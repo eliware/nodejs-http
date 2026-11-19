@@ -1,4 +1,5 @@
 import { expect, test } from "@jest/globals";
+import path from "node:path";
 import __moduleApi0 from "../../../src/backend/guides/path.mjs";
 const {
   GUIDE_ACTIONS,
@@ -15,7 +16,7 @@ test("builds paths for every supported guide coordinate", () => {
       for (const channel of GUIDE_CHANNELS) {
         expect(isGuideCoordinate(action, os, channel)).toBe(true);
         expect(guideFilePath("/repo", action, os, channel)).toBe(
-          `/repo/content/${action}/${os}/${channel}/instructions.json`,
+          path.join("/repo", "content", action, os, channel, "instructions.json"),
         );
       }
   expect(guidePlatform("centos10")).toBe("rpm");
