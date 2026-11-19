@@ -40,6 +40,13 @@ test("returns null for files and paths outside the resolved root", async () => {
   ).resolves.toBeNull();
 });
 
+test("encodes every segment in fallback directory links", async () => {
+  const publicDir = await createRepositoryRoot();
+  await createGuideFile(publicDir, `${publicDir}/dir with%name/file #1.rpm`, "package");
+  const listing = await readFilesystemDirectory({ publicDir }, "/dir with%name");
+  expect(listing.entries[0].href).toBe("/dir%20with%25name/file%20%231.rpm");
+});
+
 test("classifies allowed in-root directory symlinks and hides outside symlinks", async () => {
   const publicDir = await createStaticDirectory();
   if (!(await addOutsideSecret(publicDir))) return;
