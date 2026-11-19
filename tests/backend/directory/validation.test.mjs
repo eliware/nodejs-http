@@ -1,15 +1,6 @@
 import { expect, test } from "@jest/globals";
 import __moduleApi0 from "../../../src/backend/directory/validation.mjs";
-const { metadataStatus, renderValidation, validationIcon } = __moduleApi0();
-
-test("maps validation results to icons and status values", () => {
-  expect(validationIcon("passed")).toContain("validation-pass");
-  expect(validationIcon("failed")).toContain("validation-fail");
-  expect(validationIcon("unknown")).toContain("validation-skip");
-  expect(metadataStatus("passed")).toBe("passed");
-  expect(metadataStatus({ status: "failed" })).toBe("failed");
-  expect(metadataStatus(null)).toBeUndefined();
-});
+const { renderValidation } = __moduleApi0();
 
 test("renders package and container checks without duplicate distributions", () => {
   const packageValidation = {

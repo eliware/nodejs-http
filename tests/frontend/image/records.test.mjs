@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 import __moduleApi0 from "../../../src/frontend/image/records.mjs";
-const { displaySource, imageRecords } = __moduleApi0();
+const { imageRecords } = __moduleApi0();
 
 test("maps known registries and uses a default distribution", () => {
   expect(imageRecords({})).toEqual([]);
@@ -46,18 +46,4 @@ test("normalizes release records from all distribution fields", () => {
   expect(records[4].release).toBe("10");
   expect(records[5]).toMatchObject({ channel: "rolling", version: "unknown" });
   expect(records[6]).toMatchObject({ release: "unknown", version: "unknown" });
-});
-
-test("formats source labels for preview and stable images", () => {
-  expect(
-    displaySource({
-      channel: "rolling",
-      candidate: "2026-01-01-abcdef1234",
-      built: "2026-01-01T00:00:00Z",
-    }),
-  ).toContain("abcdef1234");
-  expect(displaySource({ channel: "stable", version: "10.1", source: { ref: "release" } })).toBe(
-    "release",
-  );
-  expect(displaySource({ channel: "stable", version: "10.1" })).toBe("Node.js 10.1");
 });

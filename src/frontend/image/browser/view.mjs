@@ -4,7 +4,7 @@ import imageRowsApi from "../rows.mjs";
 const { renderFolderRow, renderImageRow } = imageRowsApi();
 import imageExamplesApi from "../examples.mjs";
 const { renderImageExample } = imageExamplesApi();
-import imageRecordsApi from "../records.mjs";
+import imageRecordsApi from "../source.mjs";
 const { displaySource } = imageRecordsApi();
 import __moduleApifix1 from "../../format.mjs";
 const { formatDateTime } = __moduleApifix1();

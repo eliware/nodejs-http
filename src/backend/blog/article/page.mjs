@@ -1,16 +1,7 @@
 import articleRendererApi from "./renderer.mjs";
 const { renderBlogContent } = articleRendererApi();
 import articleEscapingApi from "./escaping.mjs";
-const { escapeAttribute } = articleEscapingApi();
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
+const { escapeAttribute, escapeHtml } = articleEscapingApi();
 
 function renderBlogArticlePage(blog) {
   if (!blog) return "";

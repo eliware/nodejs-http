@@ -5,29 +5,8 @@ const { getElement } = __moduleApifix1();
 import __moduleApifix2 from "../format.mjs";
 const { formatBytes, formatDateTime } = __moduleApifix2();
 import { state } from "./state.mjs";
-
-function allPackages(index) {
-  return Object.values(index.directories || {}).flatMap((directory) =>
-    (directory.entries || [])
-      .filter((entry) => entry.type === "file" && entry.package)
-      .map((entry) => ({ ...entry, directory: directory.path })),
-  );
-}
-
-function releaseFor(entry) {
-  const parts = entry.href.split("/").filter(Boolean);
-  const previewIndex = parts.indexOf("previews");
-  if (previewIndex >= 0)
-    return {
-      channel: "rolling",
-      version: parts[previewIndex + 1] || "rolling",
-    };
-  const versionIndex = parts.findIndex((part) => /^\d+\.\d+$/.test(part));
-  return {
-    channel: "stable",
-    version: versionIndex >= 0 ? parts[versionIndex] : "stable",
-  };
-}
+import __moduleApifix3 from "./packages.mjs";
+const { releaseFor } = __moduleApifix3();
 
 function packageMatches(entry) {
   const release = releaseFor(entry);
@@ -87,5 +66,5 @@ function renderSearch() {
 }
 
 export default function __moduleApi0() {
-  return { releaseFor, packageMatches, renderDetail, renderSearch, allPackages };
+  return { packageMatches, renderDetail, renderSearch };
 }

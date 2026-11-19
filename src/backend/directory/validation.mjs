@@ -1,11 +1,7 @@
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
+import __moduleApi1 from "./presentation.mjs";
+const { escapeHtml } = __moduleApi1();
+import __moduleApifix1 from "./validation/status.mjs";
+const { validationIcon, metadataStatus } = __moduleApifix1();
 
 const distributionLabels = {
   "centos-stream-10": "CentOS Stream 10",
@@ -15,16 +11,6 @@ const distributionLabels = {
   "debian-bookworm": "Debian 12 (bookworm)",
   "ubuntu-noble": "Ubuntu 24.04 (noble)",
 };
-
-function validationIcon(status) {
-  if (status === "passed") return '<span class="validation-pass">✓</span>';
-  if (status === "failed") return '<span class="validation-fail">✕</span>';
-  return '<span class="validation-skip">—</span>';
-}
-
-function metadataStatus(result) {
-  return typeof result === "string" ? result : result?.status;
-}
 
 function renderValidation(validation, containerValidation) {
   const distributions = [

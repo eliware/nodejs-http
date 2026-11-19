@@ -1,7 +1,7 @@
 import { expect, test } from "@jest/globals";
 import { gunzipSync } from "node:zlib";
 import __moduleApi0 from "../../src/backend/response.mjs";
-const { baseHeaders, fileHeaders, sendError, sendJson, sendText } = __moduleApi0();
+const { baseHeaders, sendError, sendJson, sendText } = __moduleApi0();
 import { createFixtureFile } from "../../test-fixtures/filesystem.mjs";
 
 function response(method = "GET", requestHeaders = {}) {
@@ -84,15 +84,4 @@ test("sends custom errors when present and text errors when absent", async () =>
   const fallback = response();
   await sendError(fallback, 404, "missing", config, `${file}.missing`);
   expect(fallback.body.toString()).toBe("missing");
-});
-
-test("adds MIME, Last-Modified, and ETag headers when configured", () => {
-  const stats = { size: 32, mtime: new Date("2026-01-01T00:00:00Z"), mtimeMs: 10_000 };
-  const headers = fileHeaders("file.json", stats, config);
-  expect(headers["Content-Type"]).toContain("application/json");
-  expect(headers["Last-Modified"]).toBe(stats.mtime.toUTCString());
-  expect(headers.ETag).toBe('W/"20-2710"');
-  expect(fileHeaders("file.unknown", stats, { defaultMimeType: "binary" })["Content-Type"]).toBe(
-    "binary",
-  );
 });

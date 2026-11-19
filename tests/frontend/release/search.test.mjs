@@ -2,7 +2,7 @@ import { expect, test } from "@jest/globals";
 import { installBrowserDom } from "../../../test-fixtures/browser-dom.mjs";
 
 globalThis.location = { origin: "https://repo.example" };
-const { allPackages, packageMatches, releaseFor, renderDetail, renderSearch } = (
+const { packageMatches, renderDetail, renderSearch } = (
   await import("../../../src/frontend/release/search.mjs")
 ).default();
 const { state } = await import("../../../src/frontend/release/state.mjs");
@@ -18,41 +18,6 @@ function packageRecord(name, format, href) {
     modified: "2026-01-01T00:00:00Z",
   };
 }
-
-test("collects packages and identifies stable and rolling releases", () => {
-  expect(allPackages({})).toEqual([]);
-  expect(allPackages({ directories: { "/empty/": { path: "/empty/" } } })).toEqual([]);
-  const stable = packageRecord("one.rpm", "rpm", "/el10/10.1/one.rpm");
-  const rolling = packageRecord("two.deb", "deb", "/previews/rolling-abcdef1234/two.deb");
-  expect(
-    allPackages({
-      directories: {
-        "/el10/": {
-          path: "/el10/",
-          entries: [
-            stable,
-            rolling,
-            { type: "directory", package: { format: "rpm" } },
-            { type: "file" },
-          ],
-        },
-      },
-    }),
-  ).toEqual([
-    { ...stable, directory: "/el10/" },
-    { ...rolling, directory: "/el10/" },
-  ]);
-  expect(releaseFor(stable)).toEqual({ channel: "stable", version: "10.1" });
-  expect(releaseFor(packageRecord("old", "rpm", "/legacy/file.rpm"))).toEqual({
-    channel: "stable",
-    version: "stable",
-  });
-  expect(releaseFor(rolling)).toEqual({ channel: "rolling", version: "rolling-abcdef1234" });
-  expect(releaseFor(packageRecord("rolling", "rpm", "/previews/"))).toEqual({
-    channel: "rolling",
-    version: "rolling",
-  });
-});
 
 test("filters packages by name, format, and release channel", () => {
   const entry = packageRecord("gluster.rpm", "rpm", "/el10/10.1/gluster.rpm");

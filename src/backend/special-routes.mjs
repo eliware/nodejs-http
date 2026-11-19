@@ -1,7 +1,9 @@
 import __moduleApi1 from "./api/handlers.mjs";
 const { handleBlogApi, handleDirectoryApi, handleGuideApi } = __moduleApi1();
 import __moduleApifix1 from "./health-routes.mjs";
-const { handleCatalogRoute, handleHealthRoute } = __moduleApifix1();
+const { handleHealthRoute } = __moduleApifix1();
+import __moduleApifixCatalog from "./metadata/catalog-route.mjs";
+const { handleCatalogRoute } = __moduleApifixCatalog();
 import __moduleApifix2 from "./static/assets.mjs";
 const { serveStaticFile } = __moduleApifix2();
 import __moduleApifix3 from "./blog/rss.mjs";

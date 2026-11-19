@@ -1,6 +1,6 @@
 import __moduleApi1 from "../dom.mjs";
 const { getElement } = __moduleApi1();
-import __moduleApifix1 from "./search.mjs";
+import __moduleApifix1 from "./packages.mjs";
 const { releaseFor } = __moduleApifix1();
 import { state } from "./state.mjs";
 

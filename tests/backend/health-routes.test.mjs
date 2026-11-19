@@ -1,9 +1,8 @@
-import path from "node:path";
 import { Writable } from "node:stream";
 import { once } from "node:events";
 import { describe, expect, test } from "@jest/globals";
 import __moduleApi0 from "../../src/backend/health-routes.mjs";
-const { handleCatalogRoute, handleHealthRoute } = __moduleApi0();
+const { handleHealthRoute } = __moduleApi0();
 import __moduleApifix1 from "../../src/backend/metadata/version.mjs";
 const { SUPPORTED_METADATA_VERSION } = __moduleApifix1();
 import {
@@ -150,31 +149,5 @@ describe("health and catalog routes", () => {
     );
     expect(response.statusCode).toBe(503);
     expect(JSON.parse(response.body)).toEqual({ status: "not-ready", generation: null });
-  });
-
-  test("serves a versioned catalog", async () => {
-    const { publicDir } = await metadataFixture();
-    const response = await responseFor((value) =>
-      handleCatalogRoute(value, "/api/v1/catalog", configFor(publicDir)),
-    );
-    expect(response.statusCode).toBe(200);
-    expect(JSON.parse(response.body).metadata_version).toBe(SUPPORTED_METADATA_VERSION);
-  });
-
-  test("ignores paths outside the catalog route", async () => {
-    const response = new MockResponse();
-    await expect(handleCatalogRoute(response, "/api/v1/other", configFor("/tmp"))).resolves.toBe(
-      false,
-    );
-    expect(response.statusCode).toBeNull();
-  });
-
-  test("returns an unavailable response when the catalog is missing", async () => {
-    const publicDir = path.resolve("missing-catalog-fixture");
-    const response = await responseFor((value) =>
-      handleCatalogRoute(value, "/api/v1/catalog", configFor(publicDir)),
-    );
-    expect(response.statusCode).toBe(503);
-    expect(JSON.parse(response.body)).toEqual({ error: "catalog unavailable" });
   });
 });
