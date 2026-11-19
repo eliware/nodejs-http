@@ -21,7 +21,7 @@ test("fills the configured listing template", () => {
   expect(html).not.toContain("{{");
   expect(html).not.toContain("__APP_VERSION__");
   expect(html).not.toContain("__HOST_ID__");
-  expect(html).toContain("15.2.0");
+  expect(html).toContain("15.2.1");
   expect(html).not.toContain("__ASSET_VERSION__");
 });
 

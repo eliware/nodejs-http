@@ -49,7 +49,7 @@ Keep route, asset, build, and deployment guidance aligned with maintained code a
 
 Image: ghcr.io/eliware/nodejs-http
 
-Pull command: docker pull ghcr.io/eliware/nodejs-http:v15.2.0
+Pull command: docker pull ghcr.io/eliware/nodejs-http:v15.2.1
 
 Supported tags: vMAJOR.MINOR.PATCH
 
