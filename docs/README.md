@@ -1,10 +1,10 @@
-# Node.js HTTP documentation
+# End-user documentation
 
-- [Blogs](BLOGS.md) defines the blog document format.
-- [Configuration](CONFIGURATION.md) lists server environment settings.
-- [Install guides](INSTALL-GUIDES.md) describes the CentOS Stream 10 install steps.
-- [Metadata integration](METADATA-INTEGRATION.md) defines the repository metadata boundary.
+- [Usage](usage.md) explains local startup and container use.
+- [Configuration](CONFIGURATION.md) lists environment variables and defaults.
+- [Web application](WEB-APPLICATION.md) documents pages, files, APIs, and response behavior.
+- [Install guides](INSTALL-GUIDES.md) explains Node.js installation for supported packages.
+- [Metadata integration](METADATA-INTEGRATION.md) describes repository data and readiness checks.
+- [Blogs](BLOGS.md) defines post documents and public blog routes.
+- [Troubleshooting](troubleshooting.md) explains common runtime and content failures.
 - [SEO operations](SEO-OPERATIONS.md) describes sitemap and browser checks.
-- [Troubleshooting](troubleshooting.md) lists common runtime problems.
-- [Usage](usage.md) describes local setup and startup.
-- [Web application](WEB-APPLICATION.md) lists routes, assets, build, and container use.

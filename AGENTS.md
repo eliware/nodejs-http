@@ -2,24 +2,24 @@
 
 ## Project
 
-See README.md for repository purpose, ownership, and scope.
+See README.md for the project purpose and end-user documentation.
 
 ## Scope and boundaries
 
-Keep requirements in their authoritative specifications.
+Keep package creation, signing, and publication in nodejs-packaging. Keep repository data read-only in this application.
 
 ## Layout
 
-Use README.md and specs/README.md to find maintained files.
+Keep launchers in bin/, implementation modules in src/, tests in tests/, fixtures in test-fixtures/, and end-user guides in docs/.
 
 ## Development
 
-Give each source and test module one cohesive purpose.
+Give each source and test module one purpose.
 
 ## Validation
 
 Use Node.js 26 or later and native ESM for maintained JavaScript modules.
-Run npm test for aggregate validation.
+Run npm test for full repository validation.
 Run npm run lint for lint checks.
 Run npm run audit for dependency checks.
 Run npm run format to format files.
@@ -27,11 +27,11 @@ Run npm run format:check to check formatting.
 
 ## Security
 
-Keep credentials, secret values, private data, and runtime state out of Git.
+Keep credentials, private data, and runtime state out of Git.
 
 ## Changes
 
-Update focused tests and user documentation when application behavior changes.
+Update focused tests and end-user documentation when behavior changes.
 
 ## Application
 

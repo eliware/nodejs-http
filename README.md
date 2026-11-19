@@ -27,74 +27,63 @@ Read-only Node.js RPM repository and web frontend.
 
 ## Features
 
-Read published Node.js 26 RPMs and metadata from nodejs-repository. The site targets CentOS Stream 10 EPEL on x86_64.
+Browse published Node.js 26 RPMs for CentOS Stream 10 EPEL on x86_64. Read release metadata, installation instructions, and project articles.
 
 ## Requirements
 
-Use Node.js 26 or later and npm 12 or later.
+Use Node.js 26 or later and npm 12 or later. Use Docker Compose for the container workflow.
 
 ## Setup
 
-Run `npm ci` from the repository root.
+Run `npm ci` from the repository root. See [local usage](docs/usage.md) for runtime data requirements.
 
 ## Usage
 
-Read this README and the [user guide](docs/README.md). Read [release notes](RELEASE_NOTES.md) for version history.
+Follow the [end-user guide](docs/README.md) to run the website, configure repository data, or use its HTTP endpoints. Read [release notes](RELEASE_NOTES.md) for version history.
 
 ## Development
 
-Read [AGENTS.md](AGENTS.md) and the [specifications index](specs/README.md) before changing files.
+Read [AGENTS.md](AGENTS.md) for required development and validation practices. Read [specifications](specs/README.md) before changing project rules.
 
 ## Testing
 
-Run `npm test` for repository validation. Pass test file paths to run focused tests.
+Run `npm test` for full validation. Run focused tests with `npm test -- tests/path/to/example.test.mjs`.
 
 ## Troubleshooting
 
-Read the [troubleshooting guide](docs/troubleshooting.md) for repository directory, metadata, and readiness problems.
+Use the [troubleshooting guide](docs/troubleshooting.md) to find startup, readiness, and content problems.
 
 ## Security
 
-Keep credentials, private data, and runtime state out of Git. Keep the repository directory read-only.
+Set the repository path as read-only. Keep credentials, private content, and runtime state outside Git.
 
 ## Configuration
 
-Set `PUBLIC_DIR` to the repository tree. Set `STATIC_DIR` to the website files. See [configuration](docs/CONFIGURATION.md) for every option and default.
+See the [configuration reference](docs/CONFIGURATION.md) for environment variables and defaults.
 
 ## Operations
 
-Run `npm start` to start the server on port 7001. Run `docker compose up --build -d` to build and start the local container.
+See [local usage](docs/usage.md) for startup and container commands. See [metadata integration](docs/METADATA-INTEGRATION.md) for readiness requirements.
 
 ## Routes
 
-| Method | Path                  | Result                                 |
-| ------ | --------------------- | -------------------------------------- |
-| GET    | `/`                   | Returns the Node.js package page.      |
-| GET    | `/health`, `/healthz` | Returns process health.                |
-| GET    | `/ready`, `/readyz`   | Checks repository metadata readiness.  |
-| GET    | `/metrics`            | Returns Prometheus metrics.            |
-| GET    | `/api/v1/catalog`     | Returns the validated release catalog. |
-| GET    | `/api/v1/list`        | Lists a repository directory.          |
-| GET    | `/metadata/*`         | Reads published metadata files.        |
-| GET    | `/el10/x86_64/*`      | Reads published RPM repository files.  |
-
-The server accepts configured read methods and returns HTTP 405 for other methods.
+See [HTTP routes](docs/WEB-APPLICATION.md) for pages, repository files, health checks, and API behavior.
 
 ## Assets
 
-Keep website templates in `templates/` and public brand assets in `public/assets/`. The production image copies these files into `/opt/nodejs-http/site`.
+The image copies website templates and `public/assets/` into its static content directory. See [web application](docs/WEB-APPLICATION.md) for path details.
 
 ## Development server
 
-Set `PUBLIC_DIR` to a repository tree with seed metadata. Run `npm start` to listen on `0.0.0.0:7001`.
+Run `npm start` to start the local server. Set `PUBLIC_DIR` when the repository content is outside `public/`.
 
 ## Build
 
-Run `npm run build` to create the browser bundle in `dist/`. The production image uses server-rendered pages and does not include that bundle.
+Run `npm run build` to create the browser bundle in `dist/`. The production container serves its pages from templates.
 
 ## Deployment
 
-The container uses `node:26-bookworm-slim`. Attach nodejs-repository at `/srv/repository` as read-only. The GHCR workflow publishes only on version tags that match `package.json`.
+See [container operations](docs/usage.md#container-operations). The GHCR workflow publishes version-tagged images. Publication does not deploy the application.
 
 ## Support
 

@@ -1,9 +1,26 @@
-# Packaging metadata integration
+# Repository metadata
 
-The packaging repository owns the release contract and metadata schemas. This HTTP application reads published metadata from the shared repository tree.
+The nodejs-packaging project owns package builds, RPM signing, metadata creation, and repository publication. This application reads the published tree and does not write to it.
 
-Read the contract at [nodejs-packaging](https://github.com/eliware/nodejs-packaging/blob/main/specs/release-contract.md). Keep route responses aligned with its supported Node.js major, target OS, architecture, repository paths, and metadata fields.
+Set `PUBLIC_DIR` to the published repository path. In the production container, attach it at `/srv/repository` as read-only. The tree includes signed RPMs, repository metadata, release metadata, guide documents, and optional blog content.
 
-Validate `metadata_version` before returning catalog, manifest, provenance, or validation data. Reject missing, legacy, unknown, and newer schema versions. Do not invent defaults for invalid or missing release data.
+The application checks `metadata_version` before it returns supported catalog, index, active generation, generation, blog, and validation documents. It rejects invalid metadata. Keep repository metadata aligned with the [release contract](https://github.com/eliware/nodejs-packaging/blob/main/specs/release-contract.md).
 
-Return published repository content through read-only routes. Do not build packages, sign artifacts, update catalog data, create generations, or point the active link at a different generation.
+## Readiness files
+
+`/ready` and `/readyz` require these files:
+
+- `metadata/catalog.json`
+- `metadata/repository-index.json`
+- `metadata/active-generation.json`
+- `.generations/<generation>/generation.json`, where `<generation>` matches the active generation value
+
+Every file must contain the supported `metadata_version`. The readiness response reports `ready` and the generation identifier when all checks pass. It returns HTTP 503 with `not-ready` when any file is missing, invalid, or inconsistent.
+
+## Repository index
+
+The repository index supplies directory entries and optional validation records to `/api/v1/list` and the sitemap. When an index has no entry for a requested directory, the application can inspect the mounted directory tree directly. Listings exclude dotfiles unless `ALLOW_DOTFILES` is enabled.
+
+## Content ownership
+
+Keep package building, signing, repository updates, active generation changes, and metadata publication in nodejs-packaging. Keep the nodejs-http repository path read-only so web requests cannot change published files.
