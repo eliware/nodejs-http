@@ -2,6 +2,30 @@ import { expect, test } from "@jest/globals";
 import __moduleApi0 from "../../../src/backend/api/blog-handler.mjs";
 const { handleBlogApi } = __moduleApi0();
 
-test("leaves paths outside the blog API to the router", async () => {
-  expect(await handleBlogApi({}, "/not-a-blog", {})).toBe(false);
+function response() {
+  return {
+    req: { method: "GET", headers: {} },
+    statusCode: null,
+    headers: {},
+    body: "",
+    writeHead(statusCode, headers) {
+      this.statusCode = statusCode;
+      this.headers = headers;
+    },
+    end(body) {
+      if (body !== undefined) this.body += body.toString();
+    },
+  };
+}
+
+test("returns unavailable when an article path contains a nested slug", async () => {
+  const result = response();
+  await expect(
+    handleBlogApi(result, "/api/v1/blogs/post/extra", {
+      securityHeaders: false,
+      compression: false,
+    }),
+  ).resolves.toBe(true);
+  expect(result.statusCode).toBe(503);
+  expect(JSON.parse(result.body)).toEqual({ error: "blog metadata unavailable" });
 });

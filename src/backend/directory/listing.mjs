@@ -11,6 +11,8 @@ import __moduleApifix2 from "./validation.mjs";
 const { renderValidation } = __moduleApifix2();
 import __moduleApifixFallback from "./fallback.mjs";
 const { renderFallbackHtml } = __moduleApifixFallback();
+import __moduleApifixTemplate from "./template.mjs";
+const { renderDirectoryTemplate } = __moduleApifixTemplate();
 
 function renderDirectoryHtml({
   template,
@@ -23,22 +25,21 @@ function renderDirectoryHtml({
 }) {
   const title = `Index of ${requestPath}`;
   if (!template) return renderFallbackHtml(title, rows);
-  return template
-    .replaceAll("{{TITLE}}", escapeHtml(title))
-    .replaceAll("{{OG_IMAGE}}", escapeHtml(ogImageForPath(requestPath)))
-    .replaceAll(
-      "{{OG_DESCRIPTION}}",
-      escapeHtml(`Browse signed Eliware Node.js artifacts in ${title}.`),
-    )
-    .replaceAll("{{ROWS}}", rows)
-    .replaceAll("{{BREADCRUMBS}}", renderBreadcrumbs(requestPath))
-    .replaceAll("{{PATH}}", escapeHtml(requestPath))
-    .replaceAll("{{VALIDATION}}", renderValidation(validation, containerValidation))
-    .replaceAll("{{SUMMARY}}", `Total files: ${fileCount} · Total size: ${formatBytes(totalBytes)}`)
-    .replaceAll("__COPYRIGHT_YEAR__", copyrightYear())
-    .replaceAll("__APP_VERSION__", process.env.APP_VERSION || APP_VERSION)
-    .replaceAll("__HOST_ID__", servingHostId())
-    .replaceAll("__ASSET_VERSION__", process.env.APP_VERSION || APP_VERSION);
+  const appVersion = process.env.APP_VERSION || APP_VERSION;
+  return renderDirectoryTemplate(template, {
+    title: escapeHtml(title),
+    ogImage: escapeHtml(ogImageForPath(requestPath)),
+    ogDescription: escapeHtml(`Browse signed Eliware Node.js artifacts in ${title}.`),
+    rows,
+    breadcrumbs: renderBreadcrumbs(requestPath),
+    path: escapeHtml(requestPath),
+    validation: renderValidation(validation, containerValidation),
+    summary: `Total files: ${fileCount} · Total size: ${formatBytes(totalBytes)}`,
+    copyrightYear: copyrightYear(),
+    appVersion,
+    hostId: servingHostId(),
+    assetVersion: appVersion,
+  });
 }
 
 export default function __moduleApi0() {

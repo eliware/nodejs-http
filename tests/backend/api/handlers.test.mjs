@@ -31,6 +31,16 @@ test("ignores unrelated directory API paths", async () => {
   expect(response.statusCode).toBeNull();
 });
 
+test("uses the root path when the directory request has no URL or path query", async () => {
+  const response = responseFor();
+  await expect(handleDirectoryApi({}, response, "/api/v1/list", config)).resolves.toBe(true);
+  expect(response.statusCode).toBe(404);
+});
+
+test("ignores unrelated blog API paths", async () => {
+  expect(await handleBlogApi(responseFor(), "/not-a-blog", config)).toBe(false);
+});
+
 test("serves articles, hides drafts, and handles blog store failures", async () => {
   const empty = responseFor();
   await handleBlogApi(empty, "/api/v1/blogs", {
