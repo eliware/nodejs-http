@@ -96,6 +96,7 @@ function renderEntries({ listing, sortKey, ascending, filterQuery, runtimeOnly }
   });
   const sorted = [...filtered].sort((left, right) => {
     const result = compareEntries(left, right, sortKey);
+    if (sortKey === "type" && left.type !== right.type) return result;
     return ascending ? result : -result;
   });
   sorted.forEach((entry) => addEntryRow(entries, entry));

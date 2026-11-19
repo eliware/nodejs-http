@@ -38,6 +38,16 @@ export async function addOutsideFileLink(publicDir, linkPath, content = "secret"
   }
 }
 
+export async function addBrokenFileLink(publicDir, linkPath) {
+  try {
+    await symlink(path.join(publicDir, "missing-target"), linkPath, "file");
+    return true;
+  } catch (error) {
+    if (!new Set(["EPERM", "EACCES"]).has(error.code)) throw error;
+    return false;
+  }
+}
+
 export async function publicFileStats(publicDir, name) {
   const filePath = path.join(publicDir, name);
   return { filePath, stats: await stat(filePath) };

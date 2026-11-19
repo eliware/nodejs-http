@@ -43,6 +43,8 @@ test("sorts by type, date, and name and includes non-runtime artifacts", () => {
   expect(
     get("directory-entries").children.map((row) => row.children?.[1]?.children?.[0]?.textContent),
   ).toContain("folder/");
+  render("type", false);
+  expect(get("directory-entries").children[0].children[1].children[0].textContent).toBe("folder/");
   render("date", false);
   expect(
     get("directory-entries").children.map((row) => row.children?.[1]?.children?.[0]?.textContent),

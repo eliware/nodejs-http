@@ -1,5 +1,11 @@
 import { expect, test } from "@jest/globals";
-import { createRepositoryRoot, createGuideFile } from "../../../test-fixtures/filesystem.mjs";
+import {
+  addOutsideSecret,
+  addBrokenFileLink,
+  createRepositoryRoot,
+  createGuideFile,
+  createStaticDirectory,
+} from "../../../test-fixtures/filesystem.mjs";
 import __moduleApi0 from "../../../src/backend/directory/filesystem.mjs";
 const { readFilesystemDirectory } = __moduleApi0();
 
@@ -32,4 +38,31 @@ test("returns null for files and paths outside the resolved root", async () => {
   await expect(
     readFilesystemDirectory({ publicDir: "C:\\public" }, "/secret", filesystem),
   ).resolves.toBeNull();
+});
+
+test("classifies allowed in-root directory symlinks and hides outside symlinks", async () => {
+  const publicDir = await createStaticDirectory();
+  if (!(await addOutsideSecret(publicDir))) return;
+  if (!(await addBrokenFileLink(publicDir, `${publicDir}/broken-link`))) return;
+  const restrictedListing = await readFilesystemDirectory(
+    { publicDir, allowDotfiles: false, allowSymlinks: false },
+    "/",
+  );
+  expect(restrictedListing.entries.map((entry) => entry.name)).not.toContain("secret.txt");
+  const listing = await readFilesystemDirectory(
+    { publicDir, allowDotfiles: false, allowSymlinks: true },
+    "/folder/",
+  );
+  const linkedDirectory = listing.entries.find((entry) => entry.name === "linked-calc");
+  expect(linkedDirectory).toEqual({
+    name: "linked-calc",
+    type: "directory",
+    href: "/folder/linked-calc/",
+  });
+  const rootListing = await readFilesystemDirectory(
+    { publicDir, allowDotfiles: false, allowSymlinks: true },
+    "/",
+  );
+  expect(rootListing.entries.map((entry) => entry.name)).not.toContain("secret.txt");
+  expect(rootListing.entries.map((entry) => entry.name)).not.toContain("broken-link");
 });

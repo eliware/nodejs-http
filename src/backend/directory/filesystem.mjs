@@ -18,13 +18,36 @@ async function readFilesystemDirectory(config, requestPath, filesystem = fs) {
     return null;
   const stats = await filesystem.stat(resolvedPath);
   if (!stats.isDirectory()) return null;
-  const entries = (await filesystem.readdir(resolvedPath, { withFileTypes: true }))
-    .filter((entry) => config.allowDotfiles || !entry.name.startsWith("."))
-    .map((entry) => ({
-      name: entry.name,
-      type: entry.isDirectory() ? "directory" : "file",
-      href: `${requestPath}${encodeURIComponent(entry.name)}${entry.isDirectory() ? "/" : ""}`,
-    }));
+  const entries = (
+    await Promise.all(
+      (await filesystem.readdir(resolvedPath, { withFileTypes: true }))
+        .filter((entry) => config.allowDotfiles || !entry.name.startsWith("."))
+        .map(async (entry) => {
+          let isDirectory = entry.isDirectory();
+          if (entry.isSymbolicLink?.()) {
+            if (!config.allowSymlinks) return null;
+            try {
+              const targetPath = await filesystem.realpath(path.join(resolvedPath, entry.name));
+              const relativeTarget = path.relative(normalizedRoot, targetPath);
+              if (
+                relativeTarget === ".." ||
+                relativeTarget.startsWith(`..${path.sep}`) ||
+                path.isAbsolute(relativeTarget)
+              )
+                return null;
+              isDirectory = (await filesystem.stat(targetPath)).isDirectory();
+            } catch {
+              return null;
+            }
+          }
+          return {
+            name: entry.name,
+            type: isDirectory ? "directory" : "file",
+            href: `${requestPath}${encodeURIComponent(entry.name)}${isDirectory ? "/" : ""}`,
+          };
+        }),
+    )
+  ).filter(Boolean);
   return {
     entries,
     validation: await readJson(resolvedPath, "validation.json", filesystem),
