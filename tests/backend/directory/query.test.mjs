@@ -71,4 +71,10 @@ test("uses bounded defaults for invalid pagination values", () => {
   });
   expect(queryDirectoryEntries(entries, { offset: -10, limit: 900 }).limit).toBe(500);
   expect(queryDirectoryEntries(entries, { offset: 4, limit: 1 }).entries).toEqual([]);
+  expect(queryDirectoryEntries(entries, { offset: "1x", limit: "2.5" })).toMatchObject({
+    entries: [entries[2], entries[1], entries[3], entries[0]],
+    offset: 0,
+    limit: 500,
+  });
+  expect(queryDirectoryEntries(entries, { offset: "999999999999999999999" }).offset).toBe(0);
 });

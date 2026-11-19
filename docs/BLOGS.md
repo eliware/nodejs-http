@@ -58,7 +58,7 @@ Set `BLOG_DIR` to a content checkout, then run `npm run check:blogs`. The comman
 ## Published routes
 
 - `/blog` lists published posts.
-- `/blog/category/<category>` filters posts by editorial category.
+- `/blog/category/<category>` preselects an editorial category in the browser post list.
 - `/blog/<slug>` returns one post page.
 - `/blogs/` redirects to `/blog` for path compatibility.
 - `/terms` and `/tos` return the Terms page.

@@ -29,8 +29,8 @@ function blogPageMetadata(blog, category, hostId) {
     __BLOG_PAGE_CLASS__: blog ? "blog-article-page" : "",
     __HOST_ID__: hostId,
     __COPYRIGHT_YEAR__: copyrightYear(),
-    __APP_VERSION__: version,
-    __ASSET_VERSION__: version,
+    __APP_VERSION__: escapeAttribute(version),
+    __ASSET_VERSION__: escapeAttribute(version),
   };
 }
 

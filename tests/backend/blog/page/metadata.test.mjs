@@ -30,3 +30,16 @@ test("resolves escaped article and category metadata", () => {
   expect(category.__BLOG_CANONICAL__).toContain("release%20%26%20news");
   expect(category.__BLOG_ARTICLE_CLASS__).toBe("d-none");
 });
+
+test("escapes configured versions before placing them in page tokens", () => {
+  const original = process.env.APP_VERSION;
+  process.env.APP_VERSION = '<img src=x onerror="run()">';
+  try {
+    const metadata = blogPageMetadata(null, "", "host");
+    expect(metadata.__APP_VERSION__).toBe("&lt;img src=x onerror=&quot;run()&quot;&gt;");
+    expect(metadata.__ASSET_VERSION__).toBe(metadata.__APP_VERSION__);
+  } finally {
+    if (original === undefined) delete process.env.APP_VERSION;
+    else process.env.APP_VERSION = original;
+  }
+});

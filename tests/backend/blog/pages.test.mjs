@@ -57,7 +57,7 @@ describe("blog HTTP surface", () => {
     expect(response.body.toString()).toContain("https://nodejs.eliware.org/blog/category/%252F");
   });
 
-  test("renders remote hero URLs and articles without verification metadata", async () => {
+  test("renders local hero URLs and articles without verification metadata", async () => {
     const site = await fixture();
     const response = new MockResponse();
     const finished = once(response, "finish");
@@ -72,7 +72,7 @@ describe("blog HTTP surface", () => {
       tags: ["web"],
       category: "operations",
       content: "# Remote hero\n\nArticle.",
-      hero_image: "https://images.example/hero.png",
+      hero_image: "/assets/hero.png",
     };
     await serveBlogPage(response, { method: "GET", headers: {} }, "/blog/remote-hero", {
       ...site.config,
@@ -80,7 +80,7 @@ describe("blog HTTP surface", () => {
       blogStore: { published: async () => [article] },
     });
     await finished;
-    expect(response.body.toString()).toContain("https://images.example/hero.png");
+    expect(response.body.toString()).toContain("https://nodejs.eliware.org/assets/hero.png");
     expect(response.body.toString()).not.toContain("Last verified");
   });
 

@@ -73,3 +73,37 @@ test("classifies allowed in-root directory symlinks and hides outside symlinks",
   expect(rootListing.entries.map((entry) => entry.name)).not.toContain("secret.txt");
   expect(rootListing.entries.map((entry) => entry.name)).not.toContain("broken-link");
 });
+
+test("omits allowed symlinks that target special files", async () => {
+  const publicDir = "/repo";
+  const filesystem = {
+    realpath: async (value) => value,
+    stat: async (value) => ({
+      isDirectory: () => value === publicDir,
+      isFile: () => false,
+    }),
+    readdir: async () => [
+      {
+        name: "socket-link",
+        isDirectory: () => false,
+        isFile: () => false,
+        isSymbolicLink: () => true,
+      },
+      {
+        name: "socket",
+        isDirectory: () => false,
+        isFile: () => false,
+        isSymbolicLink: () => false,
+      },
+    ],
+    readFile: async () => {
+      throw new Error("missing metadata");
+    },
+  };
+  const listing = await readFilesystemDirectory(
+    { publicDir, allowSymlinks: true, allowDotfiles: false },
+    "/",
+    filesystem,
+  );
+  expect(listing.entries).toEqual([]);
+});

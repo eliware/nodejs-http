@@ -14,6 +14,13 @@ function sortEntries(entries, sort, order) {
   });
 }
 
+function parseInteger(value, fallback) {
+  const text = String(value).trim();
+  if (!/^-?\d+$/.test(text)) return fallback;
+  const parsed = Number(text);
+  return Number.isSafeInteger(parsed) ? parsed : fallback;
+}
+
 function queryDirectoryEntries(entries, options = {}) {
   const query = String(options.query || "")
     .trim()
@@ -22,8 +29,9 @@ function queryDirectoryEntries(entries, options = {}) {
     ? entries.filter((entry) => entry.name.toLowerCase().includes(query))
     : entries;
   const sorted = sortEntries(filtered, options.sort, options.order);
-  const offset = Math.max(0, Number.parseInt(options.offset || "0", 10) || 0);
-  const limit = Math.min(500, Math.max(1, Number.parseInt(options.limit || "500", 10) || 500));
+  const offset = Math.max(0, parseInteger(options.offset || "0", 0));
+  const parsedLimit = parseInteger(options.limit || "500", 500);
+  const limit = parsedLimit === 0 ? 500 : Math.min(500, Math.max(1, parsedLimit));
   return {
     entries: sorted.slice(offset, offset + limit),
     total: sorted.length,

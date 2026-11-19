@@ -13,7 +13,7 @@ The server accepts GET and `HEAD` requests by default. It returns 405 for other 
 | `/terms` and `/tos`         | Terms page.                                                          |
 | `/policy`                   | Policy page.                                                         |
 | `/blog`                     | Published post list.                                                 |
-| `/blog/category/<category>` | Published posts in a category.                                       |
+| `/blog/category/<category>` | Browser filter for the requested editorial category.                 |
 | `/blog/<slug>`              | One published post.                                                  |
 | `/blogs`                    | Redirect to `/blog`.                                                 |
 | `/feed.xml`                 | RSS 2.0 XML for published posts.                                     |
@@ -44,12 +44,12 @@ Readiness requires valid `metadata/catalog.json`, `metadata/repository-index.jso
 | `/api/v1/catalog`                     | Returns the validated release catalog. Returns HTTP 503 when the catalog is unavailable or has an unsupported schema version. |
 | `/api/v1/list`                        | Accepts `path`, `q`, `sort`, `order`, `offset`, and `limit` query parameters.                                                 |
 | `/api/guides/<action>/<os>/<channel>` | Returns a published install or upgrade guide when a matching guide document exists.                                           |
-| `/api/v1/blogs`                       | Returns the published post list, count, and metadata version.                                                                 |
+| `/api/v1/blogs`                       | Returns collection envelope schema 1, the published post list, count, and packaging metadata version.                         |
 | `/api/v1/blogs/<slug>`                | Returns one published post with safe HTML.                                                                                    |
 
 The list API defaults to the repository root, name sorting, ascending order, offset zero, and a limit of 500. It supports `name`, `size`, or `modified` sorting and `asc` or `desc` order. The server caps the limit at 500. Name filtering ignores letter case.
 
-The list API returns a path, total entry count, offset, limit, `hasMore`, entries, validation data, and container validation data. It returns HTTP 404 when the requested directory does not exist.
+The blog collection `schema` field versions the response envelope. Each post has its own `schema` field for the packaging metadata contract. The directory list API returns a path, total entry count, offset, limit, `hasMore`, entries, validation data, and container validation data. It returns HTTP 404 when the requested directory does not exist.
 
 ## Static files and builds
 

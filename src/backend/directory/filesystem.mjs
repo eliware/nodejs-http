@@ -33,6 +33,7 @@ async function readFilesystemDirectory(config, requestPath, filesystem = fs) {
         .filter((entry) => config.allowDotfiles || !entry.name.startsWith("."))
         .map(async (entry) => {
           let isDirectory = entry.isDirectory();
+          if (!isDirectory && !entry.isFile() && !entry.isSymbolicLink?.()) return null;
           if (entry.isSymbolicLink?.()) {
             if (!config.allowSymlinks) return null;
             try {
@@ -44,7 +45,9 @@ async function readFilesystemDirectory(config, requestPath, filesystem = fs) {
                 path.isAbsolute(relativeTarget)
               )
                 return null;
-              isDirectory = (await filesystem.stat(targetPath)).isDirectory();
+              const targetStats = await filesystem.stat(targetPath);
+              isDirectory = targetStats.isDirectory();
+              if (!isDirectory && !targetStats.isFile()) return null;
             } catch {
               return null;
             }

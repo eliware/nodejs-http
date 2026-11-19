@@ -142,3 +142,71 @@ test("reloads guide content when bytes change without a size or timestamp change
   await replaceFileWithoutChangingTimestamp(file, nextContent);
   expect((await readGuide(root, "install", "centos10", "stable")).title).toBe("Updated");
 });
+
+test("rejects a guide path that changes outside the root after opening", async () => {
+  let fileReads = 0;
+  let closed = false;
+  const filesystem = {
+    realpath: async (value) => {
+      if (value === "/race-root") return "/race-root";
+      fileReads += 1;
+      return fileReads === 1 ? value : "/outside/instructions.json";
+    },
+    open: async () => ({
+      stat: async () => ({ dev: 1, ino: 1 }),
+      readFile: async () => "{}",
+      close: async () => {
+        closed = true;
+      },
+    }),
+  };
+  await expect(
+    readGuide("/race-root", "install", "centos10", "stable", filesystem),
+  ).rejects.toThrow("guide path is outside the repository");
+  expect(closed).toBe(true);
+});
+
+test("rejects a guide file replaced between opening and validation", async () => {
+  const openedFile = { dev: 1, ino: 1 };
+  const filesystem = {
+    realpath: async (value) => value,
+    open: async () => ({
+      stat: async () => openedFile,
+      readFile: async () => "{}",
+      close: async () => {},
+    }),
+    stat: async () => ({ dev: 1, ino: 2 }),
+  };
+  await expect(
+    readGuide("/stable-root", "install", "centos10", "stable", filesystem),
+  ).rejects.toThrow("guide file changed while it was being read");
+});
+
+test("keeps cache entries separate when a repository root changes target", async () => {
+  let rootTarget = "/guide-root-a";
+  const guide = {
+    schemaVersion: 2,
+    title: "Same guide",
+    summary: "Summary",
+    platform: "rpm",
+    channel: "stable",
+    source: { repository: "repo", upstream: "upstream" },
+    sections: [],
+  };
+  const content = JSON.stringify(guide);
+  const filesystem = {
+    realpath: async (value) =>
+      value === "/guide-alias" ? rootTarget : `${rootTarget}${value.slice("/guide-alias".length)}`,
+    open: async () => ({
+      stat: async () => ({ dev: 1, ino: 2 }),
+      readFile: async () => content,
+      close: async () => {},
+    }),
+    stat: async () => ({ dev: 1, ino: 2 }),
+  };
+  const first = await readGuide("/guide-alias", "install", "centos10", "stable", filesystem);
+  rootTarget = "/guide-root-b";
+  const second = await readGuide("/guide-alias", "install", "centos10", "stable", filesystem);
+  expect(second).toEqual(first);
+  expect(second).not.toBe(first);
+});
