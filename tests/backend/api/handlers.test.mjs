@@ -42,14 +42,6 @@ test("ignores unrelated directory API paths", async () => {
   expect(response.statusCode).toBeNull();
 });
 
-test("returns an empty published blog collection", async () => {
-  const response = responseFor();
-  const blogConfig = { ...config, blogStore: { published: async () => [] } };
-  await expect(handleBlogApi(response, "/api/v1/blogs", blogConfig)).resolves.toBe(true);
-  expect(response.statusCode).toBe(200);
-  expect(JSON.parse(response.body).posts).toEqual([]);
-});
-
 test("serves valid guides and reports missing or invalid guide files", async () => {
   const publicDir = await createRepositoryRoot();
   const guide = {
@@ -91,6 +83,14 @@ test("serves valid guides and reports missing or invalid guide files", async () 
 });
 
 test("serves articles, hides drafts, and handles blog store failures", async () => {
+  const empty = responseFor();
+  await handleBlogApi(empty, "/api/v1/blogs", {
+    ...config,
+    blogStore: { published: async () => [] },
+  });
+  expect(empty.statusCode).toBe(200);
+  expect(JSON.parse(empty.body).posts).toEqual([]);
+
   const article = {
     slug: "safe-post",
     title: "Safe post",
@@ -127,6 +127,7 @@ test("serves articles, hides drafts, and handles blog store failures", async () 
     },
   });
   expect(broken.statusCode).toBe(503);
+  expect(JSON.parse(broken.body)).toEqual({ error: "blog metadata unavailable" });
 });
 
 test("normalizes directory API paths and returns successful indexed listings", async () => {

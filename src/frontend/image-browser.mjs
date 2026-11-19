@@ -12,6 +12,8 @@ import __moduleApifix5 from "./image/examples.mjs";
 const { renderImageExample } = __moduleApifix5();
 import __moduleApifix6 from "./image/rows.mjs";
 const { renderFolderRow, renderImageRow } = __moduleApifix6();
+import __moduleApifix7 from "./image/selection.mjs";
+const { selectImageRecords } = __moduleApifix7();
 
 let records = [];
 let openRepository = null;
@@ -19,17 +21,12 @@ let currentExample = null;
 let exampleReferenceMode = "latest";
 let catalog = {};
 function selectedRecords() {
-  const distro = getElement("target-distro")?.value;
-  const channel = getElement("target-channel")?.value;
-  const version = getElement("target-version")?.value;
-  const stableVersion = catalog.stable?.version;
-  return records.filter(
-    (record) =>
-      record.distro === distro &&
-      record.channel === channel &&
-      (channel === "stable"
-        ? record.version === (version === "stable" ? stableVersion : version)
-        : record.candidate === version),
+  return selectImageRecords(
+    records,
+    catalog,
+    getElement("target-distro")?.value,
+    getElement("target-channel")?.value,
+    getElement("target-version")?.value,
   );
 }
 

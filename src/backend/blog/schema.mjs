@@ -1,5 +1,7 @@
 import __moduleApi1 from "../metadata/version.mjs";
 const { assertMetadataVersion } = __moduleApi1();
+import __moduleApifix1 from "./editorial-fields.mjs";
+const { validateEditorialFields } = __moduleApifix1();
 
 const BLOG_SCHEMA = 2;
 const BLOG_STATUSES = ["draft", "published"];
@@ -88,23 +90,7 @@ function assertBlogDocument(value, label = "blog document") {
     value.tested_on.some((item) => typeof item !== "string" || !item.trim())
   )
     throw new Error(`${label} tested_on must be a non-empty string array`);
-  if (
-    value.hero_image !== undefined &&
-    (typeof value.hero_image !== "string" || !value.hero_image.startsWith("/assets/"))
-  )
-    throw new Error(`${label} hero_image must be a local asset path`);
-  if (
-    value.related_slugs !== undefined &&
-    (!Array.isArray(value.related_slugs) ||
-      value.related_slugs.some((slug) => typeof slug !== "string" || !SLUG_PATTERN.test(slug)))
-  )
-    throw new Error(`${label} related_slugs must be slug strings`);
-  if (value.series !== undefined) assertString(value.series, `${label} series`);
-  if (
-    value.series_order !== undefined &&
-    (!Number.isInteger(value.series_order) || value.series_order < 1)
-  )
-    throw new Error(`${label} series_order must be a positive integer`);
+  validateEditorialFields(value, label);
   if (
     !Array.isArray(value.tags) ||
     value.tags.length === 0 ||
