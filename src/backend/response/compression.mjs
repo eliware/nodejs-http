@@ -16,7 +16,8 @@ function acceptedEncodings(request) {
     const qualityText = qualityParameter?.trim().slice(2);
     const quality =
       qualityText === undefined ? 1 : QUALITY_VALUE.test(qualityText) ? Number(qualityText) : 0;
-    accepted.set(name.trim(), quality);
+    const coding = name.trim();
+    accepted.set(coding, accepted.has(coding) ? Math.min(accepted.get(coding), quality) : quality);
   }
   return accepted;
 }

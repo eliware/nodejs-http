@@ -45,6 +45,14 @@ test("chooses supported encodings and skips ineligible content", () => {
     ),
   ).toBe("gzip");
   expect(
+    chooseEncoding(
+      { headers: { "accept-encoding": "br;q=0, br;q=1, gzip;q=0.5" } },
+      "application/json",
+      8,
+      config,
+    ),
+  ).toBe("gzip");
+  expect(
     chooseEncoding({ headers: { "accept-encoding": "*;q=0.5" } }, "application/json", 8, config),
   ).toBe("br");
   expect(chooseEncoding({}, "text/html", 8, config)).toBeNull();
