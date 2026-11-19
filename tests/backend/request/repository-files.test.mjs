@@ -30,6 +30,8 @@ test("resolves repository files and returns missing files", async () => {
     directoryIndex: false,
   });
   expect(missing).toEqual({ handled: false, file: null });
+  const outside = await resolveRepositoryFile(request, response(), "/../outside", config);
+  expect(outside).toEqual({ handled: false, file: null });
 });
 
 test("handles directory redirects before file delivery", async () => {

@@ -88,6 +88,23 @@ test("returns a valid guide document", async () => {
   });
 });
 
+test("returns a valid upgrade guide document", async () => {
+  const publicDir = await createRepositoryRoot();
+  const guideDocument = guide();
+  await createGuideFile(
+    publicDir,
+    `${publicDir}/content/upgrade/centos10/stable/instructions.json`,
+    JSON.stringify(guideDocument),
+  );
+  const result = response();
+  await handleGuideApi(result, "/api/guides/upgrade/centos10/stable", {
+    ...config,
+    publicDir,
+  });
+  expect(result.statusCode).toBe(200);
+  expect(JSON.parse(result.body).action).toBe("upgrade");
+});
+
 test.each([
   ["upgrade", undefined],
   ["install", guide({ platform: "debian" })],

@@ -24,7 +24,7 @@ function acceptedEncodings(request) {
 
 function qualityFor(accepted, encoding) {
   if (accepted.has(encoding)) return accepted.get(encoding);
-  return accepted.get("*") || 0;
+  return accepted.get("*") ?? 0;
 }
 
 function chooseEncoding(request, contentType, length, config) {

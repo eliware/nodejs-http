@@ -55,6 +55,9 @@ test("chooses supported encodings and skips ineligible content", () => {
   expect(
     chooseEncoding({ headers: { "accept-encoding": "*;q=0.5" } }, "application/json", 8, config),
   ).toBe("br");
+  expect(
+    chooseEncoding({ headers: { "accept-encoding": "*;q=0" } }, "application/json", 8, config),
+  ).toBeNull();
   expect(chooseEncoding({}, "text/html", 8, config)).toBeNull();
   expect(
     chooseEncoding({ headers: { "accept-encoding": "br" } }, "image/png", 8, config),

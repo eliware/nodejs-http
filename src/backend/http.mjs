@@ -1,9 +1,5 @@
-function registerRawHandler(server, url, requestListener) {
-  server.all(url, async (request, reply) => {
-    reply.hijack();
-    await requestListener(request.raw, reply.raw);
-  });
-}
+import __moduleApi1 from "./raw-handler.mjs";
+const { registerRawHandler } = __moduleApi1();
 
 function registerWebRoutes(server, options) {
   registerRawHandler(server, "/", options.requestListener);

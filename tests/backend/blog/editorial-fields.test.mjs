@@ -16,6 +16,8 @@ test("accepts optional editorial fields", () => {
 test.each([
   [{ hero_image: 2 }, /hero_image/],
   [{ hero_image: "https://example.test/image.png" }, /hero_image/],
+  [{ hero_image: "//attacker.example/image.png" }, /hero_image/],
+  [{ hero_image: "/assets\\attacker.png" }, /hero_image/],
   [{ related_slugs: "post" }, /related_slugs/],
   [{ related_slugs: ["Bad Slug"] }, /related_slugs/],
   [{ series: 2 }, /series/],

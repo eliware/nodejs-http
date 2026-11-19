@@ -1,6 +1,5 @@
-import { readFile, readdir } from "node:fs/promises";
+import { readFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";
-import { createHash } from "node:crypto";
 import __moduleApi1 from "./schema.mjs";
 const { assertBlogDocument } = __moduleApi1();
 
@@ -13,7 +12,7 @@ function parseJson(text, label) {
   }
 }
 
-async function readBlogFiles(blogDir) {
+async function readBlogFiles(blogDir, cachedFiles = new Map()) {
   let names;
   try {
     names = await readdir(blogDir);
@@ -25,7 +24,15 @@ async function readBlogFiles(blogDir) {
     names
       .filter((item) => item.endsWith(".json"))
       .sort()
-      .map(async (name) => ({ name, content: await readFile(path.join(blogDir, name), "utf8") })),
+      .map(async (name) => {
+        const file = path.join(blogDir, name);
+        const details = await stat(file);
+        const signature = `${details.size}:${details.mtimeMs}:${details.ctimeMs}:${details.ino}`;
+        const cached = cachedFiles.get(name);
+        const content =
+          cached?.signature === signature ? cached.content : await readFile(file, "utf8");
+        return { name, content, signature };
+      }),
   );
 }
 
@@ -55,16 +62,23 @@ async function loadBlogs(blogDir) {
 function createBlogStore(blogDir) {
   let cached = [];
   let cachedSignature = "";
+  let cachedFiles = new Map();
   return {
     async all() {
-      const files = await readBlogFiles(blogDir);
+      const files = await readBlogFiles(blogDir, cachedFiles);
       const signature = files
-        .map(({ name, content }) => `${name}:${createHash("sha256").update(content).digest("hex")}`)
+        .map(({ name, signature: fileSignature }) => `${name}:${fileSignature}`)
         .join("|");
       if (signature !== cachedSignature) {
         cached = await readBlogs(blogDir, files);
         cachedSignature = signature;
       }
+      cachedFiles = new Map(
+        files.map(({ name, content, signature: fileSignature }) => [
+          name,
+          { content, signature: fileSignature },
+        ]),
+      );
       return cached;
     },
     async published() {

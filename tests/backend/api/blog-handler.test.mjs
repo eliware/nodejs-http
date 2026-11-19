@@ -78,3 +78,10 @@ test("rejects nested article paths", async () => {
   expect(result.statusCode).toBe(404);
   expect(JSON.parse(result.body)).toEqual({ error: "blog post not found" });
 });
+
+test("rejects article slugs containing encoded path separators", async () => {
+  const result = response();
+  await expect(handleBlogApi(result, "/api/v1/blogs/safe/post", config)).resolves.toBe(true);
+  expect(result.statusCode).toBe(404);
+  expect(JSON.parse(result.body)).toEqual({ error: "blog post not found" });
+});

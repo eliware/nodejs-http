@@ -1,18 +1,28 @@
 import path from "node:path";
 import { promises as fs } from "node:fs";
 
+function isOutsideRoot(relativePath) {
+  return (
+    !relativePath ||
+    relativePath === ".." ||
+    relativePath.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relativePath)
+  );
+}
+
 async function resolveSafeFile(root, filePath, allowSymlinks, filesystem) {
   const lexicalRoot = path.resolve(root);
   const candidate = path.resolve(filePath);
   const relative = path.relative(lexicalRoot, candidate);
-  if (!relative || relative === ".." || relative.startsWith(`..${path.sep}`)) return null;
+  if (isOutsideRoot(relative)) return null;
   if (!allowSymlinks) {
     const rootDetails = await filesystem.lstat(lexicalRoot);
     if (rootDetails.isSymbolicLink?.()) return null;
   }
   const resolvedRoot = await filesystem.realpath(root);
   const resolvedFilePath = await filesystem.realpath(candidate);
-  if (!resolvedFilePath.startsWith(path.resolve(resolvedRoot) + path.sep)) return null;
+  if (isOutsideRoot(path.relative(path.resolve(resolvedRoot), path.resolve(resolvedFilePath))))
+    return null;
   if (!allowSymlinks) {
     let current = path.resolve(resolvedRoot);
     for (const segment of relative.split(path.sep)) {

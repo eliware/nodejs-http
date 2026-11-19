@@ -18,5 +18,7 @@ describe("resolvePublicPath", () => {
   test("prevents path traversal outside the public directory", () => {
     const publicDir = "/var/tmp/dev-web/public";
     expect(resolvePublicPath(publicDir, "/../secret.txt")).toBeNull();
+    expect(resolvePublicPath(publicDir, "/..\\secret.txt")).toBeNull();
+    expect(resolvePublicPath(publicDir, null)).toBeNull();
   });
 });

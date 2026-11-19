@@ -90,6 +90,15 @@ describe("request listener", () => {
     expect(published).not.toHaveBeenCalled();
   });
 
+  test("rejects blog slugs that encode a path separator", async () => {
+    const bySlug = jest.fn(async () => null);
+    config.blogStore = { published: async () => [], bySlug };
+    const result = await request(listener, "GET", "/api/v1/blogs/safe%2Fpost");
+    expect(result.response.statusCode).toBe(404);
+    expect(JSON.parse(result.body)).toEqual({ error: "blog post not found" });
+    expect(bySlug).not.toHaveBeenCalled();
+  });
+
   test("redirects directory requests and lists directories without an index", async () => {
     const redirect = await request(listener, "GET", "/dir");
     expect(redirect.response.statusCode).toBe(301);

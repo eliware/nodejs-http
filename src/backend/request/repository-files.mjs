@@ -7,6 +7,7 @@ const { resolveDirectoryRequest } = __moduleApifix2();
 
 async function resolveRepositoryFile(request, response, requestPath, config) {
   const filePath = resolvePublicPath(config.publicDir, requestPath);
+  if (!filePath) return { handled: false, file: null };
   let file = await fileExists(filePath, config);
   if (!file && config.directoryIndex) {
     const directoryResult = await resolveDirectoryRequest(

@@ -6,13 +6,16 @@ function getRequestPath(requestUrl) {
 }
 
 function resolvePublicPath(publicDir, requestPath) {
+  if (typeof requestPath !== "string" || requestPath.includes("\\")) return null;
   const normalizedPath = requestPath === "/" ? "/index.html" : requestPath;
   const resolvedPath = path.resolve(publicDir, `.${normalizedPath}`);
-  const normalizedPublicDir = path.resolve(publicDir) + path.sep;
-
-  if (!resolvedPath.startsWith(normalizedPublicDir)) {
+  const relativePath = path.relative(path.resolve(publicDir), resolvedPath);
+  if (
+    relativePath === ".." ||
+    relativePath.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relativePath)
+  )
     return null;
-  }
 
   return resolvedPath;
 }

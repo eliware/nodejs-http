@@ -24,7 +24,7 @@ async function readGuide(publicDir, action, os, channel) {
   const signature = createHash("sha256").update(content).digest("hex");
   const cached = cache.get(filePath);
   if (cached?.signature === signature) return cached.value;
-  const value = validateGuideCoordinate(validateGuide(JSON.parse(content)), os, channel);
+  const value = validateGuideCoordinate(validateGuide(JSON.parse(content)), action, os, channel);
   cache.set(filePath, { signature, value });
   return value;
 }

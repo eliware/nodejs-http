@@ -1,10 +1,14 @@
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
+function isLocalAssetPath(value) {
+  if (typeof value !== "string" || !value.startsWith("/assets/") || value.includes("\\"))
+    return false;
+  const assetUrl = new URL(value, "https://assets.invalid");
+  return assetUrl.origin === "https://assets.invalid" && assetUrl.pathname.startsWith("/assets/");
+}
+
 function validateEditorialFields(value, label) {
-  if (
-    value.hero_image !== undefined &&
-    (typeof value.hero_image !== "string" || !value.hero_image.startsWith("/assets/"))
-  )
+  if (value.hero_image !== undefined && !isLocalAssetPath(value.hero_image))
     throw new Error(`${label} hero_image must be a local asset path`);
   if (
     value.related_slugs !== undefined &&
