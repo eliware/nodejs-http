@@ -27,5 +27,5 @@ function renderBlogCard(post) {
 }
 
 export default function __moduleApi0() {
-  return { formatBlogDate, renderBlogCard };
+  return { escapeHtml, formatBlogDate, renderBlogCard };
 }

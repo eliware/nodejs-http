@@ -1,6 +1,10 @@
 import { expect, test } from "@jest/globals";
 import __moduleApi0 from "../../../src/backend/api/handlers.mjs";
-const { handleBlogApi, handleDirectoryApi, handleGuideApi } = __moduleApi0();
+const { handleDirectoryApi } = __moduleApi0();
+import __moduleApifixGuide from "../../../src/backend/api/guide-handler.mjs";
+const { handleGuideApi } = __moduleApifixGuide();
+import __moduleApifixBlog from "../../../src/backend/api/blog-handler.mjs";
+const { handleBlogApi } = __moduleApifixBlog();
 import {
   createGuideFile,
   createRepositoryRoot,

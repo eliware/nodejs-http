@@ -1,18 +1,9 @@
 import __moduleApi1 from "./dom.mjs";
 const { getElement } = __moduleApi1();
 import __moduleApifix1 from "./blog/cards.mjs";
-const { formatBlogDate, renderBlogCard } = __moduleApifix1();
-import __moduleApifix2 from "../shared/blog/article-markup.mjs";
-const { withoutLeadingTitle } = __moduleApifix2();
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
+const { escapeHtml, renderBlogCard } = __moduleApifix1();
+import __moduleApifixArticle from "./blog/article.mjs";
+const { renderBlogArticle } = __moduleApifixArticle();
 
 async function getJson(path) {
   const response = await fetch(path, { cache: "no-store" });
@@ -32,19 +23,7 @@ async function initBlog() {
     const categoryPath = location.pathname.match(/^\/blog\/category\/([^/]+)\/?$/);
     const slug = categoryPath ? "" : location.pathname.replace(/^\/blog\/?/, "");
     if (slug) {
-      // A post page replaces the list. Remove the list before loading the post to prevent duplicate content.
-      list.replaceChildren();
-      list.hidden = true;
-      status.hidden = true;
-      if (hero) hero.hidden = true;
-      if (article.dataset.serverRendered === "true") {
-        article.classList.remove("d-none");
-        return;
-      }
-      const post = await getJson(`/api/v1/blogs/${encodeURIComponent(slug)}`);
-      document.title = `${post.title} · Eliware Node.js`;
-      article.innerHTML = `<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> → <a href="/blog">Blog</a> → ${escapeHtml(post.category)}</nav><p class="blog-date">${formatBlogDate(post.published_at)}</p><h1>${escapeHtml(post.title)}</h1><p class="lead">${escapeHtml(post.summary)}</p><p class="blog-byline">By ${escapeHtml(post.author)} · ${Math.max(1, Math.ceil(post.content.split(/\s+/).length / 220))} min read</p><div class="blog-content">${withoutLeadingTitle(post.html)}</div><p><a href="/blog">← All posts</a></p>`;
-      article.classList.remove("d-none");
+      await renderBlogArticle(slug, { status, list, article, hero });
       return;
     }
     const result = await getJson("/api/v1/blogs");

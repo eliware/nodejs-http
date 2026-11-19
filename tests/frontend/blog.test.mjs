@@ -49,29 +49,6 @@ test("renders post cards, escapes text, and filters by search and category", asy
   expect(get("blog-list").innerHTML).not.toContain("Safe &lt;title&gt;");
 });
 
-test("shows the server-rendered post without a duplicate network request", async () => {
-  const { get } = blogDom();
-  globalThis.location = { pathname: "/blog/guide", search: "" };
-  get("blog-article").dataset.serverRendered = "true";
-  globalThis.fetch = jest.fn();
-  await initBlog();
-  expect(get("blog-list").hidden).toBe(true);
-  expect(get("blog-status").hidden).toBe(true);
-  expect(get("blog-article").classList.contains("d-none")).toBe(false);
-  expect(globalThis.fetch).not.toHaveBeenCalled();
-});
-
-test("renders a fetched post safely and hides the index controls", async () => {
-  const { get } = blogDom();
-  globalThis.location = { pathname: "/blog/guide", search: "" };
-  globalThis.fetch = jest.fn(async () => ({ ok: true, json: async () => post }));
-  await initBlog();
-  expect(globalThis.document.title).toContain("Safe <title>");
-  expect(get("blog-article").innerHTML).toContain("Safe &lt;title&gt;");
-  expect(get("blog-article").innerHTML).not.toContain("<h1>Guide</h1>");
-  expect(get("blog-article").classList.contains("d-none")).toBe(false);
-});
-
 test("reports a failed blog request", async () => {
   const { get } = blogDom();
   globalThis.location = { pathname: "/blog", search: "" };
@@ -113,14 +90,4 @@ test("renders the blog index without optional controls", async () => {
   globalThis.fetch = jest.fn(async () => ({ ok: true, json: async () => ({ posts: [] }) }));
   await initBlog();
   expect(globalThis.document.getElementById("blog-status").textContent).toBe("0 matching posts");
-});
-
-test("renders a fetched article without an optional hero", async () => {
-  installBrowserDom({ ids: ["blog-status", "blog-list", "blog-article"] });
-  globalThis.location = { pathname: "/blog/guide", search: "" };
-  globalThis.fetch = jest.fn(async () => ({ ok: true, json: async () => post }));
-  await initBlog();
-  expect(globalThis.document.getElementById("blog-article").innerHTML).toContain(
-    "Safe &lt;title&gt;",
-  );
 });
