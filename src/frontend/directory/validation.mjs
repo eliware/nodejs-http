@@ -2,15 +2,8 @@ import __moduleApi1 from "../dom.mjs";
 const { getElement } = __moduleApi1();
 import __moduleApifix1 from "../validation/results.mjs";
 const { metadataStatus, resolveValidationResults, validationStatusIcon } = __moduleApifix1();
-
-const distributionLabels = {
-  "centos-stream-10": "CentOS Stream 10",
-  "rocky-10": "Rocky Linux 10",
-  "almalinux-10": "AlmaLinux 10",
-  "oracle-linux-10": "Oracle Linux 10",
-  "debian-bookworm": "Debian 12 (bookworm)",
-  "ubuntu-noble": "Ubuntu 24.04 (noble)",
-};
+import __moduleApifix2 from "../../shared/directory/distribution-labels.mjs";
+const { distributionLabels } = __moduleApifix2();
 
 function renderValidation(listing) {
   const section = getElement("directory-validation");

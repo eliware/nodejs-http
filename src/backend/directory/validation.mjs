@@ -2,7 +2,7 @@ import __moduleApi1 from "./presentation.mjs";
 const { escapeHtml } = __moduleApi1();
 import __moduleApifix1 from "./validation/status.mjs";
 const { validationIcon, metadataStatus } = __moduleApifix1();
-import __moduleApifix2 from "./distribution-labels.mjs";
+import __moduleApifix2 from "../../shared/directory/distribution-labels.mjs";
 const { distributionLabels } = __moduleApifix2();
 
 function renderValidation(validation, containerValidation) {

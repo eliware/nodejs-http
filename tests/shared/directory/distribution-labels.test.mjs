@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import __moduleApi0 from "../../../src/backend/directory/distribution-labels.mjs";
+import __moduleApi0 from "../../../src/shared/directory/distribution-labels.mjs";
 const { distributionLabels } = __moduleApi0();
 
 test("provides labels for supported distributions", () => {

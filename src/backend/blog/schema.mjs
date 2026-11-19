@@ -3,8 +3,9 @@ const { assertMetadataVersion } = __moduleApi1();
 import __moduleApifix1 from "./editorial-fields.mjs";
 const { validateEditorialFields } = __moduleApifix1();
 import __moduleApifix2 from "./schema/fields.mjs";
-const { BLOG_SCHEMA, BLOG_STATUSES, BLOG_REQUIRED_FIELDS, assertBlogCoreFields } =
-  __moduleApifix2();
+const { BLOG_SCHEMA, BLOG_STATUSES, BLOG_REQUIRED_FIELDS } = __moduleApifix2();
+import __moduleApifix3 from "./schema/core.mjs";
+const { assertBlogCoreFields } = __moduleApifix3();
 const TAG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function assertBlogDocument(value, label = "blog document") {
