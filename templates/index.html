@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Signed Node.js 26 RPMs for CentOS Stream 10 from Eliware." />
+    <meta name="theme-color" content="#101820" />
+    <link rel="canonical" href="https://nodejs.eliware.org/" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>Eliware Node.js 26</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font:
+          16px/1.6 system-ui,
+          sans-serif;
+        background: #101820;
+        color: #edf4f7;
+      }
+      body {
+        margin: 0;
+      }
+      main {
+        width: min(960px, calc(100% - 2rem));
+        margin: 0 auto;
+      }
+      header,
+      section,
+      footer {
+        padding: 2rem 0;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border-bottom: 1px solid #35444b;
+      }
+      header img {
+        width: 3rem;
+        height: 3rem;
+      }
+      h1 {
+        font-size: clamp(2rem, 6vw, 4rem);
+        line-height: 1.1;
+        margin: 0;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      p {
+        max-width: 70ch;
+      }
+      a {
+        color: #7ee0c3;
+      }
+      code,
+      pre {
+        background: #1c2a32;
+        border-radius: 0.5rem;
+      }
+      code {
+        padding: 0.15rem 0.35rem;
+      }
+      pre {
+        padding: 1rem;
+        overflow-x: auto;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+      }
+      .card {
+        border: 1px solid #35444b;
+        border-radius: 0.75rem;
+        padding: 1rem;
+      }
+      .muted {
+        color: #b3c2c8;
+      }
+      footer {
+        border-top: 1px solid #35444b;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <img src="/assets/eliware-brand.svg" alt="Eliware" />
+        <div>
+          <p class="muted">Eliware packages</p>
+          <h1>Node.js 26</h1>
+        </div>
+      </header>
+      <section aria-labelledby="intro">
+        <h2 id="intro">Install Node.js on CentOS Stream 10</h2>
+        <p>
+          Use the signed Eliware RPM repository to install Node.js 26 with DNF. Use the same package
+          to receive updates through DNF or YUM.
+        </p>
+        <pre><code>sudo dnf install nodejs26
+sudo dnf update nodejs26</code></pre>
+        <p id="release-status" class="muted">Loading release information.</p>
+      </section>
+      <section class="cards" aria-label="Release resources">
+        <article class="card">
+          <h2>RPM repository</h2>
+          <p>Configure the stable repository and verify signed package metadata.</p>
+          <p><a href="/nodejs26.repo">Download the repository file</a></p>
+          <p><a href="/el10/x86_64/stable/">Browse stable RPM files</a></p>
+        </article>
+        <article class="card">
+          <h2>Container image</h2>
+          <p id="image-status">
+            The Node.js base image is planned. Published image tags and digests will appear here.
+          </p>
+          <pre id="image-command-wrap" hidden><code id="image-command"></code></pre>
+          <p id="image-link-wrap" hidden>
+            <a id="image-link" href="https://github.com/orgs/eliware/packages"
+              >View the published image</a
+            >
+          </p>
+        </article>
+        <article class="card">
+          <h2>Release data</h2>
+          <p>Review the release catalog, checksums, validation, and provenance records.</p>
+          <p><a href="/metadata/catalog.json">Open the release catalog</a></p>
+          <p><a href="/metadata/repository-index.json">Open the file index</a></p>
+        </article>
+      </section>
+      <footer>
+        <p class="muted">
+          The Node.js release team maintains Node.js. Eliware packages the official precompiled
+          Linux x64 binaries.
+        </p>
+        <p>
+          <a href="https://nodejs.org/">Node.js project</a> ·
+          <a href="https://github.com/eliware/nodejs-packaging">Packaging source</a> ·
+          <a href="https://github.com/eliware/nodejs-http">HTTP service source</a>
+        </p>
+      </footer>
+    </main>
+    <script>
+      fetch("/metadata/catalog.json")
+        .then((response) => {
+          if (!response.ok) throw new Error("Release catalog unavailable");
+          return response.json();
+        })
+        .then((catalog) => {
+          const status = document.getElementById("release-status");
+          const latest = catalog.stable?.latest;
+          if (!latest) {
+            status.textContent = "The first signed Node.js 26 release is not published yet.";
+            return;
+          }
+          status.textContent = `Latest stable release: Node.js ${latest.node_version}.`;
+          const image = (catalog.images || []).find(
+            (record) =>
+              record.version === latest.node_version &&
+              record.image?.repository === "ghcr.io/eliware/centos10-node26",
+          );
+          if (image) {
+            const reference = image.image.digest
+              ? `${image.image.repository}@${image.image.digest}`
+              : `${image.image.repository}:${image.image.tag || image.version}`;
+            document.getElementById("image-status").textContent =
+              `Node.js ${latest.node_version} base image.`;
+            document.getElementById("image-command").textContent = `docker pull ${reference}`;
+            document.getElementById("image-command-wrap").hidden = false;
+            document.getElementById("image-link-wrap").hidden = false;
+            document.getElementById("image-link").href =
+              "https://github.com/orgs/eliware/packages/container/package/centos10-node26";
+          }
+        })
+        .catch(() => {
+          document.getElementById("release-status").textContent =
+            "Release information is temporarily unavailable.";
+        });
+    </script>
+  </body>
+</html>

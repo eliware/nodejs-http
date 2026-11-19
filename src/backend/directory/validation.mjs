@@ -1,0 +1,58 @@
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+const distributionLabels = {
+  "centos-stream-10": "CentOS Stream 10",
+  "rocky-10": "Rocky Linux 10",
+  "almalinux-10": "AlmaLinux 10",
+  "oracle-linux-10": "Oracle Linux 10",
+  "debian-bookworm": "Debian 12 (bookworm)",
+  "ubuntu-noble": "Ubuntu 24.04 (noble)",
+};
+
+function validationIcon(status) {
+  if (status === "passed") return '<span class="validation-pass">✓</span>';
+  if (status === "failed") return '<span class="validation-fail">✕</span>';
+  return '<span class="validation-skip">—</span>';
+}
+
+function metadataStatus(result) {
+  return typeof result === "string" ? result : result?.status;
+}
+
+function renderValidation(validation, containerValidation) {
+  const distributions = [
+    ...(validation?.distributions || []),
+    ...(containerValidation?.distributions || []),
+  ].filter(
+    (item, index, items) => items.findIndex((candidate) => candidate.id === item.id) === index,
+  );
+  if (!distributions.length) return "";
+  const hasContainer = Boolean(containerValidation?.distributions?.length);
+  const rows = distributions
+    .map((item) => {
+      const rpm = validation?.distributions?.find((candidate) => candidate.id === item.id);
+      const container = containerValidation?.distributions?.find(
+        (candidate) => candidate.id === item.id,
+      );
+      const packageResult = rpm?.package_core || rpm?.core;
+      const label = distributionLabels[item.id] || item.label || item.id;
+      const repositoryResult =
+        rpm?.repository_integrity || rpm?.integrity || container?.repository_integrity;
+      const provenanceResult =
+        rpm?.provenance || rpm?.provenance_verification || container?.provenance;
+      return `<tr><th scope="row">${escapeHtml(label)}</th><td>${validationIcon(packageResult?.status)}</td>${hasContainer ? `<td>${validationIcon((container?.container_core || container?.core)?.status)}</td>` : ""}<td>${validationIcon(metadataStatus(repositoryResult))}</td><td>${validationIcon(metadataStatus(provenanceResult))}</td></tr>`;
+    })
+    .join("");
+  return `<section class="validation-summary" aria-labelledby="validation-title"><div><p class="eyebrow">Build verification</p><h2 id="validation-title">Compatibility checks</h2><p>Package${hasContainer ? ", container" : ""}, repository integrity, and provenance validation for this package set.</p></div><table><thead><tr><th>Distribution</th><th>Package core</th>${hasContainer ? "<th>Container core</th>" : ""}<th>Repository integrity</th><th>Provenance</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+}
+
+export default function __moduleApi0() {
+  return { distributionLabels, validationIcon, metadataStatus, renderValidation };
+}

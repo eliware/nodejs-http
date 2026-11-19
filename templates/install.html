@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Install Node.js 26</title>
+  </head>
+  <body>
+    <main>
+      <p><a href="/">Eliware Node.js 26</a></p>
+      <h1>Install Node.js 26 on CentOS Stream 10</h1>
+      <p>Download the repository configuration, then install the signed RPM with DNF.</p>
+      <pre><code>sudo dnf config-manager --add-repo https://nodejs.eliware.org/nodejs26.repo
+sudo dnf install nodejs26
+sudo dnf update nodejs26</code></pre>
+      <p>
+        The RPM installs versioned commands named <code>node26</code>, <code>npm26</code>, and
+        <code>npx26</code>.
+      </p>
+      <p><a href="/nodejs26.repo">Download the repository configuration</a></p>
+      <p><a href="/metadata/catalog.json">Review release metadata</a></p>
+    </main>
+  </body>
+</html>

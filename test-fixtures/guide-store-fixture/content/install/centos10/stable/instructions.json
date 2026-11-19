@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 2,
+  "title": "Install",
+  "summary": "Summary",
+  "sections": [
+    {
+      "title": "Prepare",
+      "steps": [{ "title": "Step", "text": "Do it", "commands": ["step"], "verify": "it works" }]
+    }
+  ]
+}

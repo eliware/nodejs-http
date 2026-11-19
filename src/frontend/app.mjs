@@ -1,0 +1,31 @@
+import "./styles.css";
+import __moduleApi0 from "./copy-controls.mjs";
+const { initCopyControls } = __moduleApi0();
+import __moduleApifix1 from "./directory-browser.mjs";
+const { initDirectoryBrowser } = __moduleApifix1();
+import __moduleApifix2 from "./image-browser.mjs";
+const { initImageBrowser } = __moduleApifix2();
+import __moduleApifix3 from "./panels.mjs";
+const { initPanels } = __moduleApifix3();
+import __moduleApifix4 from "./release/wizard.mjs";
+const { initReleaseWizard } = __moduleApifix4();
+import __moduleApifix5 from "./release/experience.mjs";
+const { initReleaseExperience } = __moduleApifix5();
+import __moduleApifix6 from "./validation-matrix.mjs";
+const { initValidationMatrix } = __moduleApifix6();
+import __moduleApifix7 from "./blog.mjs";
+const { initBlog } = __moduleApifix7();
+import __moduleApifix8 from "./dom.mjs";
+const { whenVisible } = __moduleApifix8();
+
+initCopyControls();
+initPanels();
+initReleaseWizard();
+whenVisible("directory-entries", () => initDirectoryBrowser()).catch(() => {
+  const status = document.getElementById("directory-status");
+  if (status) status.textContent = "Directory metadata is temporarily unavailable.";
+});
+whenVisible("image-browser", initImageBrowser);
+whenVisible("validation-matrix", initValidationMatrix);
+whenVisible("release-workspace", initReleaseExperience);
+initBlog();

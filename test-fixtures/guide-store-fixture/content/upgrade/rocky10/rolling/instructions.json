@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 2,
+  "title": "Guide",
+  "summary": "Summary",
+  "platform": "debian",
+  "channel": "stable",
+  "source": {
+    "repository": "https://example.test/repository",
+    "upstream": "https://example.test/upstream"
+  },
+  "sections": [
+    {
+      "title": "Section",
+      "steps": [
+        {
+          "title": "Step",
+          "text": "Run the install command.",
+          "commands": ["apt install glusterfs"],
+          "verify": "The package is installed."
+        }
+      ]
+    }
+  ]
+}

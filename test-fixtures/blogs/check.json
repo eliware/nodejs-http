@@ -1,0 +1,18 @@
+{
+  "metadata_version": "0.1.0",
+  "schema": 2,
+  "slug": "check-blog",
+  "title": "Check blog",
+  "summary": "A validation fixture.",
+  "published_at": "2026-08-18T12:00:00Z",
+  "updated_at": "2026-08-18T12:00:00Z",
+  "created_at": "2026-08-18T11:00:00Z",
+  "author": "Eliware",
+  "tags": ["testing"],
+  "content_format": "markdown",
+  "category": "operations",
+  "last_verified_at": "2026-08-18T12:00:00Z",
+  "tested_on": ["CI"],
+  "status": "published",
+  "content": "# Check blog\n"
+}
