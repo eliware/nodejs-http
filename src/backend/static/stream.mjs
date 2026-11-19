@@ -17,6 +17,7 @@ function streamFile(
     ...fileHeaders(filePath, stats, config, request),
     ...(config.byteRanges ? { "Accept-Ranges": "bytes" } : {}),
   };
+  if (config.compression) headers.Vary = "Accept-Encoding";
   if (range) {
     headers["Content-Range"] = `bytes ${range.start}-${range.end}/${stats.size}`;
     headers["Content-Length"] = range.end - range.start + 1;

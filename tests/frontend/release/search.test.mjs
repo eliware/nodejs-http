@@ -45,7 +45,9 @@ test("renders search results, empty state, and the overflow note", () => {
     packageRecord(`pkg-${index}.rpm`, "rpm", `/el10/10.1/pkg-${index}.rpm`),
   );
   renderSearch();
-  expect(get("package-search-results").children[0].children[0].innerHTML).toContain("2.0 KiB");
+  expect(get("package-search-results").children[0].children[0].children[1].textContent).toContain(
+    "2.0 KiB",
+  );
   expect(get("package-search-results").children).toHaveLength(13);
   expect(get("package-search-results").children.at(-1).textContent).toContain("first 12");
   get("package-search-results").children[0].children[0].dispatch("click");
@@ -61,4 +63,17 @@ test("renders search results, empty state, and the overflow note", () => {
   renderSearch();
   installBrowserDom({ ids: ["package-search-results"] });
   renderSearch();
+});
+
+test("renders repository filenames as text", () => {
+  const { get } = installBrowserDom({ ids: ["package-search-results", "package-search-status"] });
+  const name = '<img src=x onerror="run()">.rpm';
+  state.query = "";
+  state.format = "all";
+  state.channel = "all";
+  state.packages = [packageRecord(name, "rpm", "/el10/package.rpm")];
+  renderSearch();
+  const strong = get("package-search-results").children[0].children[0].children[0];
+  expect(strong.textContent).toBe(name);
+  expect(strong.innerHTML).toBe("");
 });

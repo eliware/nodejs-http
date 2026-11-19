@@ -32,9 +32,15 @@ test("shows stable release lifecycle events", () => {
   const { get } = installBrowserDom({ ids: ["release-timeline"] });
   renderTimeline();
   expect(get("release-timeline").children).toHaveLength(3);
-  expect(get("release-timeline").children[0].innerHTML).toContain("Validated");
-  expect(get("release-timeline").children[0].innerHTML).toContain("Node.js 26.13.1");
-  expect(get("release-timeline").children[2].innerHTML).toContain("Node.js stable");
+  expect(get("release-timeline").children[0].children[1].children[0].textContent).toBe(
+    "Node.js 26.13.1",
+  );
+  expect(get("release-timeline").children[0].children[1].children[1].textContent).toContain(
+    "Validated",
+  );
+  expect(get("release-timeline").children[2].children[1].children[0].textContent).toBe(
+    "Node.js stable",
+  );
 });
 
 test("uses stable generated metadata when built metadata is absent", () => {
@@ -42,12 +48,27 @@ test("uses stable generated metadata when built metadata is absent", () => {
   state.manifest = null;
   const { get } = installBrowserDom({ ids: ["release-timeline"] });
   renderTimeline();
-  expect(get("release-timeline").children[0].innerHTML).toContain("Node.js 10.2");
+  expect(get("release-timeline").children[0].children[1].children[0].textContent).toBe(
+    "Node.js 10.2",
+  );
 });
 
 test("uses latest metadata when the stable history array is absent", () => {
   state.catalog = { stable: { latest: { node_version: "26.13.2" } } };
   const { get } = installBrowserDom({ ids: ["release-timeline"] });
   renderTimeline();
-  expect(get("release-timeline").children[0].innerHTML).toContain("Node.js 26.13.2");
+  expect(get("release-timeline").children[0].children[1].children[0].textContent).toBe(
+    "Node.js 26.13.2",
+  );
+});
+
+test("renders catalog values as text", () => {
+  state.catalog = {
+    stable: { latest: { node_version: '<img src=x onerror="run()">' } },
+  };
+  const { get } = installBrowserDom({ ids: ["release-timeline"] });
+  renderTimeline();
+  const label = get("release-timeline").children[0].children[1].children[0];
+  expect(label.textContent).toBe('Node.js <img src=x onerror="run()">');
+  expect(label.innerHTML).toBe("");
 });

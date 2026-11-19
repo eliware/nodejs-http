@@ -36,6 +36,7 @@ test("streams full, ranged, Brotli, and gzip file responses", async () => {
     headers: {},
   });
   expect(full.status).toBe(200);
+  expect(full.headers.Vary).toBeUndefined();
   expect(await fullBody).toBe("hello world");
 
   const ranged = response();
@@ -59,8 +60,23 @@ test("streams full, ranged, Brotli, and gzip file responses", async () => {
       { headers: { "accept-encoding": encoding } },
     );
     expect(compressed.headers["Content-Encoding"]).toBe(encoding);
+    expect(compressed.headers.Vary).toBe("Accept-Encoding");
     expect((await compressedBody).length).toBeGreaterThan(0);
   }
+
+  const uncompressed = response();
+  const uncompressedBody = readText(uncompressed);
+  streamFile(
+    uncompressed,
+    filePath,
+    stats,
+    null,
+    { byteRanges: false, compression: true, compressionMinBytes: 0 },
+    headers,
+    { headers: {} },
+  );
+  expect(uncompressed.headers.Vary).toBe("Accept-Encoding");
+  await uncompressedBody;
 });
 
 test("destroys responses when file streams fail", () => {

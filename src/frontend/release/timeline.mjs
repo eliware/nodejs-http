@@ -25,7 +25,16 @@ function renderTimeline() {
   }
   events.forEach((event) => {
     const item = document.createElement("li");
-    item.innerHTML = `<span class="timeline-dot" aria-hidden="true"></span><div><strong>${event.label}</strong><span>${event.status} · ${formatDateTime(event.detail)}</span></div>`;
+    const dot = document.createElement("span");
+    dot.className = "timeline-dot";
+    dot.setAttribute("aria-hidden", "true");
+    const content = document.createElement("div");
+    const label = document.createElement("strong");
+    label.textContent = event.label;
+    const detail = document.createElement("span");
+    detail.textContent = `${event.status} · ${formatDateTime(event.detail)}`;
+    content.append(label, detail);
+    item.append(dot, content);
     timeline.appendChild(item);
   });
 }

@@ -16,17 +16,30 @@ function renderValidation(listing) {
     (item, index, items) => items.findIndex((candidate) => candidate.id === item.id) === index,
   );
   if (!distributions.length) return;
-  body.innerHTML = distributions
-    .map((item) => {
-      const rpmResult = rpm?.distributions?.find((candidate) => candidate.id === item.id);
-      const containerResult = container?.distributions?.find(
-        (candidate) => candidate.id === item.id,
-      );
-      const label = distributionLabels[item.id] || item.label || item.id;
-      const results = resolveValidationResults({ rpm: rpmResult, container: containerResult });
-      return `<tr><th scope="row">${label}</th><td>${validationStatusIcon(results.packageResult?.status, true)}</td>${hasContainer ? `<td>${validationStatusIcon(results.containerResult?.status, true)}</td>` : ""}<td>${validationStatusIcon(metadataStatus(results.repositoryResult), true)}</td><td>${validationStatusIcon(metadataStatus(results.provenanceResult), true)}</td></tr>`;
-    })
-    .join("");
+  body.replaceChildren();
+  distributions.forEach((item) => {
+    const rpmResult = rpm?.distributions?.find((candidate) => candidate.id === item.id);
+    const containerResult = container?.distributions?.find((candidate) => candidate.id === item.id);
+    const label = distributionLabels[item.id] || item.label || item.id;
+    const results = resolveValidationResults({ rpm: rpmResult, container: containerResult });
+    const row = document.createElement("tr");
+    const heading = document.createElement("th");
+    heading.setAttribute("scope", "row");
+    heading.textContent = label;
+    row.appendChild(heading);
+    const statuses = [results.packageResult?.status];
+    if (hasContainer) statuses.push(results.containerResult?.status);
+    statuses.push(
+      metadataStatus(results.repositoryResult),
+      metadataStatus(results.provenanceResult),
+    );
+    statuses.forEach((status) => {
+      const cell = document.createElement("td");
+      cell.innerHTML = validationStatusIcon(status, true);
+      row.appendChild(cell);
+    });
+    body.appendChild(row);
+  });
   section.hidden = false;
   const headers = section.querySelectorAll("thead th");
   if (headers[2]) headers[2].hidden = !hasContainer;

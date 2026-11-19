@@ -40,7 +40,11 @@ function renderSearch() {
     link.type = "button";
     link.className = "package-result-button";
     const release = releaseFor(entry);
-    link.innerHTML = `<strong>${entry.name}</strong><span>${entry.package.format.toUpperCase()} · ${release.channel} · ${formatBytes(entry.size || 0)}</span>`;
+    const name = document.createElement("strong");
+    name.textContent = entry.name;
+    const metadata = document.createElement("span");
+    metadata.textContent = `${entry.package.format.toUpperCase()} · ${release.channel} · ${formatBytes(entry.size || 0)}`;
+    link.append(name, metadata);
     link.addEventListener("click", () => renderDetail(entry));
     item.appendChild(link);
     list.appendChild(item);

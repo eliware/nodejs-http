@@ -43,7 +43,7 @@ function chooseEncoding(request, contentType, length, config) {
 
 async function compressBody(body, request, contentType, config) {
   const encoding = chooseEncoding(request, contentType, body.length, config);
-  if (!encoding) return { body, headers: {} };
+  if (!encoding) return { body, headers: config.compression ? { Vary: "Accept-Encoding" } : {} };
   return {
     body: encoding === "br" ? await brotliCompressAsync(body) : await gzipAsync(body),
     headers: { "Content-Encoding": encoding, Vary: "Accept-Encoding" },

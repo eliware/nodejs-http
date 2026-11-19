@@ -39,9 +39,9 @@ test("renders package, container, repository, and provenance states", () => {
       distributions: [{ id: "ubuntu-noble", container_core: { status: "failed" } }],
     },
   });
-  expect(body.innerHTML).toContain("Ubuntu 24.04 (noble)");
-  expect(body.innerHTML).toContain("validation-icon pass");
-  expect(body.innerHTML).toContain("validation-icon fail");
+  expect(body.children[0].children[0].textContent).toBe("Ubuntu 24.04 (noble)");
+  expect(body.children[0].children[1].innerHTML).toContain("validation-icon pass");
+  expect(body.children[0].children[2].innerHTML).toContain("validation-icon fail");
   expect(section.hidden).toBe(false);
   expect(headers[2].hidden).toBe(false);
   expect(cells[2].hidden).toBe(false);
@@ -57,7 +57,7 @@ test("hides container columns when only package validation exists", () => {
   section.querySelectorAll = () => headers;
   body.querySelectorAll = () => [row];
   renderValidation({ validation: { distributions: [{ id: "unknown-distro", label: "Other" }] } });
-  expect(body.innerHTML).toContain("Other");
+  expect(body.children[0].children[0].textContent).toBe("Other");
   expect(headers[2].hidden).toBe(true);
   expect(row.children[2].hidden).toBe(true);
 });
@@ -86,6 +86,27 @@ test("uses fallback fields when validation table cells are absent", () => {
       ],
     },
   });
-  expect(body.innerHTML).toContain("Custom distribution");
-  expect(body.innerHTML).toContain("fallback");
+  expect(body.children[0].children[0].textContent).toBe("Custom distribution");
+  expect(body.children[1].children[0].textContent).toBe("fallback");
+});
+
+test("renders metadata labels as text and ignores status markup", () => {
+  const { get } = installBrowserDom({ ids: ["directory-validation", "directory-validation-rows"] });
+  const section = get("directory-validation");
+  const body = get("directory-validation-rows");
+  section.querySelectorAll = () => [];
+  body.querySelectorAll = () => [];
+  renderValidation({
+    validation: {
+      distributions: [
+        {
+          id: "custom",
+          label: '<img src=x onerror="run()">',
+          core: { status: '<img src=x onerror="run()">' },
+        },
+      ],
+    },
+  });
+  expect(body.children[0].children[0].textContent).toBe('<img src=x onerror="run()">');
+  expect(body.children[0].children[1].innerHTML).toContain('class="validation-icon skip"');
 });

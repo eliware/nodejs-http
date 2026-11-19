@@ -88,5 +88,12 @@ test("compresses bodies with Brotli or gzip and returns plain bodies unchanged",
   expect(brotli.headers).toEqual({ "Content-Encoding": "br", Vary: "Accept-Encoding" });
   expect(brotliDecompressSync(brotli.body).toString()).toBe(body.toString());
   expect(gunzipSync(gzip.body).toString()).toBe(body.toString());
-  expect(await compressBody(body, {}, "text/plain", config)).toEqual({ body, headers: {} });
+  expect(await compressBody(body, {}, "text/plain", config)).toEqual({
+    body,
+    headers: { Vary: "Accept-Encoding" },
+  });
+  expect(await compressBody(body, {}, "text/plain", { ...config, compression: false })).toEqual({
+    body,
+    headers: {},
+  });
 });

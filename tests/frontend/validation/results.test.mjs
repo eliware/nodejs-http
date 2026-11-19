@@ -19,5 +19,11 @@ test("normalizes distribution aliases and validation results", () => {
   expect(results.repositoryResult).toBe("failed");
   expect(results.provenanceResult).toBe("passed");
   expect(validationStatusIcon("passed")).toContain("validation-icon pass");
-  expect(validationStatusIcon("failed", true)).toContain("validation-icon failed");
+  expect(validationStatusIcon("failed")).toContain("validation-icon fail");
+  expect(validationStatusIcon("unknown")).toContain("validation-icon skip");
+  expect(validationStatusIcon("passed", true)).toContain("validation-icon pass");
+  expect(validationStatusIcon("failed", true)).toContain("validation-icon fail");
+  expect(validationStatusIcon('<img src=x onerror="run()">', true)).toContain(
+    "validation-icon skip",
+  );
 });

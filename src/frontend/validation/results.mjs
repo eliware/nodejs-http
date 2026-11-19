@@ -8,8 +8,11 @@ function metadataStatus(result) {
 
 function validationStatusIcon(status, directory = false) {
   if (directory) {
-    const icon = status === "passed" ? "✓" : status === "failed" ? "✕" : "—";
-    return `<span class="validation-icon ${status || "skip"}">${icon}</span>`;
+    const passed = status === "passed";
+    const failed = status === "failed";
+    const className = passed ? "pass" : failed ? "fail" : "skip";
+    const icon = passed ? "✓" : failed ? "✕" : "—";
+    return `<span class="validation-icon ${className}">${icon}</span>`;
   }
   if (status === "passed") return '<span class="validation-icon pass">✓</span>';
   if (status === "failed") return '<span class="validation-icon fail">✕</span>';
