@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import __moduleApi0 from "../../../src/backend/directory/listing.mjs";
+import __moduleApi0 from "../../../src/backend/directory/page.mjs";
 const { renderDirectoryHtml } = __moduleApi0();
 
 test("fills the configured listing template", () => {
@@ -13,7 +13,6 @@ test("fills the configured listing template", () => {
     validation: null,
     containerValidation: null,
   });
-
   expect(html).toContain("Index of /metadata/runs/run 1/");
   expect(html).toContain("/metadata/runs/run%201/release-card.png");
   expect(html).toContain("<tr>row</tr>");

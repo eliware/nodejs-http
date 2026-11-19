@@ -1,22 +1,12 @@
 import path from "node:path";
+import __moduleApi1 from "./config/boolean.mjs";
+const { parseBoolean } = __moduleApi1();
+import __moduleApifix1 from "./config/positive-int.mjs";
+const { parsePositiveInt } = __moduleApifix1();
 
 const DEFAULT_PORT = 7100;
 const DEFAULT_HOST = "0.0.0.0";
 const DEFAULT_PUBLIC_DIR = path.resolve(process.cwd(), "public");
-
-const TRUE = new Set(["1", "true", "yes", "on"]);
-const FALSE = new Set(["0", "false", "no", "off"]);
-
-function parseBoolean(value, fallback) {
-  if (TRUE.has(String(value).toLowerCase())) return true;
-  if (FALSE.has(String(value).toLowerCase())) return false;
-  return fallback;
-}
-
-function parsePositiveInt(value, fallback) {
-  const parsed = Number.parseInt(value ?? "", 10);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
-}
 
 function envValue(env, key, fallback = "") {
   const value = env[key];
@@ -86,8 +76,6 @@ export default function __moduleApi0() {
     DEFAULT_PORT,
     DEFAULT_HOST,
     DEFAULT_PUBLIC_DIR,
-    parseBoolean,
-    parsePositiveInt,
     loadConfig,
   };
 }

@@ -3,16 +3,14 @@ import __moduleApi1 from "../runtime-identity.mjs";
 const { servingHostId } = __moduleApi1();
 import __moduleApifix1 from "./presentation.mjs";
 const { copyrightYear, escapeHtml, formatBytes } = __moduleApifix1();
-import __moduleApifix4 from "./rows.mjs";
-const { renderDirectoryRows } = __moduleApifix4();
-import __moduleApifix3 from "./links.mjs";
-const { ogImageForPath, renderBreadcrumbs } = __moduleApifix3();
-import __moduleApifix2 from "./validation.mjs";
-const { renderValidation } = __moduleApifix2();
-import __moduleApifixFallback from "./fallback.mjs";
-const { renderFallbackHtml } = __moduleApifixFallback();
-import __moduleApifixTemplate from "./template.mjs";
-const { renderDirectoryTemplate } = __moduleApifixTemplate();
+import __moduleApifix2 from "./links.mjs";
+const { ogImageForPath, renderBreadcrumbs } = __moduleApifix2();
+import __moduleApifix3 from "./validation.mjs";
+const { renderValidation } = __moduleApifix3();
+import __moduleApifix4 from "./fallback.mjs";
+const { renderFallbackHtml } = __moduleApifix4();
+import __moduleApifix5 from "./template.mjs";
+const { renderDirectoryTemplate } = __moduleApifix5();
 
 function renderDirectoryHtml({
   template,
@@ -43,5 +41,5 @@ function renderDirectoryHtml({
 }
 
 export default function __moduleApi0() {
-  return { renderDirectoryRows, renderDirectoryHtml };
+  return { renderDirectoryHtml };
 }

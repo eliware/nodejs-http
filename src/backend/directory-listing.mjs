@@ -3,8 +3,10 @@ import __moduleApi1 from "./response.mjs";
 const { baseHeaders } = __moduleApi1();
 import __moduleApifix1 from "./response/compression.mjs";
 const { compressBody } = __moduleApifix1();
-import __moduleApifix2 from "./directory/listing.mjs";
-const { renderDirectoryHtml, renderDirectoryRows } = __moduleApifix2();
+import __moduleApifix2 from "./directory/rows.mjs";
+const { renderDirectoryRows } = __moduleApifix2();
+import __moduleApifixPage from "./directory/page.mjs";
+const { renderDirectoryHtml } = __moduleApifixPage();
 import listingDataApi from "./directory/listing-data.mjs";
 const { readDirectoryListingData } = listingDataApi();
 

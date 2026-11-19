@@ -1,30 +1,8 @@
 import { describe, expect, test } from "@jest/globals";
 import __moduleApi0 from "../../src/backend/config.mjs";
-const {
-  DEFAULT_HOST,
-  DEFAULT_PORT,
-  DEFAULT_PUBLIC_DIR,
-  loadConfig,
-  parseBoolean,
-  parsePositiveInt,
-} = __moduleApi0();
+const { DEFAULT_HOST, DEFAULT_PORT, DEFAULT_PUBLIC_DIR, loadConfig } = __moduleApi0();
 
 describe("config parsing", () => {
-  test("parses booleans case-insensitively and preserves fallback", () => {
-    expect(parseBoolean(" YES ", false)).toBe(false);
-    expect(parseBoolean("TRUE", false)).toBe(true);
-    expect(parseBoolean("off", true)).toBe(false);
-    expect(parseBoolean("unknown", true)).toBe(true);
-  });
-
-  test("accepts positive integers and falls back for invalid values", () => {
-    expect(parsePositiveInt("123", 9)).toBe(123);
-    expect(parsePositiveInt("0", 9)).toBe(9);
-    expect(parsePositiveInt("-1", 9)).toBe(9);
-    expect(parsePositiveInt("nope", 9)).toBe(9);
-    expect(parsePositiveInt(undefined, 9)).toBe(9);
-  });
-
   test("loads every documented environment option", () => {
     expect(
       loadConfig({
@@ -144,11 +122,5 @@ describe("config parsing", () => {
       logLevel: "info",
       ramCachePaths: ["/one", "/two"],
     });
-  });
-
-  test("accepts all supported true spellings", () => {
-    for (const value of ["1", "true", "yes", "on"]) {
-      expect(parseBoolean(value, false)).toBe(true);
-    }
   });
 });
