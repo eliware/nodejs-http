@@ -7,6 +7,7 @@
 - Add stable RPM browsing, package lookup, and tools to compare stable releases.
 - Add image inspection and deployment examples for the published CentOS Stream 10 Node.js image.
 - Add an end-user site guide for packages, updates, images, and release verification.
+- Add blog document checks and browser tools for Lighthouse reports and site screenshots.
 
 ### Changed
 
