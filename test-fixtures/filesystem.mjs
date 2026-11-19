@@ -1,4 +1,4 @@
-import { mkdtemp, mkdir, symlink, writeFile, stat, utimes } from "node:fs/promises";
+import { mkdtemp, mkdir, rm, symlink, writeFile, stat, utimes } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import __moduleApi0 from "../src/backend/metadata/version.mjs";
@@ -66,6 +66,14 @@ export async function createGuideFile(root, filePath, content) {
   return root;
 }
 
+export async function replaceWithOutsideSymlink(filePath) {
+  const outside = await mkdtemp(path.join(os.tmpdir(), "guide-outside-"));
+  const target = path.join(outside, "instructions.json");
+  await writeFile(target, "{}");
+  await rm(filePath);
+  await symlink(target, filePath, "file");
+}
+
 export async function replaceFileWithoutChangingTimestamp(filePath, content) {
   const previous = await stat(filePath);
   await writeFile(filePath, content);
@@ -108,6 +116,10 @@ export async function setCatalogVersion(publicDir, version) {
     path.join(publicDir, "metadata", "catalog.json"),
     JSON.stringify({ metadata_version: version }),
   );
+}
+
+export async function writeHealthMetadata(publicDir, relativePath, value) {
+  await writeFile(path.join(publicDir, relativePath), JSON.stringify(value));
 }
 
 export async function createRequestDirectory() {

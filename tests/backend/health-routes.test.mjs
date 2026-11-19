@@ -9,6 +9,7 @@ import {
   createHealthMetadata,
   setCatalogVersion,
   setGenerationRecord,
+  writeHealthMetadata,
 } from "../../test-fixtures/filesystem.mjs";
 
 class MockResponse extends Writable {
@@ -129,6 +130,36 @@ describe("health and catalog routes", () => {
     );
     expect(response.statusCode).toBe(503);
     expect(JSON.parse(response.body).status).toBe("not-ready");
+  });
+
+  test.each([
+    ["catalog", "metadata/catalog.json", { metadata_version: SUPPORTED_METADATA_VERSION }],
+    [
+      "repository index",
+      "metadata/repository-index.json",
+      { metadata_version: SUPPORTED_METADATA_VERSION },
+    ],
+  ])("reports not-ready when the %s structure is invalid", async (_name, file, value) => {
+    const { publicDir } = await metadataFixture();
+    await writeHealthMetadata(publicDir, file, value);
+    const response = await responseFor((result) =>
+      handleHealthRoute({ method: "GET" }, result, "/ready", configFor(publicDir)),
+    );
+    expect(response.statusCode).toBe(503);
+    expect(JSON.parse(response.body).status).toBe("not-ready");
+  });
+
+  test("reports not-ready when the active generation identifier is unsafe", async () => {
+    const { publicDir } = await metadataFixture();
+    await writeHealthMetadata(publicDir, "metadata/active-generation.json", {
+      metadata_version: SUPPORTED_METADATA_VERSION,
+      generation: "../outside",
+    });
+    const response = await responseFor((result) =>
+      handleHealthRoute({ method: "GET" }, result, "/ready", configFor(publicDir)),
+    );
+    expect(response.statusCode).toBe(503);
+    expect(JSON.parse(response.body)).toEqual({ status: "not-ready", generation: null });
   });
 
   test.each([

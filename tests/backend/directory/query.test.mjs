@@ -36,6 +36,25 @@ test("filters names, sorts entries, and paginates results", () => {
   ]);
 });
 
+test("keeps entries without sizes after sized entries in both sort directions", () => {
+  expect(queryDirectoryEntries(entries, { sort: "size", order: "asc" }).entries).toEqual([
+    entries[1],
+    entries[0],
+    entries[2],
+    entries[3],
+  ]);
+  expect(queryDirectoryEntries(entries, { sort: "size", order: "desc" }).entries).toEqual([
+    entries[0],
+    entries[1],
+    entries[2],
+    entries[3],
+  ]);
+  expect(queryDirectoryEntries([entries[3], entries[1]], { sort: "size" }).entries).toEqual([
+    entries[1],
+    entries[3],
+  ]);
+});
+
 test("uses bounded defaults for invalid pagination values", () => {
   const page = queryDirectoryEntries(entries, {
     query: "  ",

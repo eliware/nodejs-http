@@ -27,21 +27,21 @@ async function handleHealthRoute(request, response, requestPath, config) {
 async function checkReadiness(response, config) {
   let catalog = false;
   try {
-    assertMetadataVersion(
+    const value = assertMetadataVersion(
       JSON.parse(await fs.readFile(path.join(config.publicDir, "metadata/catalog.json"), "utf8")),
       "catalog.json",
     );
-    catalog = true;
+    catalog = Array.isArray(value.releases);
   } catch {}
   let index = false;
   try {
-    assertMetadataVersion(
+    const value = assertMetadataVersion(
       JSON.parse(
         await fs.readFile(path.join(config.publicDir, "metadata/repository-index.json"), "utf8"),
       ),
       "repository-index.json",
     );
-    index = true;
+    index = Array.isArray(value.entries);
   } catch {}
   let active = null;
   try {
@@ -51,6 +51,11 @@ async function checkReadiness(response, config) {
       ),
       "active-generation.json",
     );
+    if (
+      typeof active.generation !== "string" ||
+      !/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(active.generation)
+    )
+      throw new Error("invalid generation identifier");
     const generation = assertMetadataVersion(
       JSON.parse(
         await fs.readFile(

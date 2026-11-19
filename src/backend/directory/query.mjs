@@ -1,7 +1,11 @@
 function sortEntries(entries, sort, order) {
   const direction = order === "desc" ? -1 : 1;
   return [...entries].sort((left, right) => {
-    if (sort === "size") return direction * ((left.size ?? -1) - (right.size ?? -1));
+    if (sort === "size") {
+      if (left.size === undefined) return right.size === undefined ? 0 : 1;
+      if (right.size === undefined) return -1;
+      return direction * (left.size - right.size);
+    }
     if (sort === "modified")
       return direction * String(left.modified || "").localeCompare(String(right.modified || ""));
     const directoryOrder = Number(right.type === "directory") - Number(left.type === "directory");

@@ -1,6 +1,8 @@
+import { platform } from "node:os";
 import {
   createGuideFile,
   createRepositoryRoot,
+  replaceWithOutsideSymlink,
   replaceFileWithoutChangingTimestamp,
 } from "../../test-fixtures/filesystem.mjs";
 import __moduleApi0 from "../../src/backend/guide-store.mjs";
@@ -31,6 +33,18 @@ test("guides resolve from the hierarchical repository content path", async () =>
   expect(guideFilePath(root, "invalid", "centos10", "stable")).toBeNull();
   expect(guideFilePath(root, "install", "centos10", "invalid")).toBeNull();
   await expect(readGuide(root, "invalid", "centos10", "stable")).resolves.toBeNull();
+});
+
+const testSymlink = platform() === "win32" ? test.skip : test;
+
+testSymlink("rejects a guide symlink that points outside the repository", async () => {
+  const root = await createRepositoryRoot();
+  const file = guideFilePath(root, "install", "centos10", "stable");
+  await createGuideFile(root, file, "{}");
+  await replaceWithOutsideSymlink(file);
+  await expect(readGuide(root, "install", "centos10", "stable")).rejects.toThrow(
+    "guide path is outside the repository",
+  );
 });
 
 test.each([
