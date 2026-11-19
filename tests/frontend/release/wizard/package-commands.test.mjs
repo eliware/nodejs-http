@@ -74,7 +74,7 @@ test("builds Node.js 26 DNF commands", () => {
   commands.updateCommand();
   expect(state.get("package-install-title").textContent).toBe("Install with DNF");
   expect(state.get("package-manager-tools").hidden).toBe(false);
-  expect(state.get("rpm-command").textContent).toContain("nodejs26");
+  expect(state.get("rpm-command").textContent).toContain("eliware-nodejs26");
   expect(state.get("rpm-command").textContent).toContain("nodejs26.repo");
 });
 
@@ -91,7 +91,7 @@ test("builds preview rpm commands and fallback image tags", () => {
 test("uses the latest stable image and applies manager button state", () => {
   const state = setup("centos-stream", "stable", "stable");
   commands.setPackageManager("dnf");
-  expect(state.get("rpm-command").textContent).toContain("nodejs26");
+  expect(state.get("rpm-command").textContent).toContain("eliware-nodejs26");
   expect(
     state.document.querySelectorAll("[data-package-manager]")[0].classList.contains("active"),
   ).toBe(true);
@@ -114,7 +114,7 @@ test("uses default commands when optional controls and image metadata are absent
   state.get("target-version").value = "stable";
   wizardState.catalog = { images: [{}] };
   commands.updateCommand();
-  expect(state.get("rpm-command").textContent).toContain("nodejs26");
+  expect(state.get("rpm-command").textContent).toContain("eliware-nodejs26");
 });
 
 test("updates only the available package output controls", () => {

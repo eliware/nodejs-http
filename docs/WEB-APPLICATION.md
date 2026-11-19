@@ -19,7 +19,7 @@ The server accepts GET and `HEAD` requests by default. It returns 405 for other 
 | `/feed.xml`                 | RSS 2.0 XML for published posts.                                     |
 | `/sitemap.xml`              | Sitemap for site pages, repository directories, and published posts. |
 
-The install page describes the currently published Node.js 26 RPM for CentOS Stream 10 EPEL on x86_64. The package names are `nodejs26`, `node26`, `npm26`, and `npx26` as shown by the published installation instructions.
+The install page describes the Node.js 26 RPM for CentOS Stream 10 EPEL on x86_64. The RPM name is `eliware-nodejs26`. The command names are `node26`, `npm26`, and `npx26`.
 
 ## Repository files
 

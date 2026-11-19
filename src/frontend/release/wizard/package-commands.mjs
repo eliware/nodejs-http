@@ -40,13 +40,13 @@ function updateCommand() {
   const lines = [prerequisite];
   if (preview && selected?.rpm_repo) {
     lines.push(
-      `sudo ${wizardState.packageManager} --repofrompath=nodejs26-preview,${selected.rpm_repo} --setopt=nodejs26-preview.gpgcheck=1 --setopt=nodejs26-preview.repo_gpgcheck=1 --setopt=nodejs26-preview.gpgkey=${origin}/keys/RPM-GPG-KEY-ELIWARE-NODEJS --enablerepo=nodejs26-preview install -y nodejs26`,
+      `sudo ${wizardState.packageManager} --repofrompath=nodejs26-preview,${selected.rpm_repo} --setopt=nodejs26-preview.gpgcheck=1 --setopt=nodejs26-preview.repo_gpgcheck=1 --setopt=nodejs26-preview.gpgkey=${origin}/keys/RPM-GPG-KEY-ELIWARE-NODEJS --enablerepo=nodejs26-preview install -y eliware-nodejs26`,
     );
   } else {
     lines.push(
       `sudo ${wizardState.packageManager} config-manager --add-repo ${origin}${distroTargets["centos-stream"].repoFile}`,
-      `sudo ${wizardState.packageManager} install -y nodejs26`,
-      `sudo ${wizardState.packageManager} update -y nodejs26`,
+      `sudo ${wizardState.packageManager} install -y eliware-nodejs26`,
+      `sudo ${wizardState.packageManager} -y update`,
     );
   }
   const command = getElement("rpm-command");

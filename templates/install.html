@@ -11,11 +11,16 @@
       <h1>Install Node.js 26 on CentOS Stream 10</h1>
       <p>Download the repository configuration, then install the signed RPM with DNF.</p>
       <pre><code>sudo dnf config-manager --add-repo https://nodejs.eliware.org/nodejs26.repo
-sudo dnf install nodejs26
-sudo dnf update nodejs26</code></pre>
+sudo dnf install eliware-nodejs26
+sudo yum -y update</code></pre>
       <p>
         The RPM installs versioned commands named <code>node26</code>, <code>npm26</code>, and
         <code>npx26</code>.
+      </p>
+      <p>The RPM includes npm 12 or later and keeps global tools outside RPM-managed files.</p>
+      <p>
+        Use <code>npm26 -g install npm@latest</code> to update npm. Use <code>npm26 link</code> to
+        link a local package.
       </p>
       <p><a href="/nodejs26.repo">Download the repository configuration</a></p>
       <p><a href="/metadata/catalog.json">Review release metadata</a></p>
