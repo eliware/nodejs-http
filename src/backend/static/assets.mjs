@@ -8,7 +8,7 @@ import { promises as fs } from "node:fs";
 import { APP_VERSION } from "../app-version.mjs";
 import __moduleApifix3 from "../runtime-identity.mjs";
 const { servingHostId } = __moduleApifix3();
-import __moduleApifix4 from "../directory/listing-markup.mjs";
+import __moduleApifix4 from "../directory/presentation.mjs";
 const { copyrightYear } = __moduleApifix4();
 
 async function serveStaticFile(response, request, requestPath, config) {

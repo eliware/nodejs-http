@@ -1,35 +1,7 @@
 import __moduleApi1 from "../format.mjs";
 const { previewCommit, previewDate } = __moduleApi1();
-
-const distroLabels = {
-  "centos-stream": "CentOS Stream",
-  rocky: "Rocky Linux",
-  alma: "AlmaLinux",
-  oracle: "Oracle Linux",
-  debian: "Debian",
-  ubuntu: "Ubuntu",
-};
-const distroReleases = {
-  "centos-stream": "10",
-  rocky: "10",
-  alma: "10",
-  oracle: "10",
-  debian: "12",
-  ubuntu: "24.04",
-};
-const repositoryDistributions = {
-  "centos10-node26": "centos-stream",
-  "rocky10-gluster": "rocky",
-  "alma10-gluster": "alma",
-  "oracle10-gluster": "oracle",
-  "debian12-gluster": "debian",
-  "ubuntu2404-gluster": "ubuntu",
-};
-
-function distroFromRepository(repository) {
-  const name = repository.split("/").at(-1) || "";
-  return repositoryDistributions[name] || "centos-stream";
-}
+import imageDistributionApi from "./distributions.mjs";
+const { distroFromRepository, distroLabel, distroRelease } = imageDistributionApi();
 
 function imageRecords(data) {
   return (data.images || []).map((record) => {
@@ -43,9 +15,9 @@ function imageRecords(data) {
     return {
       ...record,
       distro,
-      distroLabel: distroLabels[distro] || distro,
+      distroLabel: distroLabel(distro),
       repository,
-      release: distroReleases[distro] || "unknown",
+      release: distroRelease(distro),
       arch: "x86_64",
       channel,
       version:
@@ -63,5 +35,5 @@ function displaySource(record) {
 }
 
 export default function __moduleApi0() {
-  return { distroFromRepository, imageRecords, displaySource };
+  return { imageRecords, displaySource };
 }

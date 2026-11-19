@@ -1,7 +1,5 @@
-import markdownApi from "./markdown.mjs";
-const { renderMarkdown } = markdownApi();
-import __moduleApifix1 from "../../shared/blog/article-markup.mjs";
-const { withoutLeadingTitle } = __moduleApifix1();
+import articleRendererApi from "./renderer.mjs";
+const { renderBlogContent } = articleRendererApi();
 
 function escapeAttribute(value) {
   return String(value)
@@ -20,9 +18,9 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-function renderBlogArticle(blog) {
+function renderBlogArticlePage(blog) {
   if (!blog) return "";
-  const html = withoutLeadingTitle(renderMarkdown(blog.content));
+  const html = renderBlogContent(blog.content);
   const verified = blog.last_verified_at
     ? `<p class="blog-meta">Last verified ${escapeHtml(blog.last_verified_at.slice(0, 10))} · Tested on ${escapeHtml(blog.tested_on.join(", "))}</p>`
     : "";
@@ -33,5 +31,5 @@ function renderBlogArticle(blog) {
 }
 
 export default function __moduleApi0() {
-  return { renderBlogArticle, escapeAttribute };
+  return { renderBlogArticlePage, escapeAttribute };
 }

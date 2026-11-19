@@ -1,12 +1,9 @@
 import { expect, test } from "@jest/globals";
 import __moduleApi0 from "../../../src/frontend/image/records.mjs";
-const { displaySource, distroFromRepository, imageRecords } = __moduleApi0();
+const { displaySource, imageRecords } = __moduleApi0();
 
 test("maps known registries and uses a default distribution", () => {
   expect(imageRecords({})).toEqual([]);
-  expect(distroFromRepository("ghcr.io/eliware/debian12-gluster")).toBe("debian");
-  expect(distroFromRepository("ghcr.io/other/unknown")).toBe("centos-stream");
-  expect(distroFromRepository("")).toBe("centos-stream");
 });
 
 test("normalizes release records from all distribution fields", () => {

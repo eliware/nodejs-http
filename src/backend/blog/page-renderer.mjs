@@ -1,9 +1,9 @@
-import __moduleApi1 from "./article-renderer.mjs";
-const { renderBlogArticle, escapeAttribute } = __moduleApi1();
+import __moduleApi1 from "./article/page.mjs";
+const { renderBlogArticlePage, escapeAttribute } = __moduleApi1();
 import __moduleApifix1 from "./jsonld.mjs";
 const { absoluteBlogImage, renderBlogJsonLd } = __moduleApifix1();
 import { APP_VERSION } from "../app-version.mjs";
-import __moduleApifix3 from "../directory/listing-markup.mjs";
+import __moduleApifix3 from "../directory/presentation.mjs";
 const { copyrightYear } = __moduleApifix3();
 
 const SITE_URL = "https://nodejs.eliware.org";
@@ -26,7 +26,7 @@ function renderBlogPage(template, blog, category, hostId) {
     .replaceAll("__BLOG_SERVER_RENDERED__", blog ? "true" : "false")
     .replaceAll("__BLOG_ARTICLE_CLASS__", blog ? "" : "d-none")
     .replaceAll("__BLOG_PAGE_CLASS__", blog ? "blog-article-page" : "")
-    .replaceAll("__BLOG_ARTICLE__", renderBlogArticle(blog))
+    .replaceAll("__BLOG_ARTICLE__", renderBlogArticlePage(blog))
     .replaceAll("__HOST_ID__", hostId)
     .replaceAll("__COPYRIGHT_YEAR__", copyrightYear())
     .replaceAll("__APP_VERSION__", process.env.APP_VERSION || APP_VERSION)

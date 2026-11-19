@@ -1,9 +1,9 @@
 import { expect, jest, test } from "@jest/globals";
-import __moduleApi0 from "../../../src/backend/directory/listing-markup.mjs";
+import __moduleApi0 from "../../../src/backend/directory/presentation.mjs";
 const { copyrightYear, escapeHtml, formatBytes, ogImageForPath, renderBreadcrumbs } =
   __moduleApi0();
 
-test("escapes HTML and formats byte sizes across units", () => {
+test("escapes HTML and formats byte lengths across units", () => {
   expect(escapeHtml(`&<>"'`)).toBe("&amp;&lt;&gt;&quot;&#39;");
   expect(escapeHtml("plain")).toBe("plain");
   expect(formatBytes(12)).toBe("12 B");
@@ -13,7 +13,7 @@ test("escapes HTML and formats byte sizes across units", () => {
   expect(formatBytes(1024 ** 5)).toContain("TiB");
 });
 
-test("uses release card URLs and builds encoded breadcrumbs", () => {
+test("creates release card links and encoded breadcrumbs", () => {
   expect(ogImageForPath("/metadata/runs/run 1/catalog.json")).toBe(
     "/metadata/runs/run%201/release-card.png",
   );

@@ -1,9 +1,3 @@
-import __moduleApi1 from "./validation.mjs";
-const { renderValidation } = __moduleApi1();
-
-import __sourceApi0 from "./validation.mjs";
-const { distributionLabels, metadataStatus, validationIcon } = __sourceApi0();
-
 function escapeHtml(value) {
   return String(value).replace(
     /[&<>"']/g,
@@ -54,15 +48,5 @@ function renderBreadcrumbs(requestPath) {
 }
 
 export default function __moduleApi0() {
-  return {
-    renderValidation,
-    escapeHtml,
-    formatBytes,
-    copyrightYear,
-    ogImageForPath,
-    renderBreadcrumbs,
-    distributionLabels,
-    metadataStatus,
-    validationIcon,
-  };
+  return { escapeHtml, formatBytes, copyrightYear, ogImageForPath, renderBreadcrumbs };
 }
