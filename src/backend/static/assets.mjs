@@ -1,6 +1,6 @@
 import __moduleApi1 from "../file-access.mjs";
 const { staticFileExists } = __moduleApi1();
-import __moduleApifix1 from "../response.mjs";
+import __moduleApifix1 from "../response/file-headers.mjs";
 const { fileHeaders } = __moduleApifix1();
 import __moduleApifix2 from "../response/compression.mjs";
 const { compressBody } = __moduleApifix2();

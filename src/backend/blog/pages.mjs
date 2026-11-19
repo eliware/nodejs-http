@@ -1,7 +1,9 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import __moduleApi1 from "../response.mjs";
-const { fileHeaders, sendError } = __moduleApi1();
+const { sendError } = __moduleApi1();
+import __moduleApiFileHeaders from "../response/file-headers.mjs";
+const { fileHeaders } = __moduleApiFileHeaders();
 import __moduleApifix1 from "../response/compression.mjs";
 const { compressBody } = __moduleApifix1();
 import __moduleApifix2 from "../runtime-identity.mjs";

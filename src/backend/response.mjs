@@ -5,8 +5,6 @@ import __moduleApifix1 from "./response/compression.mjs";
 const { compressBody } = __moduleApifix1();
 import __moduleApifix2 from "./response/headers.mjs";
 const { baseHeaders } = __moduleApifix2();
-import __moduleApifix3 from "./response/file-headers.mjs";
-const { fileHeaders } = __moduleApifix3();
 
 async function sendText(response, statusCode, message, config, headers = {}) {
   const contentType = "text/plain; charset=utf-8";
@@ -61,5 +59,5 @@ async function sendJson(
 }
 
 export default function __moduleApi0() {
-  return { baseHeaders, sendText, sendError, sendJson, fileHeaders };
+  return { baseHeaders, sendText, sendError, sendJson };
 }

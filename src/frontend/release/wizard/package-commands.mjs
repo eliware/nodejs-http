@@ -4,9 +4,6 @@ import __moduleApifix1 from "../../dom.mjs";
 const { getElement } = __moduleApifix1();
 import { wizardState } from "./state.mjs";
 import { distroRepositories, distroTargets } from "./targets.mjs";
-import imageCommandsApi from "./image-commands.mjs";
-const { updateContainerCommand } = imageCommandsApi();
-
 function setPackageManager(value) {
   wizardState.packageManager = value;
   document.querySelectorAll("[data-package-manager]").forEach((button) => {
@@ -15,7 +12,6 @@ function setPackageManager(value) {
     button.setAttribute("aria-pressed", String(selected));
   });
   updateCommand();
-  updateContainerCommand();
 }
 
 function updateCommand() {

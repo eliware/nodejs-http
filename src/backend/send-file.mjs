@@ -1,7 +1,9 @@
 import __moduleApi1 from "./range-utils.mjs";
 const { parseByteRange } = __moduleApi1();
 import __moduleApifix1 from "./response.mjs";
-const { fileHeaders, sendText } = __moduleApifix1();
+const { sendText } = __moduleApifix1();
+import __moduleApiFileHeaders from "./response/file-headers.mjs";
+const { fileHeaders } = __moduleApiFileHeaders();
 import __moduleApifix2 from "./response/compression.mjs";
 const { compressBody } = __moduleApifix2();
 import __moduleApifix3 from "./static/stream.mjs";
