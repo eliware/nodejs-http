@@ -31,7 +31,7 @@ async function checkReadiness(response, config) {
       JSON.parse(await fs.readFile(path.join(config.publicDir, "metadata/catalog.json"), "utf8")),
       "catalog.json",
     );
-    catalog = Array.isArray(value.releases);
+    catalog = Boolean(value.stable && typeof value.stable === "object");
   } catch {}
   let index = false;
   try {
@@ -41,7 +41,7 @@ async function checkReadiness(response, config) {
       ),
       "repository-index.json",
     );
-    index = Array.isArray(value.entries);
+    index = Boolean(value.directories && typeof value.directories === "object");
   } catch {}
   let active = null;
   try {

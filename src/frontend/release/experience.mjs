@@ -33,9 +33,9 @@ function initControls() {
       const target = getElement(button.dataset.packageDetailCopy);
       if (!target) return;
       await navigator.clipboard.writeText(target.textContent);
-      button.textContent = "Copied";
+      button.classList.add("btn-success");
       setTimeout(() => {
-        button.textContent = "Copy";
+        button.classList.remove("btn-success");
       }, 2500);
     }),
   );

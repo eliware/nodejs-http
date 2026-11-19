@@ -1,7 +1,7 @@
 import { expect, jest, test } from "@jest/globals";
 import siteScreenshotsModule from "../../src/e2e/site-screenshots.mjs";
 
-const { runSiteScreenshots, waitForPublishedContent } = siteScreenshotsModule();
+const { loadPageSections, runSiteScreenshots, waitForPublishedContent } = siteScreenshotsModule();
 
 function createPage() {
   return {
@@ -56,7 +56,7 @@ test("uses default URL and screenshot paths when environment values are absent",
   const { options } = createRunOptions(page, { environment: {} });
   await runSiteScreenshots(options);
   expect(page.goto).toHaveBeenCalledWith("https://nodejs.eliware.org/", {
-    waitUntil: "networkidle2",
+    waitUntil: "domcontentloaded",
     timeout: 60_000,
   });
   expect(options.fs.mkdir).toHaveBeenCalledWith("/resolved/artifacts/e2e-screenshots", {
@@ -134,10 +134,10 @@ test("waits for directory entries and titles", async () => {
   const oldDocument = globalThis.document;
   globalThis.document = {
     querySelector: (selector) => {
-      if (selector === "#directory-entries, .directory-card table tbody, table tbody") {
+      if (selector === ".directory-card table tbody, table tbody") {
         return { querySelector: () => ({}) };
       }
-      if (selector === "#directory-title") return { textContent: "Packages" };
+      if (selector === ".directory-hero h1") return { textContent: "Packages" };
       return null;
     },
   };
@@ -146,4 +146,92 @@ test("waits for directory entries and titles", async () => {
   } finally {
     globalThis.document = oldDocument;
   }
+});
+
+test("waits for install commands", async () => {
+  const page = { waitForFunction: jest.fn(async (callback, options, target) => callback(target)) };
+  const oldDocument = globalThis.document;
+  globalThis.document = {
+    querySelector: (selector) =>
+      selector === "#rpm-command" ? { textContent: "sudo dnf install eliware-node26" } : null,
+  };
+  try {
+    await expect(waitForPublishedContent(page, { name: "install", kind: "install" })).resolves.toBe(
+      true,
+    );
+  } finally {
+    globalThis.document = oldDocument;
+  }
+});
+
+test("waits for the package browser", async () => {
+  const page = { waitForFunction: jest.fn(async (callback, options, target) => callback(target)) };
+  const oldDocument = globalThis.document;
+  globalThis.document = {
+    querySelector: (selector) => {
+      if (selector === "#directory-title") return { textContent: "Repository browser" };
+      if (selector === "#directory-status") return { textContent: "12 entries" };
+      return null;
+    },
+  };
+  try {
+    await expect(waitForPublishedContent(page, { name: "browser", kind: "browser" })).resolves.toBe(
+      true,
+    );
+  } finally {
+    globalThis.document = oldDocument;
+  }
+});
+
+test("waits for information page headings", async () => {
+  const page = { waitForFunction: jest.fn(async (callback, options, target) => callback(target)) };
+  const oldDocument = globalThis.document;
+  globalThis.document = { querySelector: (selector) => (selector === "main h1" ? {} : null) };
+  try {
+    await expect(
+      waitForPublishedContent(page, { name: "about", kind: "information" }),
+    ).resolves.toBe(true);
+  } finally {
+    globalThis.document = oldDocument;
+  }
+});
+
+test("scrolls the homepage to load visible sections before capture", async () => {
+  const oldWindow = globalThis.window;
+  const oldDocument = globalThis.document;
+  const scrollTo = jest.fn();
+  globalThis.window = { innerHeight: 800, scrollY: 0, scrollTo };
+  globalThis.document = {
+    documentElement: { scrollHeight: 50, style: { scrollBehavior: "smooth" } },
+  };
+  const oldRequestAnimationFrame = globalThis.requestAnimationFrame;
+  globalThis.requestAnimationFrame = (callback) => callback();
+  const page = { evaluate: jest.fn(async (callback) => callback()) };
+  try {
+    await expect(loadPageSections(page, { name: "homepage" })).resolves.toBe(0);
+    expect(page.evaluate).toHaveBeenCalledTimes(1);
+    expect(scrollTo).toHaveBeenNthCalledWith(1, 0, 0);
+    expect(scrollTo).toHaveBeenLastCalledWith(0, 0);
+    expect(globalThis.document.documentElement.style.scrollBehavior).toBe("smooth");
+  } finally {
+    globalThis.window = oldWindow;
+    globalThis.document = oldDocument;
+    globalThis.requestAnimationFrame = oldRequestAnimationFrame;
+  }
+});
+
+test("rejects a homepage capture that remains below the top", async () => {
+  const page = createPage();
+  page.evaluate = jest.fn(async () => 12);
+  const { options, browser } = createRunOptions(page, {
+    browserConfig: {
+      browserArgs: () => [],
+      chromePath: async () => "/chrome",
+      targetPages: [{ name: "homepage", path: "/" }],
+    },
+  });
+  await expect(runSiteScreenshots(options)).rejects.toThrow(
+    "The homepage screenshot did not return to the top of the page",
+  );
+  expect(browser.close).toHaveBeenCalledTimes(1);
 });

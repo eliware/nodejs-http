@@ -129,7 +129,13 @@
             data-copy="rpm-command"
             aria-label="Copy installation commands"
           >
-            <span class="copy-icon">⧉</span>
+            <span class="copy-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="8" y="8" width="12" height="12" rx="1.5" />
+                <path
+                  d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"
+                /></svg
+            ></span>
           </button>
         </div>
         <p class="muted">
@@ -209,7 +215,20 @@
             </div>
             <div class="package-checksum">
               <span>SHA-256</span><code id="package-detail-hash"></code
-              ><button type="button" data-package-detail-copy="package-detail-hash">Copy</button>
+              ><button
+                class="copy-btn inline-copy"
+                type="button"
+                data-package-detail-copy="package-detail-hash"
+                aria-label="Copy SHA-256 checksum"
+              >
+                <span class="copy-icon"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="8" y="8" width="12" height="12" rx="1.5" />
+                    <path
+                      d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"
+                    /></svg
+                ></span>
+              </button>
             </div>
             <div class="code-wrap">
               <pre><code id="package-detail-command"></code></pre>
@@ -219,7 +238,13 @@
                 data-copy="package-detail-command"
                 aria-label="Copy verification and install commands"
               >
-                <span class="copy-icon">⧉</span>
+                <span class="copy-icon"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="8" y="8" width="12" height="12" rx="1.5" />
+                    <path
+                      d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"
+                    /></svg
+                ></span>
               </button>
             </div>
           </article>
@@ -284,7 +309,13 @@
             data-copy="image-ref"
             aria-label="Copy image reference"
           >
-            <span class="copy-icon">⧉</span>
+            <span class="copy-icon"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="8" y="8" width="12" height="12" rx="1.5" />
+                <path
+                  d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"
+                /></svg
+            ></span>
           </button>
         </div>
         <div id="image-browser" class="image-browser-integrated">
@@ -311,15 +342,23 @@
                 ><button type="button" data-image-example-kind="kubernetes">Kubernetes</button>
               </div>
             </div>
-            <pre><code id="image-example-code"></code></pre>
-            <button
-              class="copy-btn"
-              type="button"
-              data-copy="image-example-code"
-              aria-label="Copy container example"
-            >
-              <span class="copy-icon">⧉</span>
-            </button>
+            <div class="code-wrap">
+              <pre><code id="image-example-code"></code></pre>
+              <button
+                class="copy-btn"
+                type="button"
+                data-copy="image-example-code"
+                aria-label="Copy container example"
+              >
+                <span class="copy-icon"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="8" y="8" width="12" height="12" rx="1.5" />
+                    <path
+                      d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"
+                    /></svg
+                ></span>
+              </button>
+            </div>
           </article>
         </div>
       </section>

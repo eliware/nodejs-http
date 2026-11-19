@@ -61,7 +61,7 @@ select,
   position: relative;
 }
 .code-wrap pre {
-  min-height: 7.5rem;
+  min-height: 0;
   margin: 0;
   padding: 1rem 3.8rem 1rem 1rem;
   overflow: auto;
@@ -108,11 +108,11 @@ select,
 }
 #containers .code-wrap pre {
   min-height: 0;
-  padding: 0.75rem 8rem 0.75rem 1rem;
+  padding: 0.75rem 4rem 0.75rem 1rem;
   white-space: nowrap;
 }
 #install .code-wrap pre {
-  padding-right: 8rem;
+  padding-right: 4rem;
 }
 #containers .command-tools {
   top: 50%;
@@ -150,6 +150,7 @@ select,
   z-index: 2;
   top: 0.55rem;
   right: 0.55rem;
+  display: inline-grid;
   width: 2.25rem;
   height: 2.25rem;
   padding: 0;
@@ -162,8 +163,24 @@ select,
   color: #07121e;
   background: var(--info);
 }
+.copy-btn.copy-failed {
+  border-color: #ff8696;
+  color: #ff8696;
+}
 .copy-icon {
-  font-size: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.copy-icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .image-reference-toggle {
   display: flex;
@@ -218,6 +235,15 @@ select,
   justify-content: space-between;
   gap: 1rem;
 }
+.package-detail-heading > div,
+.package-detail-panel > .code-wrap,
+.package-checksum,
+.package-checksum code {
+  min-width: 0;
+}
+#package-detail-title {
+  overflow-wrap: anywhere;
+}
 .package-search-tools {
   display: grid;
   grid-template-columns: minmax(0, 2fr) repeat(2, minmax(10rem, 1fr));
@@ -238,12 +264,12 @@ select,
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.5rem;
-  min-height: 8rem;
+  min-height: 0;
   max-height: 20rem;
   overflow: auto;
 }
 #validation-matrix {
-  min-height: 430px;
+  min-height: 0;
 }
 #repository,
 #install,
@@ -255,7 +281,7 @@ select,
   contain-intrinsic-size: auto 700px;
 }
 #validation-rows {
-  min-height: 15rem;
+  min-height: 0;
 }
 #release-timeline {
   min-height: 8rem;
@@ -292,6 +318,9 @@ select,
   border-radius: 0.75rem;
   background: rgba(8, 13, 24, 0.42);
 }
+.package-detail-panel[hidden] {
+  display: none;
+}
 .package-checksum {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -305,9 +334,17 @@ select,
   color: var(--text);
   white-space: nowrap;
 }
+.package-checksum button {
+  cursor: pointer;
+}
+.package-checksum .copy-btn {
+  position: static;
+}
 .package-detail-panel .code-wrap pre {
   min-height: 0;
   padding-right: 5rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .workspace-columns {
   display: grid;

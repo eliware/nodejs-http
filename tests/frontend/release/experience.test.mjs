@@ -104,9 +104,9 @@ test("renders searchable packages, details, release history, and comparisons", a
   state.copy.dataset.packageDetailCopy = "package-detail-command";
   await state.copy.dispatch("click")[0];
   expect(globalThis.navigator.clipboard.writeText).toHaveBeenCalled();
-  expect(state.copy.textContent).toBe("Copied");
+  expect(state.copy.classList.contains("btn-success")).toBe(true);
   jest.advanceTimersByTime(2500);
-  expect(state.copy.textContent).toBe("Copy");
+  expect(state.copy.classList.contains("btn-success")).toBe(false);
   jest.useRealTimers();
 });
 

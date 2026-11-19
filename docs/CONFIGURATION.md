@@ -2,6 +2,8 @@
 
 Set options as process environment variables. The application does not load `.env` files. Boolean values accept `1`, `true`, `yes`, or `on` for true and `0`, `false`, `no`, or `off` for false. Other boolean values use the listed default. Positive integer options use the default when their value is invalid or zero.
 
+Every variable in this table is optional because the code supplies a default. Docker Compose requires `REPOSITORY_ROOT` to point to the published repository directory.
+
 | Variable                  | Default                                                                                                      | Purpose                                                                                          |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
 | `HOST`                    | `0.0.0.0`                                                                                                    | Listener address.                                                                                |

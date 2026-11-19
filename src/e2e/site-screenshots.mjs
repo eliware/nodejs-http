@@ -4,10 +4,8 @@ async function waitForPublishedContent(page, target) {
       if (kind === "blog") {
         const status = document.querySelector("#blog-status")?.textContent;
         const article = document.querySelector("#blog-article");
-        const posts = document.querySelectorAll("#blog-list .blog-card");
         const articleReady = article && !article.classList.contains("d-none");
-        const listingReady = posts.length > 0 && status && !status.includes("Loading");
-        return Boolean(articleReady || listingReady);
+        return Boolean(articleReady || (status && !status.includes("Loading")));
       }
       if (name === "homepage") {
         const packageStatus = document.querySelector("#package-search-status")?.textContent;
@@ -19,15 +17,43 @@ async function waitForPublishedContent(page, target) {
           !timeline.textContent.includes("Loading")
         );
       }
-      const entries = document.querySelector(
-        "#directory-entries, .directory-card table tbody, table tbody",
-      );
-      const title = document.querySelector("#directory-title")?.textContent;
+      if (kind === "install") {
+        const command = document.querySelector("#rpm-command")?.textContent;
+        return Boolean(command && !command.includes("Loading"));
+      }
+      if (kind === "browser") {
+        const title = document.querySelector("#directory-title")?.textContent;
+        const status = document.querySelector("#directory-status")?.textContent;
+        return Boolean(
+          title && !title.includes("Loading") && status && !status.includes("Loading"),
+        );
+      }
+      if (kind === "information") return Boolean(document.querySelector("main h1"));
+      const entries = document.querySelector(".directory-card table tbody, table tbody");
+      const title = document.querySelector(".directory-hero h1")?.textContent;
       return Boolean(title && entries?.querySelector("tr"));
     },
     { timeout: 15_000 },
     target,
   );
+}
+
+async function loadPageSections(page, target) {
+  if (target.name !== "homepage") return null;
+  return page.evaluate(async () => {
+    const root = document.documentElement;
+    const previousScrollBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    const step = Math.max(400, Math.round(window.innerHeight * 0.75));
+    for (let top = 0; top < root.scrollHeight; top += step) {
+      window.scrollTo(0, top);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    window.scrollTo(0, 0);
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    root.style.scrollBehavior = previousScrollBehavior;
+    return window.scrollY;
+  });
 }
 
 async function runSiteScreenshots({
@@ -70,7 +96,11 @@ async function runSiteScreenshots({
       await page.setViewport(viewport.viewport);
       for (const target of targetPages) {
         const url = `${baseUrl}${target.path}`;
-        await page.goto(url, { waitUntil: "networkidle2", timeout: 60_000 });
+        await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60_000 });
+        const scrollPosition = await loadPageSections(page, target);
+        if (scrollPosition !== null && scrollPosition !== 0) {
+          throw new Error(`The ${target.name} screenshot did not return to the top of the page`);
+        }
         await waitForPublishedContent(page, target);
         const fileStem = `${target.name}-${viewport.name}`;
         await page.screenshot({
@@ -90,5 +120,5 @@ async function runSiteScreenshots({
 }
 
 export default function siteScreenshotsModule() {
-  return { runSiteScreenshots, waitForPublishedContent };
+  return { loadPageSections, runSiteScreenshots, waitForPublishedContent };
 }

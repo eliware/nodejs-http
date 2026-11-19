@@ -97,11 +97,11 @@ export async function createHealthMetadata(active = true) {
   const base = { metadata_version: SUPPORTED_METADATA_VERSION, schema: 1 };
   await writeFile(
     path.join(metadataDir, "catalog.json"),
-    JSON.stringify({ ...base, releases: [] }),
+    JSON.stringify({ ...base, active_generation: "run-1", stable: { available: true } }),
   );
   await writeFile(
     path.join(metadataDir, "repository-index.json"),
-    JSON.stringify({ ...base, entries: [] }),
+    JSON.stringify({ ...base, directories: { "/": { path: "/", entries: [] } } }),
   );
   if (active) {
     await writeFile(

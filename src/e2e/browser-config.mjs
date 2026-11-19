@@ -14,14 +14,13 @@ async function chromePath(puppeteer, environment, platform, fileExists) {
 
 const targetPages = [
   { name: "homepage", path: "/" },
-  { name: "directory-index", path: "/el10/x86_64/" },
-  { name: "directory-11-2", path: "/el10/x86_64/11.2/" },
+  { name: "install", path: "/install", kind: "install" },
+  { name: "package-browser", path: "/browse", kind: "browser" },
+  { name: "stable-rpms", path: "/el10/x86_64/stable/", kind: "directory" },
   { name: "blog-index", path: "/blog", kind: "blog" },
-  {
-    name: "blog-article",
-    path: "/blog/glusterfs-el10-first-replica-volume",
-    kind: "blog",
-  },
+  { name: "about", path: "/about", kind: "information" },
+  { name: "terms", path: "/tos", kind: "information" },
+  { name: "policy", path: "/policy", kind: "information" },
 ];
 
 export default function browserConfig({ environment, platform, fileExists, userId }) {

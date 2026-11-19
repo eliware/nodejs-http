@@ -41,6 +41,15 @@ test("uses Puppeteer's browser when no system browser exists", async () => {
 
 test("lists the production pages used by browser checks", () => {
   const { targetPages } = createConfig();
-  expect(targetPages).toHaveLength(5);
-  expect(targetPages.filter(({ kind }) => kind === "blog")).toHaveLength(2);
+  expect(targetPages.map(({ path }) => path)).toEqual([
+    "/",
+    "/install",
+    "/browse",
+    "/el10/x86_64/stable/",
+    "/blog",
+    "/about",
+    "/tos",
+    "/policy",
+  ]);
+  expect(targetPages.filter(({ kind }) => kind === "blog")).toHaveLength(1);
 });

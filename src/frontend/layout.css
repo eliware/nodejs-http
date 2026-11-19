@@ -101,6 +101,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(10rem, 16rem));
   justify-content: start;
+  gap: 0.6rem;
 }
 .hero-actions .btn {
   width: 100%;
@@ -169,6 +170,9 @@
   font-size: clamp(2.7rem, 7vw, 5.8rem);
   letter-spacing: -0.07em;
   line-height: 0.94;
+}
+.nowrap {
+  white-space: nowrap;
 }
 .hero .lead {
   max-width: 48rem;
@@ -323,8 +327,18 @@
   justify-content: center;
 }
 .image-example-panel pre {
-  margin: 0.5rem 0 0;
+  margin: 0;
   white-space: pre-wrap;
+}
+.image-example-panel .code-wrap {
+  margin-top: 0.65rem;
+}
+.image-example-panel .code-wrap pre {
+  padding-right: 3.8rem;
+}
+#containers .image-example-panel .code-wrap pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .inline-copy {
   position: static;
@@ -337,11 +351,14 @@
 }
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
 }
+.stats-grid > .card {
+  padding: 0.75rem 0.9rem;
+}
 .section-block {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 }
 .blog-list {
   display: grid;
@@ -417,6 +434,15 @@
   place-items: center;
   border-radius: 50%;
   font-weight: 800;
+}
+.validation-icon svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .validation-icon.pass {
   color: #082018;

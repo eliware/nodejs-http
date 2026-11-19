@@ -27,23 +27,23 @@ Node.js HTTP repository and web frontend.
 
 ## Features
 
-Browse stable Node.js 26 RPMs for CentOS Stream 10 EPEL on x86_64. Find packages, verify checksums and provenance, compare releases, inspect published images, and read installation guides and project articles.
+Browse stable Node.js 26 RPMs for CentOS Stream 10 EPEL on x86_64. Read package metadata and signed release records. Inspect the published runtime image and read installation guides.
 
 ## Requirements
 
-Use Node.js 26 or later and npm 12 or later. Use Docker Compose for the container workflow.
+Use Node.js 26 or later and npm 12 or later. Use Docker Compose to run the container locally.
 
 ## Setup
 
-Run `npm ci` from the repository root. See [local usage](docs/usage.md) for runtime data requirements.
+Run `npm ci` from the repository root. See [local usage](docs/usage.md) for repository data requirements.
 
 ## Usage
 
-Follow the [end-user guide](docs/README.md) to run the website, configure repository data, or use its HTTP endpoints. Read [release notes](RELEASE_NOTES.md) for version history.
+Follow the [end-user documentation index](docs/README.md) to run the site or use its pages and HTTP endpoints. Read [release notes](RELEASE_NOTES.md) for version history.
 
 ## Development
 
-Read [AGENTS.md](AGENTS.md) for required development and validation practices. Read [specifications](specs/README.md) before changing project rules.
+Read [AGENTS.md](AGENTS.md) for development requirements. Read [specifications](specs/README.md) before changing repository rules.
 
 ## Testing
 
@@ -51,15 +51,15 @@ Run `npm test` for full validation. Run focused tests with `npm test -- tests/pa
 
 ## Troubleshooting
 
-Use the [troubleshooting guide](docs/troubleshooting.md) to find startup, readiness, and content problems.
+Use the [troubleshooting guide](docs/troubleshooting.md) to resolve startup, readiness, and content problems.
 
 ## Security
 
-Set the repository path as read-only. Keep credentials, private content, and runtime state outside Git.
+Attach published repository data as read-only. Keep credentials, private content, and runtime state outside Git.
 
 ## Configuration
 
-See the [configuration reference](docs/CONFIGURATION.md) for environment variables and defaults.
+See the [configuration reference](docs/CONFIGURATION.md) for environment variables, defaults, and runtime behavior.
 
 ## Operations
 
@@ -71,25 +71,19 @@ See [HTTP routes](docs/WEB-APPLICATION.md) for pages, repository files, health c
 
 ## Assets
 
-The image copies website templates and `public/assets/` into its static content directory. See [web application](docs/WEB-APPLICATION.md) for path details.
+The image copies `public/assets/` into its static content directory. See the [web application guide](docs/WEB-APPLICATION.md) for asset and route details.
 
 ## Development server
 
-Run `npm start` to start the local server. Set `PUBLIC_DIR` when the repository content is outside `public/`.
+Assemble the static site as described in [local usage](docs/usage.md), then run `npm start` to listen on `0.0.0.0:7100`.
 
 ## Build
 
-Run `npm run build` to create the browser bundle in `dist/`. The production container builds and serves that bundle with its page templates.
+Run `npm run build` to create browser assets in `dist/`. The container builds and serves those assets with the page templates.
 
 ## Deployment
 
-See [container operations](docs/usage.md#container-operations) for local builds. The GHCR package is public at `ghcr.io/eliware/nodejs-http`.
-
-The workflow publishes `vMAJOR.MINOR.PATCH` tags when a Git tag matches `package.json`. The repository maintainers own the application Dockerfile and build inputs. The `nodejs-packaging` repository owns the public CentOS Stream 10 Node.js base image used by the Dockerfile.
-
-The workflow uses the `ubuntu-latest` runner and does not set a platform list. The current build target is `linux/amd64`. The publish job receives `contents: read` and `packages: write` permissions. The validation job only receives `contents: read`.
-
-Publication only adds an image to GHCR. It does not deploy the application. To deploy an image, use an approved version tag and record its SHA-256 digest. Verify and deploy the immutable image reference `ghcr.io/eliware/nodejs-http@sha256:<digest>`.
+The public image is `ghcr.io/eliware/nodejs-http`. The workflow publishes a version tag that matches `package.json`. Publication does not deploy the application. See [container operations](docs/usage.md#container-operations) for local builds.
 
 ## Support
 

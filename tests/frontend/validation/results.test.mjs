@@ -1,29 +1,66 @@
 import { expect, test } from "@jest/globals";
-import __moduleApi0 from "../../../src/frontend/validation/results.mjs";
-const { canonicalDistributionId, metadataStatus, resolveValidationResults, validationStatusIcon } =
-  __moduleApi0();
+import validationResults from "../../../src/frontend/validation/results.mjs";
 
-test("normalizes distribution aliases and validation results", () => {
+const { canonicalDistributionId, metadataStatus, resolveValidationResults, validationStatusIcon } =
+  validationResults();
+
+test("normalizes metadata and status icons", () => {
   expect(canonicalDistributionId("debian")).toBe("debian-bookworm");
-  expect(canonicalDistributionId("custom")).toBe("custom");
+  expect(canonicalDistributionId("centos-stream-10")).toBe("centos-stream-10");
   expect(metadataStatus("passed")).toBe("passed");
   expect(metadataStatus({ status: "failed" })).toBe("failed");
-  const results = resolveValidationResults({
-    rpm: { package_core: { status: "passed" }, integrity: "failed" },
-    container: { core: { status: "failed" }, provenance: "passed" },
-    validation: { repository_integrity: "passed" },
-    containerRecord: { provenance: "failed" },
-  });
-  expect(results.packageResult.status).toBe("passed");
-  expect(results.containerResult.status).toBe("failed");
-  expect(results.repositoryResult).toBe("failed");
-  expect(results.provenanceResult).toBe("passed");
   expect(validationStatusIcon("passed")).toContain("validation-icon pass");
   expect(validationStatusIcon("failed")).toContain("validation-icon fail");
   expect(validationStatusIcon("unknown")).toContain("validation-icon skip");
   expect(validationStatusIcon("passed", true)).toContain("validation-icon pass");
   expect(validationStatusIcon("failed", true)).toContain("validation-icon fail");
-  expect(validationStatusIcon('<img src=x onerror="run()">', true)).toContain(
-    "validation-icon skip",
-  );
+  expect(validationStatusIcon("unknown", true)).toContain("validation-icon skip");
+});
+
+test("resolves package and container checks with their metadata fallbacks", () => {
+  expect(
+    resolveValidationResults({
+      rpm: { core: "package", integrity: "rpm integrity", provenance_verification: "rpm proof" },
+      container: {
+        core: "image",
+        repository_integrity: "image integrity",
+        provenance: "image proof",
+      },
+      validation: {},
+      containerRecord: {},
+    }),
+  ).toEqual({
+    packageResult: "package",
+    containerResult: "image",
+    repositoryResult: "rpm integrity",
+    provenanceResult: "rpm proof",
+  });
+  expect(
+    resolveValidationResults({
+      container: {
+        container_core: "image",
+        repository_integrity: "image integrity",
+        provenance: "image proof",
+      },
+      containerRecord: {
+        repository_integrity: "record integrity",
+        provenance_verification: "record proof",
+      },
+    }),
+  ).toEqual({
+    packageResult: undefined,
+    containerResult: "image",
+    repositoryResult: "image integrity",
+    provenanceResult: "image proof",
+  });
+  expect(
+    resolveValidationResults({
+      containerRecord: { repository_integrity: "record integrity", provenance: "record proof" },
+    }),
+  ).toEqual({
+    packageResult: undefined,
+    containerResult: undefined,
+    repositoryResult: "record integrity",
+    provenanceResult: "record proof",
+  });
 });

@@ -22,5 +22,11 @@ const fetchRepositoryIndex = () => getJson("/metadata/repository-index.json");
 const fetchReleaseManifest = () => getJson("/metadata/release-manifest.json");
 
 export default function __moduleApi0() {
-  return { fetchCatalog, fetchDirectory, fetchRepositoryIndex, fetchReleaseManifest, origin };
+  return {
+    fetchCatalog,
+    fetchDirectory,
+    fetchRepositoryIndex,
+    fetchReleaseManifest,
+    origin,
+  };
 }

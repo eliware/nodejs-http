@@ -12,7 +12,7 @@ function setup(clipboardWrite, withIcon = false) {
   if (withIcon) {
     const icon = new BrowserElement("span");
     icon.className = "copy-icon";
-    icon.textContent = "⧉";
+    icon.textContent = "Copy";
     button.appendChild(icon);
   }
   const state = installBrowserDom({ ids: ["source"], groups: { "[data-copy]": [button] } });
@@ -37,7 +37,7 @@ test("copies text and restores the plain button label", async () => {
   jest.useRealTimers();
 });
 
-test("updates and restores the icon after a successful copy", async () => {
+test("keeps the icon and shows success after a successful copy", async () => {
   jest.useFakeTimers();
   const { button } = setup(
     jest.fn(async () => {}),
@@ -46,10 +46,10 @@ test("updates and restores the icon after a successful copy", async () => {
   const icon = button.children[0];
   initCopyControls();
   await Promise.all(button.dispatch("click"));
-  expect(icon.textContent).toBe("✓");
+  expect(icon.textContent).toBe("Copy");
   expect(button.classList.contains("btn-success")).toBe(true);
   jest.runOnlyPendingTimers();
-  expect(icon.textContent).toBe("⧉");
+  expect(icon.textContent).toBe("Copy");
   expect(button.classList.contains("btn-success")).toBe(false);
   jest.useRealTimers();
 });
@@ -66,12 +66,12 @@ test.each([false, true])(
     );
     initCopyControls();
     await Promise.all(button.dispatch("click"));
-    expect(withIcon ? button.children[0].textContent : button.textContent).toBe(
-      withIcon ? "!" : "Retry",
+    expect(withIcon ? button.classList.contains("copy-failed") : button.textContent).toBe(
+      withIcon ? true : "Retry",
     );
     jest.runOnlyPendingTimers();
-    expect(withIcon ? button.children[0].textContent : button.textContent).toBe(
-      withIcon ? "⧉" : "Copy",
+    expect(withIcon ? button.classList.contains("copy-failed") : button.textContent).toBe(
+      withIcon ? false : "Copy",
     );
     jest.useRealTimers();
   },
