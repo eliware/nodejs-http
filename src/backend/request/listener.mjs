@@ -1,19 +1,17 @@
-import __moduleApi1 from "../file-access.mjs";
-const { fileExists } = __moduleApi1();
 import __moduleApifix1 from "../response.mjs";
 const { sendError, sendText } = __moduleApifix1();
 import __moduleApifix2 from "../special-routes.mjs";
 const { handleSpecialRequest } = __moduleApifix2();
 import __moduleApifix3 from "../path-utils.mjs";
-const { getRequestPath, resolvePublicPath } = __moduleApifix3();
-import __moduleApifix4 from "../directory/request.mjs";
-const { resolveDirectoryRequest } = __moduleApifix4();
+const { getRequestPath } = __moduleApifix3();
 import __moduleApifix6 from "../send-file.mjs";
 const { sendFile } = __moduleApifix6();
 import __moduleApifix7 from "../blog/store.mjs";
 const { createBlogStore } = __moduleApifix7();
 import __moduleApifix8 from "./observation.mjs";
 const { observeRequest } = __moduleApifix8();
+import __moduleApifix9 from "./repository-files.mjs";
+const { resolveRepositoryFile } = __moduleApifix9();
 import { createLogger } from "@eliware/common";
 
 function createRequestListener(config, loggerOverride) {
@@ -54,19 +52,8 @@ function createRequestListener(config, loggerOverride) {
     }
     if (await handleSpecialRequest(request, response, requestPath, config)) return;
 
-    const filePath = resolvePublicPath(config.publicDir, requestPath);
-    let file = await fileExists(filePath, config);
-    if (!file && config.directoryIndex) {
-      const directoryResult = await resolveDirectoryRequest(
-        request,
-        response,
-        filePath,
-        requestPath,
-        config,
-      );
-      if (directoryResult.handled) return;
-      file = directoryResult.file;
-    }
+    const { handled, file } = await resolveRepositoryFile(request, response, requestPath, config);
+    if (handled) return;
     if (!file) {
       await sendError(response, 404, "Not Found", config, config.notFoundFile);
       return;

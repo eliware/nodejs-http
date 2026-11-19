@@ -5,6 +5,8 @@ import guidePathApi from "./guides/path.mjs";
 const { GUIDE_ACTIONS, GUIDE_OSES, GUIDE_CHANNELS, guideFilePath } = guidePathApi();
 import __moduleApifix1 from "./guides/schema.mjs";
 const { validateGuide } = __moduleApifix1();
+import __moduleApifixCoordinates from "./guides/coordinates.mjs";
+const { validateGuideCoordinate } = __moduleApifixCoordinates();
 const cache = new Map();
 
 async function readGuide(publicDir, action, os, channel) {
@@ -22,7 +24,7 @@ async function readGuide(publicDir, action, os, channel) {
   const signature = createHash("sha256").update(content).digest("hex");
   const cached = cache.get(filePath);
   if (cached?.signature === signature) return cached.value;
-  const value = validateGuide(JSON.parse(content), os, channel);
+  const value = validateGuideCoordinate(validateGuide(JSON.parse(content)), os, channel);
   cache.set(filePath, { signature, value });
   return value;
 }

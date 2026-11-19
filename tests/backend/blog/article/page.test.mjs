@@ -21,6 +21,7 @@ test("assembles escaped article page content and optional metadata", () => {
   expect(html).toContain("Safe &lt;title&gt;");
   expect(html).toContain("operations &lt;today&gt;");
   expect(html).toContain("A &quot;summary&quot; &amp; detail.");
+  expect(html).toContain("1 min read");
   expect(html).toContain("/assets/hero.png?size=large&amp;safe=1");
   expect(html).toContain("Last verified 2026-01-03 · Tested on Linux, Node.js");
   expect(renderBlogArticlePage(null)).toBe("");
