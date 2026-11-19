@@ -2,7 +2,7 @@
 
 ## Project
 
-See README.md for the project purpose and end-user documentation.
+Eliware owns this website and application. See README.md for the project purpose and docs/README.md for end-user documentation.
 
 ## Scope and boundaries
 

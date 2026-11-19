@@ -56,3 +56,11 @@ The list API returns a path, total entry count, offset, limit, `hasMore`, entrie
 The image copies `templates/` into `/opt/nodejs-http/site` and copies `public/assets/` into its `assets/` directory. It serves those files from `STATIC_DIR`. Repository files remain in the read-only repository path.
 
 Run `npm run build` to create the browser bundle in `dist/`. The production image builds that bundle in a separate stage and serves it with the pages. See [usage](usage.md) for container commands.
+
+## Published image
+
+The public image is `ghcr.io/eliware/nodejs-http`. The workflow publishes a version tag when a Git tag matches `package.json.version`. The current release tag is `v15.2.0`.
+
+The repository maintainers own the application code and Dockerfile. The `nodejs-packaging` repository owns the CentOS Stream 10 Node.js base image. The workflow leaves `platforms` unset, so the `ubuntu-latest` runner builds `linux/amd64`.
+
+The publish job has `contents: read` and `packages: write` permissions. The package allows public pulls. Publication does not deploy the application. Use a version tag and record its SHA-256 digest when you deploy an image.

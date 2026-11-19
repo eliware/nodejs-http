@@ -83,7 +83,13 @@ Run `npm run build` to create the browser bundle in `dist/`. The production cont
 
 ## Deployment
 
-See [container operations](docs/usage.md#container-operations). The GHCR workflow publishes version-tagged images. Publication does not deploy the application.
+See [container operations](docs/usage.md#container-operations) for local builds. The GHCR package is public at `ghcr.io/eliware/nodejs-http`.
+
+The workflow publishes `vMAJOR.MINOR.PATCH` tags when a Git tag matches `package.json`. The repository maintainers own the application Dockerfile and build inputs. The `nodejs-packaging` repository owns the public CentOS Stream 10 Node.js base image used by the Dockerfile.
+
+The workflow uses the `ubuntu-latest` runner and does not set a platform list. The current build target is `linux/amd64`. The publish job receives `contents: read` and `packages: write` permissions. The validation job only receives `contents: read`.
+
+Publication only adds an image to GHCR. It does not deploy the application. To deploy an image, use an approved version tag and record its SHA-256 digest. Verify and deploy the immutable image reference `ghcr.io/eliware/nodejs-http@sha256:<digest>`.
 
 ## Support
 
