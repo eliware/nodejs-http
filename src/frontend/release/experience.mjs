@@ -13,6 +13,8 @@ import __moduleApifix3 from "./timeline.mjs";
 const { renderTimeline } = __moduleApifix3();
 import __moduleApifix4 from "./comparison.mjs";
 const { populateComparison } = __moduleApifix4();
+import __moduleApifix5 from "./detail-copy.mjs";
+const { initDetailCopy } = __moduleApifix5();
 
 function initControls() {
   const search = getElement("package-search");
@@ -28,17 +30,7 @@ function initControls() {
     state.channel = event.target.value;
     renderSearch();
   });
-  document.querySelectorAll("[data-package-detail-copy]").forEach((button) =>
-    button.addEventListener("click", async () => {
-      const target = getElement(button.dataset.packageDetailCopy);
-      if (!target) return;
-      await navigator.clipboard.writeText(target.textContent);
-      button.classList.add("btn-success");
-      setTimeout(() => {
-        button.classList.remove("btn-success");
-      }, 2500);
-    }),
-  );
+  initDetailCopy();
 }
 
 async function initReleaseExperience() {

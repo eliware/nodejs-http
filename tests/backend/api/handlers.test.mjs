@@ -37,10 +37,6 @@ test("uses the root path when the directory request has no URL or path query", a
   expect(response.statusCode).toBe(404);
 });
 
-test("ignores unrelated blog API paths", async () => {
-  expect(await handleBlogApi(responseFor(), "/not-a-blog", config)).toBe(false);
-});
-
 test("serves articles, hides drafts, and handles blog store failures", async () => {
   const empty = responseFor();
   await handleBlogApi(empty, "/api/v1/blogs", {
@@ -87,6 +83,13 @@ test("serves articles, hides drafts, and handles blog store failures", async () 
   });
   expect(broken.statusCode).toBe(503);
   expect(JSON.parse(broken.body)).toEqual({ error: "blog metadata unavailable" });
+});
+
+test("returns not found for nested article paths", async () => {
+  const result = responseFor();
+  await expect(handleBlogApi(result, "/api/v1/blogs/post/extra", config)).resolves.toBe(true);
+  expect(result.statusCode).toBe(404);
+  expect(JSON.parse(result.body)).toEqual({ error: "blog post not found" });
 });
 
 test("normalizes directory API paths and returns successful indexed listings", async () => {

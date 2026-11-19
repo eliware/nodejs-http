@@ -1,6 +1,6 @@
 import __moduleApi1 from "../../dom.mjs";
 const { getElement } = __moduleApi1();
-import imageExamplesApi from "../examples.mjs";
+import imageExamplesApi from "../example-view.mjs";
 const { renderImageExample } = imageExamplesApi();
 import imageStateApi from "./state.mjs";
 const { resetImageSelection, setImageExampleReferenceMode, setImageExampleKind } = imageStateApi();

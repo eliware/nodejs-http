@@ -5,11 +5,8 @@ const { fileHeaders } = __moduleApifix1();
 import __moduleApifix2 from "../response/compression.mjs";
 const { compressBody } = __moduleApifix2();
 import { promises as fs } from "node:fs";
-import { APP_VERSION } from "../app-version.mjs";
-import __moduleApifix3 from "../runtime-identity.mjs";
-const { servingHostId } = __moduleApifix3();
-import __moduleApifix4 from "../directory/presentation.mjs";
-const { copyrightYear } = __moduleApifix4();
+import __moduleApifix3 from "./page-tokens.mjs";
+const { replacePageTokens } = __moduleApifix3();
 
 async function serveStaticFile(response, request, requestPath, config) {
   const file = await staticFileExists(config.staticDir, requestPath, config);
@@ -23,15 +20,7 @@ async function serveStaticFile(response, request, requestPath, config) {
         : "public, max-age=60",
   };
   let body = await fs.readFile(file.path);
-  if (file.path.endsWith(".html"))
-    body = Buffer.from(
-      body
-        .toString("utf8")
-        .replaceAll("__HOST_ID__", servingHostId())
-        .replaceAll("__COPYRIGHT_YEAR__", copyrightYear())
-        .replaceAll("__APP_VERSION__", process.env.APP_VERSION || APP_VERSION)
-        .replaceAll("__ASSET_VERSION__", process.env.APP_VERSION || APP_VERSION),
-    );
+  if (file.path.endsWith(".html")) body = replacePageTokens(body);
   const encoded = await compressBody(body, request, headers["Content-Type"], config);
   if (request.method === "HEAD") {
     response.writeHead(200, {

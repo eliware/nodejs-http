@@ -1,5 +1,5 @@
 import { expect, jest, test } from "@jest/globals";
-import { BrowserElement, installBrowserDom } from "../../../test-fixtures/browser-dom.mjs";
+import { installBrowserDom } from "../../../test-fixtures/browser-dom.mjs";
 
 const fetchCatalog = jest.fn();
 const fetchRepositoryIndex = jest.fn();
@@ -32,8 +32,6 @@ const stableNode = {
   href: "/el10/x86_64/stable/eliware-node26-26.13.1-1.npm12.2.3.el10.x86_64.rpm",
 };
 function setup(search = "") {
-  const copy = new BrowserElement("button");
-  copy.dataset.packageDetailCopy = "package-detail-command";
   const state = installBrowserDom({
     ids: [
       "package-search",
@@ -52,7 +50,6 @@ function setup(search = "") {
       "compare-to",
       "release-comparison-result",
     ],
-    groups: { "[data-package-detail-copy]": [copy] },
   });
   globalThis.location = { search };
   fetchCatalog.mockResolvedValue({
@@ -68,7 +65,7 @@ function setup(search = "") {
     },
   });
   fetchReleaseManifest.mockResolvedValue({ generated: "today" });
-  return { ...state, copy };
+  return state;
 }
 
 test("does nothing without the package search or detail panel", async () => {
@@ -97,17 +94,6 @@ test("renders searchable packages, details, release history, and comparisons", a
   const channel = state.get("package-channel");
   channel.value = "rolling";
   channel.dispatch("change");
-  globalThis.navigator = { clipboard: { writeText: jest.fn(async () => {}) } };
-  jest.useFakeTimers();
-  state.copy.dataset.packageDetailCopy = "missing-target";
-  await state.copy.dispatch("click")[0];
-  state.copy.dataset.packageDetailCopy = "package-detail-command";
-  await state.copy.dispatch("click")[0];
-  expect(globalThis.navigator.clipboard.writeText).toHaveBeenCalled();
-  expect(state.copy.classList.contains("btn-success")).toBe(true);
-  jest.advanceTimersByTime(2500);
-  expect(state.copy.classList.contains("btn-success")).toBe(false);
-  jest.useRealTimers();
 });
 
 test("loads release data without a requested package", async () => {

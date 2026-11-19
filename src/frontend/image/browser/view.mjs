@@ -2,7 +2,7 @@ import __moduleApi1 from "../../dom.mjs";
 const { getElement } = __moduleApi1();
 import imageRowsApi from "../rows.mjs";
 const { renderFolderRow, renderImageRow } = imageRowsApi();
-import imageExamplesApi from "../examples.mjs";
+import imageExamplesApi from "../example-view.mjs";
 const { renderImageExample } = imageExamplesApi();
 import imageRecordsApi from "../source.mjs";
 const { displaySource } = imageRecordsApi();
