@@ -1,5 +1,7 @@
 import __moduleApi1 from "../dom.mjs";
 const { getElement } = __moduleApi1();
+import __moduleApifix1 from "../validation/results.mjs";
+const { metadataStatus, resolveValidationResults, validationStatusIcon } = __moduleApifix1();
 
 const distributionLabels = {
   "centos-stream-10": "CentOS Stream 10",
@@ -9,15 +11,6 @@ const distributionLabels = {
   "debian-bookworm": "Debian 12 (bookworm)",
   "ubuntu-noble": "Ubuntu 24.04 (noble)",
 };
-
-function validationIcon(status) {
-  const icon = status === "passed" ? "✓" : status === "failed" ? "✕" : "—";
-  return `<span class="validation-icon ${status || "skip"}">${icon}</span>`;
-}
-
-function metadataStatus(result) {
-  return typeof result === "string" ? result : result?.status;
-}
 
 function renderValidation(listing) {
   const section = getElement("directory-validation");
@@ -36,15 +29,9 @@ function renderValidation(listing) {
       const containerResult = container?.distributions?.find(
         (candidate) => candidate.id === item.id,
       );
-      const packageResult = rpmResult?.package_core || rpmResult?.core;
       const label = distributionLabels[item.id] || item.label || item.id;
-      const repositoryResult =
-        rpmResult?.repository_integrity ||
-        rpmResult?.integrity ||
-        containerResult?.repository_integrity;
-      const provenanceResult =
-        rpmResult?.provenance || rpmResult?.provenance_verification || containerResult?.provenance;
-      return `<tr><th scope="row">${label}</th><td>${validationIcon(packageResult?.status)}</td>${hasContainer ? `<td>${validationIcon((containerResult?.container_core || containerResult?.core)?.status)}</td>` : ""}<td>${validationIcon(metadataStatus(repositoryResult))}</td><td>${validationIcon(metadataStatus(provenanceResult))}</td></tr>`;
+      const results = resolveValidationResults({ rpm: rpmResult, container: containerResult });
+      return `<tr><th scope="row">${label}</th><td>${validationStatusIcon(results.packageResult?.status, true)}</td>${hasContainer ? `<td>${validationStatusIcon(results.containerResult?.status, true)}</td>` : ""}<td>${validationStatusIcon(metadataStatus(results.repositoryResult), true)}</td><td>${validationStatusIcon(metadataStatus(results.provenanceResult), true)}</td></tr>`;
     })
     .join("");
   section.hidden = false;

@@ -45,6 +45,12 @@ describe("blog HTTP surface", () => {
     expect(body).toMatch(/Host <code>[^<]+<\/code>/);
   });
 
+  test("renders a published category page", async () => {
+    const response = await request((await fixture()).listener, "/blog/category/releases");
+    expect(response.statusCode).toBe(200);
+    expect(response.body.toString()).toContain("releases · Eliware");
+  });
+
   test("renders remote hero URLs and articles without verification metadata", async () => {
     const site = await fixture();
     const response = new MockResponse();

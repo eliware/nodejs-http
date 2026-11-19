@@ -6,7 +6,7 @@ import __moduleApifix1 from "../response/compression.mjs";
 const { compressBody } = __moduleApifix1();
 import __moduleApifix2 from "../runtime-identity.mjs";
 const { servingHostId } = __moduleApifix2();
-import __moduleApifix3 from "./page-renderer.mjs";
+import __moduleApifix3 from "./page/renderer.mjs";
 const { renderBlogPage } = __moduleApifix3();
 
 async function serveBlogPage(response, request, requestPath, config) {

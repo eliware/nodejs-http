@@ -76,7 +76,6 @@ test("returns unavailable feeds and sitemaps when their stores fail", async () =
 
 test("serves blog pages, redirects old paths, and maps static pages", async () => {
   expect((await call("/blog")).response.statusCode).toBe(200);
-  expect((await call("/blog/category/releases")).body).toContain("releases · Eliware");
   const articleStore = {
     published: async () => [
       {

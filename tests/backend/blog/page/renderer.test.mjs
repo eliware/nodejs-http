@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import __moduleApi0 from "../../../src/backend/blog/page-renderer.mjs";
+import __moduleApi0 from "../../../../src/backend/blog/page/renderer.mjs";
 const { renderBlogPage } = __moduleApi0();
 
 const article = () => ({

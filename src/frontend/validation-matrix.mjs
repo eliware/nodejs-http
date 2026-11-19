@@ -4,6 +4,9 @@ import __moduleApifix1 from "./dom.mjs";
 const { getElement } = __moduleApifix1();
 import __moduleApifix2 from "./format.mjs";
 const { formatDateTime } = __moduleApifix2();
+import __moduleApifix3 from "./validation/results.mjs";
+const { canonicalDistributionId, metadataStatus, resolveValidationResults, validationStatusIcon } =
+  __moduleApifix3();
 
 const supportedDistributions = [
   ["centos-stream-10", "CentOS Stream 10"],
@@ -13,25 +16,6 @@ const supportedDistributions = [
   ["debian-bookworm", "Debian 12 (bookworm)"],
   ["ubuntu-noble", "Ubuntu 24.04 (noble)"],
 ];
-
-function statusIcon(status) {
-  if (status === "passed") return '<span class="validation-icon pass">✓</span>';
-  if (status === "failed") return '<span class="validation-icon fail">✕</span>';
-  return '<span class="validation-icon skip">—</span>';
-}
-
-function metadataStatus(result) {
-  return typeof result === "string" ? result : result?.status;
-}
-
-function canonicalDistributionId(id) {
-  return (
-    {
-      debian: "debian-bookworm",
-      ubuntu: "ubuntu-noble",
-    }[id] || id
-  );
-}
 
 async function initValidationMatrix() {
   const body = getElement("validation-rows");
@@ -55,21 +39,8 @@ async function initValidationMatrix() {
         const containerRecord = containerValidations.find((candidate) =>
           (candidate.distributions || []).some((item) => canonicalDistributionId(item.id) === id),
         );
-        const packageResult = rpm?.package_core || rpm?.core;
-        const repositoryResult =
-          rpm?.repository_integrity ||
-          rpm?.integrity ||
-          container?.repository_integrity ||
-          (rpm ? validation?.repository_integrity : null) ||
-          containerRecord?.repository_integrity;
-        const provenanceResult =
-          rpm?.provenance ||
-          rpm?.provenance_verification ||
-          container?.provenance ||
-          (rpm ? validation?.provenance_verification : null) ||
-          containerRecord?.provenance_verification ||
-          containerRecord?.provenance;
-        return `<tr><th scope="row">${label}</th><td>${statusIcon(packageResult?.status)}</td><td>${statusIcon((container?.container_core || container?.core)?.status)}</td><td>${statusIcon(metadataStatus(repositoryResult))}</td><td>${statusIcon(metadataStatus(provenanceResult))}</td></tr>`;
+        const results = resolveValidationResults({ rpm, container, validation, containerRecord });
+        return `<tr><th scope="row">${label}</th><td>${validationStatusIcon(results.packageResult?.status)}</td><td>${validationStatusIcon(results.containerResult?.status)}</td><td>${validationStatusIcon(metadataStatus(results.repositoryResult))}</td><td>${validationStatusIcon(metadataStatus(results.provenanceResult))}</td></tr>`;
       })
       .join("");
     const checks = getElement("validation-checks");
