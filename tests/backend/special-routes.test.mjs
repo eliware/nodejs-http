@@ -32,7 +32,7 @@ test("routes health, catalog, and metadata API requests", async () => {
   expect((await call("/api/guides/install/centos10/stable")).response.statusCode).toBe(404);
   expect((await call("/api/v1/blogs")).response.statusCode).toBe(200);
   expect((await call("/api/v1/blogs/missing")).response.statusCode).toBe(404);
-  expect((await call("/api/v1/blogs/missing/part")).response.statusCode).toBe(503);
+  expect((await call("/api/v1/blogs/missing/part")).response.statusCode).toBe(404);
 });
 
 test("serves RSS and sitemap documents and their HEAD forms", async () => {

@@ -5,7 +5,7 @@ const { sendText } = __moduleApifix1();
 import __moduleApiFileHeaders from "./response/file-headers.mjs";
 const { fileHeaders } = __moduleApiFileHeaders();
 import __moduleApifix2 from "./response/compression.mjs";
-const { compressBody } = __moduleApifix2();
+const { chooseEncoding, compressBody } = __moduleApifix2();
 import __moduleApifix3 from "./static/stream.mjs";
 const { streamFile } = __moduleApifix3();
 
@@ -30,7 +30,17 @@ async function sendFile(response, request, file, config) {
       headers["Content-Length"] = range.end - range.start + 1;
       response.writeHead(206, headers);
     } else {
-      headers["Content-Length"] = stats.size;
+      if (file.body) {
+        const encoded = await compressBody(file.body, request, headers["Content-Type"], config);
+        headers["Content-Length"] = encoded.body.length;
+        Object.assign(headers, encoded.headers);
+      } else {
+        const encoding = chooseEncoding(request, headers["Content-Type"], stats.size, config);
+        if (encoding) {
+          headers["Content-Encoding"] = encoding;
+          headers.Vary = "Accept-Encoding";
+        } else headers["Content-Length"] = stats.size;
+      }
       response.writeHead(200, headers);
     }
     response.end();

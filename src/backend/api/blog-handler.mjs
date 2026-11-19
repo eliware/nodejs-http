@@ -15,10 +15,13 @@ async function handleBlogApi(response, requestPath, config) {
   const isCollection = requestPath === collectionPath;
   const isArticle = requestPath.startsWith(prefix);
   if (!isCollection && !isArticle) return false;
+  const slug = isArticle ? requestPath.slice(prefix.length) : "";
+  if (isArticle && (!slug || slug.includes("/"))) {
+    sendJson(response, 404, { error: "blog post not found" }, config, "no-store");
+    return true;
+  }
   try {
     if (isArticle) {
-      const slug = requestPath.slice(prefix.length);
-      if (!slug || slug.includes("/")) throw new Error("invalid blog slug");
       const blog = await config.blogStore.bySlug(slug);
       if (!blog) {
         sendJson(response, 404, { error: "blog post not found" }, config, "no-store");

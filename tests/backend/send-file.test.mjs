@@ -44,6 +44,24 @@ test("sends full and ranged HEAD responses without bodies", async () => {
   expect(ranged.body).toHaveLength(0);
 });
 
+test("reports compressed representation headers for HEAD requests", async () => {
+  const publicDir = await createStaticDirectory();
+  const file = await fileExists(path.join(publicDir, "hello.txt"), { publicDir });
+  const cached = { ...file, body: Buffer.from("cached response") };
+  const settings = { ...config(), compression: true, compressionMinBytes: 0 };
+  const get = await send("GET", { "accept-encoding": "gzip" }, cached, settings);
+  const head = await send("HEAD", { "accept-encoding": "gzip" }, cached, settings);
+  expect(head.response.headers["Content-Encoding"]).toBe("gzip");
+  expect(head.response.headers.Vary).toBe("Accept-Encoding");
+  expect(head.response.headers["Content-Length"]).toBe(get.response.headers["Content-Length"]);
+  expect(head.body).toHaveLength(0);
+
+  const streamedHead = await send("HEAD", { "accept-encoding": "gzip" }, file, settings);
+  expect(streamedHead.response.headers["Content-Encoding"]).toBe("gzip");
+  expect(streamedHead.response.headers["Content-Length"]).toBeUndefined();
+  expect(streamedHead.body).toHaveLength(0);
+});
+
 test("rejects invalid ranges with a 416 response", async () => {
   const publicDir = await createStaticDirectory();
   const file = await fileExists(path.join(publicDir, "hello.txt"), { publicDir });

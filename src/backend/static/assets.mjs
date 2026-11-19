@@ -32,12 +32,16 @@ async function serveStaticFile(response, request, requestPath, config) {
         .replaceAll("__APP_VERSION__", process.env.APP_VERSION || APP_VERSION)
         .replaceAll("__ASSET_VERSION__", process.env.APP_VERSION || APP_VERSION),
     );
+  const encoded = await compressBody(body, request, headers["Content-Type"], config);
   if (request.method === "HEAD") {
-    response.writeHead(200, { ...headers, "Content-Length": body.length });
+    response.writeHead(200, {
+      ...headers,
+      "Content-Length": encoded.body.length,
+      ...encoded.headers,
+    });
     response.end();
     return true;
   }
-  const encoded = await compressBody(body, request, headers["Content-Type"], config);
   response.writeHead(200, {
     ...headers,
     "Content-Length": encoded.body.length,

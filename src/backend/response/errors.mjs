@@ -22,7 +22,7 @@ function createErrorSender(sendText) {
           "Content-Length": body.length,
           ...headers,
         });
-        response.end(body);
+        response.end(response.req?.method === "HEAD" ? undefined : body);
         return;
       } catch {
         /* use the built-in response */

@@ -39,6 +39,16 @@ test("sends a custom error file when it exists", async () => {
   expect(result.body.toString()).toBe("custom error");
 });
 
+test("does not send a custom error body for HEAD requests", async () => {
+  const file = await createFixtureFile("custom error", "head-error-page.html");
+  const result = response();
+  result.req.method = "HEAD";
+  await sendError(result, 404, "missing", config, file);
+  expect(result.statusCode).toBe(404);
+  expect(result.headers["Content-Length"]).toBe(Buffer.byteLength("custom error"));
+  expect(result.body).toHaveLength(0);
+});
+
 test("uses a text error when the custom file is missing or unset", async () => {
   const missing = response();
   await sendError(missing, 404, "missing", config, "/not/a/real/error-page.html");

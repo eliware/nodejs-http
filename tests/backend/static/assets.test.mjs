@@ -81,6 +81,17 @@ test("compresses accepted static bodies and honors encoding settings", async () 
   );
   expect(file.response.headers["Content-Encoding"]).toBe("gzip");
   expect(file.response.headers.Vary).toBe("Accept-Encoding");
+  const head = await serve(
+    root,
+    "/web/app.js",
+    "HEAD",
+    { "accept-encoding": "gzip" },
+    { compression: true, compressionMinBytes: 0 },
+  );
+  expect(head.response.headers["Content-Encoding"]).toBe("gzip");
+  expect(head.response.headers.Vary).toBe("Accept-Encoding");
+  expect(head.response.headers["Content-Length"]).toBe(file.response.headers["Content-Length"]);
+  expect(head.body).toBe("");
 });
 
 test("uses the extended copyright year after the base year", async () => {

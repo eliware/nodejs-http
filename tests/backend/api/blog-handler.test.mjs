@@ -18,7 +18,7 @@ function response() {
   };
 }
 
-test("returns unavailable when an article path contains a nested slug", async () => {
+test("returns not found when an article path contains a nested slug", async () => {
   const result = response();
   await expect(
     handleBlogApi(result, "/api/v1/blogs/post/extra", {
@@ -26,6 +26,6 @@ test("returns unavailable when an article path contains a nested slug", async ()
       compression: false,
     }),
   ).resolves.toBe(true);
-  expect(result.statusCode).toBe(503);
-  expect(JSON.parse(result.body)).toEqual({ error: "blog metadata unavailable" });
+  expect(result.statusCode).toBe(404);
+  expect(JSON.parse(result.body)).toEqual({ error: "blog post not found" });
 });
