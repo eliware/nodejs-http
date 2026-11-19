@@ -3,27 +3,156 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Install Node.js 26</title>
+    <meta
+      name="description"
+      content="Install or update Node.js 26 from the signed Eliware RPM repository."
+    />
+    <link rel="icon" href="/assets/favicon.ico" />
+    <link rel="stylesheet" href="/web/app.css?v=__ASSET_VERSION__" />
+    <title>Install Node.js · Eliware</title>
   </head>
   <body>
-    <main>
-      <p><a href="/">Eliware Node.js 26</a></p>
-      <h1>Install Node.js 26 on CentOS Stream 10</h1>
-      <p>Download the repository configuration, then install the signed RPM with DNF.</p>
-      <pre><code>sudo dnf config-manager --add-repo https://nodejs.eliware.org/nodejs26.repo
-sudo dnf install eliware-nodejs26
-sudo yum -y update</code></pre>
-      <p>
-        The RPM installs versioned commands named <code>node26</code>, <code>npm26</code>, and
-        <code>npx26</code>.
-      </p>
-      <p>The RPM includes npm 12 or later and keeps global tools outside RPM-managed files.</p>
-      <p>
-        Use <code>npm26 -g install npm@latest</code> to update npm. Use <code>npm26 link</code> to
-        link a local package.
-      </p>
-      <p><a href="/nodejs26.repo">Download the repository configuration</a></p>
-      <p><a href="/metadata/catalog.json">Review release metadata</a></p>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="navbar">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/"
+          ><img class="brand-logo" src="/assets/eliware-brand.svg" alt="Eliware" /><strong
+            >Eliware Node.js</strong
+          ></a
+        >
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/">Home</a><a href="/browse">Browse</a><a href="/#containers">Images</a
+          ><a href="/blog">Blog</a><a href="/about">About</a>
+        </nav>
+        <details class="mobile-nav">
+          <summary>Menu</summary>
+          <nav class="mobile-nav-links" aria-label="Mobile navigation">
+            <a href="/">Home</a><a href="/browse">Browse</a><a href="/#containers">Images</a
+            ><a href="/blog">Blog</a><a href="/about">About</a>
+          </nav>
+        </details>
+      </div>
+    </header>
+    <main id="main" class="container repository-browser info-page">
+      <header class="blog-hero">
+        <p class="eyebrow">CentOS Stream 10 · x86_64</p>
+        <h1>Install and update Node.js 26</h1>
+        <p class="lead">
+          Use the signed Eliware RPM repository. The package provides the standard
+          <code>node</code>, <code>npm</code>, and <code>npx</code> commands.
+        </p>
+      </header>
+      <section class="card p-4">
+        <div class="workspace-heading">
+          <div>
+            <p class="eyebrow">Stable release</p>
+            <h2 id="package-install-title">Install with DNF</h2>
+          </div>
+          <div id="package-manager-tools" class="d-flex gap-2" aria-label="Package manager">
+            <button
+              class="btn btn-outline-light"
+              type="button"
+              data-package-manager="dnf"
+              aria-pressed="true"
+            >
+              DNF</button
+            ><button
+              class="btn btn-outline-light"
+              type="button"
+              data-package-manager="yum"
+              aria-pressed="false"
+            >
+              YUM
+            </button>
+          </div>
+        </div>
+        <p id="rpm-status" class="muted">Install the current stable Node.js 26 release.</p>
+        <select id="target-distro" class="visually-hidden" aria-label="Operating system">
+          <option value="centos-stream">CentOS Stream 10</option>
+        </select>
+        <div class="wizard-fields">
+          <label class="form-label" for="target-channel"
+            >Release lane<select id="target-channel">
+              <option value="stable">Stable</option>
+            </select></label
+          >
+          <label class="form-label" for="target-version"
+            >Node.js version<select id="target-version">
+              <option value="stable">Latest stable</option>
+            </select></label
+          >
+          <label class="form-label" for="target-release"
+            >Operating system release<select id="target-release">
+              <option value="10">10</option>
+            </select></label
+          >
+        </div>
+        <div class="code-wrap">
+          <pre><code id="rpm-command">Loading installation commands.</code></pre>
+          <button
+            class="copy-btn"
+            type="button"
+            data-copy="rpm-command"
+            aria-label="Copy install commands"
+          >
+            <span class="copy-icon">⧉</span>
+          </button>
+        </div>
+        <p>
+          <a id="package-repo-file" href="/nodejs26.repo">Download the repository file</a
+          ><span id="package-repo-separator"> · </span
+          ><a id="rpm-browse" href="/el10/x86_64/stable/">Browse stable RPMs</a>
+        </p>
+      </section>
+      <section class="workspace-columns section-block">
+        <article class="card p-4">
+          <h2>Verify the package</h2>
+          <p>
+            Confirm the package SHA-256 value before installation. The repository publishes detached
+            signatures, checksums, and provenance.
+          </p>
+          <p>
+            <a href="/keys/RPM-GPG-KEY-ELIWARE-NODEJS">Signing key</a> ·
+            <a href="/el10/x86_64/stable/repodata/repomd.xml">Signed repository metadata</a>
+          </p>
+        </article>
+        <article class="card p-4">
+          <h2>Update Node.js</h2>
+          <p>
+            Keep the Eliware repository file installed. DNF and YUM will show newer stable RPMs when
+            the conductor publishes them.
+          </p>
+          <p>
+            Run <code>sudo dnf update eliware-node26</code> or
+            <code>sudo yum update eliware-node26</code>.
+          </p>
+        </article>
+      </section>
+      <section class="card p-4 section-block">
+        <h2>Global tools and local links</h2>
+        <p>
+          The RPM keeps npm global packages outside its managed runtime files. The profile script
+          adds the global command directory to <code>PATH</code>.
+        </p>
+        <p>
+          Use <code>npm install --global package-name</code> to add a command. Use
+          <code>npm link</code> to link a local package.
+        </p>
+        <p>
+          <a href="/metadata/catalog.json">Release catalog</a> ·
+          <a href="/metadata/provenance/package.json">Package provenance</a>
+        </p>
+      </section>
     </main>
+    <footer class="site-footer">
+      <div class="container py-4 d-flex flex-wrap justify-content-between gap-2">
+        <span>© __COPYRIGHT_YEAR__ Eliware · Node.js HTTP v__APP_VERSION__</span
+        ><span
+          ><a href="/about">About</a> · <a href="/tos">Terms</a> · <a href="/policy">Policy</a> ·
+          <a href="/metadata/catalog.json">Catalog</a></span
+        >
+      </div>
+    </footer>
+    <script src="/web/app.js?v=__ASSET_VERSION__" defer></script>
   </body>
 </html>

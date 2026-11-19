@@ -37,7 +37,12 @@ function updateSortButtons() {
 async function initDirectoryBrowser() {
   const entries = getElement("directory-entries");
   if (!entries || !getElement("directory-title")) return;
-  const currentPath = location.pathname.endsWith("/") ? location.pathname : `${location.pathname}/`;
+  const requestedPath = new URLSearchParams(location.search).get("path");
+  const currentPath = requestedPath
+    ? requestedPath.startsWith("/")
+      ? requestedPath
+      : `/${requestedPath}`
+    : "/";
   currentListing = await fetchDirectory(currentPath);
   renderValidation(currentListing);
   getElement("directory-title").textContent = `Index of ${currentListing.path}`;

@@ -15,7 +15,7 @@ test("renders encoded directory breadcrumbs and marks the current segment", () =
     "/",
     "x86_64",
   ]);
-  expect(crumbs[2].href).toBe("/el10/");
+  expect(crumbs[2].href).toBe("/browse?path=%2Fel10%2F");
   expect(crumbs[4].getAttribute("aria-current")).toBe("page");
 });
 

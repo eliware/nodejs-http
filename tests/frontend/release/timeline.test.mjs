@@ -14,25 +14,27 @@ test("renders an empty timeline message", () => {
   renderTimeline();
 });
 
-test("shows stable, rolling, and manifest lifecycle events", () => {
+test("shows stable release lifecycle events", () => {
   state.catalog = {
-    stable: { version: "10.1", built: "2026-01-01T00:00:00Z" },
-    preview: {
+    stable: {
       items: [
-        { candidate: "rolling-abcdef1234", built: "2026-01-02T00:00:00Z", validation: true },
-        { candidate: "rolling-9876543", generated: "2026-01-03T00:00:00Z" },
+        {
+          node_version: "26.13.1",
+          built: "2026-01-01T00:00:00Z",
+          validation: { status: "passed" },
+        },
+        { node_version: "26.13.0", generated: "2026-01-03T00:00:00Z" },
+        { generated: "2026-01-05T00:00:00Z" },
       ],
     },
   };
   state.manifest = { generated: "2026-01-04T00:00:00Z" };
   const { get } = installBrowserDom({ ids: ["release-timeline"] });
   renderTimeline();
-  expect(get("release-timeline").children).toHaveLength(4);
-  expect(get("release-timeline").children[1].innerHTML).toContain("Validated");
-  expect(get("release-timeline").children[2].innerHTML).toContain("Published");
-  state.catalog.preview.items.push({ source: { commit: "abcdef123456" } });
-  renderTimeline();
-  expect(get("release-timeline").children[3].innerHTML).toContain("abcdef123456");
+  expect(get("release-timeline").children).toHaveLength(3);
+  expect(get("release-timeline").children[0].innerHTML).toContain("Validated");
+  expect(get("release-timeline").children[0].innerHTML).toContain("Node.js 26.13.1");
+  expect(get("release-timeline").children[2].innerHTML).toContain("Node.js stable");
 });
 
 test("uses stable generated metadata when built metadata is absent", () => {
@@ -40,5 +42,12 @@ test("uses stable generated metadata when built metadata is absent", () => {
   state.manifest = null;
   const { get } = installBrowserDom({ ids: ["release-timeline"] });
   renderTimeline();
-  expect(get("release-timeline").children[0].innerHTML).toContain("Stable 10.2");
+  expect(get("release-timeline").children[0].innerHTML).toContain("Node.js 10.2");
+});
+
+test("uses latest metadata when the stable history array is absent", () => {
+  state.catalog = { stable: { latest: { node_version: "26.13.2" } } };
+  const { get } = installBrowserDom({ ids: ["release-timeline"] });
+  renderTimeline();
+  expect(get("release-timeline").children[0].innerHTML).toContain("Node.js 26.13.2");
 });

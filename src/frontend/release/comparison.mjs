@@ -6,21 +6,18 @@ import { state } from "./state.mjs";
 
 function releaseOptions() {
   const options = [];
-  if (state.catalog.stable?.version)
-    options.push({
-      id: `stable:${state.catalog.stable.version}`,
-      label: `Stable ${state.catalog.stable.version}`,
-      version: state.catalog.stable.version,
-      channel: "stable",
-    });
-  (state.catalog.preview?.items || []).forEach((item) =>
-    options.push({
-      id: `rolling:${item.candidate}`,
-      label: `Rolling ${item.candidate}`,
-      version: item.candidate,
-      channel: "rolling",
-    }),
-  );
+  const stable = state.catalog.stable;
+  const releases = stable?.items || (stable?.latest ? [stable.latest] : stable ? [stable] : []);
+  releases.forEach((item) => {
+    const version = item.node_version || item.version;
+    if (version)
+      options.push({
+        id: `stable:${version}`,
+        label: `Stable ${version}`,
+        version,
+        channel: "stable",
+      });
+  });
   return options;
 }
 

@@ -8,14 +8,7 @@ import __moduleApifix3 from "./validation/results.mjs";
 const { canonicalDistributionId, metadataStatus, resolveValidationResults, validationStatusIcon } =
   __moduleApifix3();
 
-const supportedDistributions = [
-  ["centos-stream-10", "CentOS Stream 10"],
-  ["rocky-10", "Rocky Linux 10"],
-  ["almalinux-10", "AlmaLinux 10"],
-  ["oracle-linux-10", "Oracle Linux 10"],
-  ["debian-bookworm", "Debian 12 (bookworm)"],
-  ["ubuntu-noble", "Ubuntu 24.04 (noble)"],
-];
+const supportedDistributions = [["centos-stream-10", "CentOS Stream 10"]];
 
 async function initValidationMatrix() {
   const body = getElement("validation-rows");

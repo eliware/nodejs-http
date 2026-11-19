@@ -52,6 +52,7 @@ test("renders search results, empty state, and the overflow note", () => {
   state.packages = [];
   renderSearch();
   expect(get("package-search-status").textContent).toBe("0 matching packages");
+  expect(get("package-search-results").children[0].textContent).toContain("No stable RPM packages");
   state.packages = [packageRecord("one.rpm", "rpm", "/el10/10.1/one.rpm")];
   state.packages[0].size = 0;
   renderSearch();

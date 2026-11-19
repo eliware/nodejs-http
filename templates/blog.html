@@ -3,17 +3,70 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Eliware Node.js updates</title>
+    <meta name="description" content="Node.js packaging and release notes from Eliware." />
+    <link rel="icon" href="/assets/favicon.ico" />
+    <link rel="stylesheet" href="/web/app.css?v=__ASSET_VERSION__" />
+    <title>Blog · Eliware Node.js</title>
   </head>
   <body>
-    <main>
-      <p><a href="/">Eliware Node.js 26</a></p>
-      <h1>Node.js package updates</h1>
-      <p>
-        Read release notes from the
-        <a href="https://nodejs.org/en/blog/release/">official Node.js project</a>.
-      </p>
-      <p><a href="/metadata/catalog.json">Review Eliware release metadata</a></p>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="navbar">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/"
+          ><img class="brand-logo" src="/assets/eliware-brand.svg" alt="Eliware" /><strong
+            >Eliware Node.js</strong
+          ></a
+        >
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/">Home</a><a href="/browse">Browse</a><a href="/install">Install</a
+          ><a href="/about">About</a>
+        </nav>
+        <details class="mobile-nav">
+          <summary>Menu</summary>
+          <nav class="mobile-nav-links" aria-label="Mobile navigation">
+            <a href="/">Home</a><a href="/browse">Browse</a><a href="/install">Install</a
+            ><a href="/about">About</a>
+          </nav>
+        </details>
+      </div>
+    </header>
+    <main id="main" class="container repository-browser info-page">
+      <header id="blog-hero" class="blog-hero">
+        <p class="eyebrow">Release notes and project news</p>
+        <h1>Node.js updates</h1>
+        <p class="lead">
+          Learn about stable package releases, verification, and repository operations.
+        </p>
+      </header>
+      <section id="blog-list-panel" class="card p-4">
+        <div class="package-search-tools">
+          <label class="form-label" for="blog-search"
+            >Search posts<input
+              id="blog-search"
+              type="search"
+              placeholder="Search titles and topics"
+          /></label>
+          <label class="form-label" for="blog-category"
+            >Category<select id="blog-category">
+              <option value="">All categories</option>
+            </select></label
+          >
+        </div>
+        <p id="blog-status" class="muted" aria-live="polite">Loading posts.</p>
+        <div id="blog-list" class="blog-list"></div>
+        <p><a href="/feed.xml">Subscribe to the RSS feed</a></p>
+      </section>
+      <article id="blog-article" class="card p-4 d-none" data-server-rendered="false"></article>
     </main>
+    <footer class="site-footer">
+      <div class="container py-4 d-flex flex-wrap justify-content-between gap-2">
+        <span>© __COPYRIGHT_YEAR__ Eliware · Node.js HTTP v__APP_VERSION__</span
+        ><span
+          ><a href="/about">About</a> · <a href="/policy">Policy</a> · <a href="/tos">Terms</a> ·
+          <a href="/feed.xml">RSS</a></span
+        >
+      </div>
+    </footer>
+    <script src="/web/app.js?v=__ASSET_VERSION__" defer></script>
   </body>
 </html>

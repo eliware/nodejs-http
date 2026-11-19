@@ -60,6 +60,10 @@ function renderImageBrowser(state) {
   renderBreadcrumbs(state, render);
   list.replaceChildren();
   const visible = selectedRecords(state);
+  if (!visible.length) {
+    status.textContent = "No stable CentOS Stream 10 images are available.";
+    return;
+  }
   const repositories = [...new Set(visible.map((record) => record.repository))];
   if (!state.openRepository) {
     if (repositories.length > 1) {

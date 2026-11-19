@@ -27,7 +27,7 @@ Node.js HTTP repository and web frontend.
 
 ## Features
 
-Browse published Node.js 26 RPMs for CentOS Stream 10 EPEL on x86_64. Read release metadata, installation instructions, and project articles.
+Browse stable Node.js 26 RPMs for CentOS Stream 10 EPEL on x86_64. Find packages, verify checksums and provenance, compare releases, inspect published images, and read installation guides and project articles.
 
 ## Requirements
 
@@ -79,7 +79,7 @@ Run `npm start` to start the local server. Set `PUBLIC_DIR` when the repository 
 
 ## Build
 
-Run `npm run build` to create the browser bundle in `dist/`. The production container serves its pages from templates.
+Run `npm run build` to create the browser bundle in `dist/`. The production container builds and serves that bundle with its page templates.
 
 ## Deployment
 

@@ -16,20 +16,20 @@ Store one JSON post in the shared content directory at `content/blogs/`.
 {
   "metadata_version": "<packaging metadata schema version>",
   "schema": 2,
-  "slug": "rolling-releases",
-  "title": "Following rolling releases",
-  "summary": "How to follow Node.js rolling builds.",
-  "published_at": "2026-08-18T12:00:00Z",
-  "updated_at": "2026-08-18T12:00:00Z",
+  "slug": "stable-releases",
+  "title": "Following stable releases",
+  "summary": "How to install stable Node.js updates.",
+  "published_at": "2026-11-19T12:00:00Z",
+  "updated_at": "2026-11-19T12:00:00Z",
   "author": "Eliware",
-  "tags": ["releases", "rolling"],
+  "tags": ["releases", "stable"],
   "content_format": "markdown",
-  "created_at": "2026-08-18T11:00:00Z",
+  "created_at": "2026-11-19T11:00:00Z",
   "category": "releases",
-  "last_verified_at": "2026-08-18T12:00:00Z",
+  "last_verified_at": "2026-11-19T12:00:00Z",
   "tested_on": ["Repository content review"],
   "status": "published",
-  "content": "# Rolling releases\n\nMarkdown content goes here."
+  "content": "# Stable releases\n\nMarkdown content goes here."
 }
 ```
 

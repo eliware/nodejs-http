@@ -7,7 +7,7 @@ function createImageBrowserState(catalog, records) {
     records,
     openRepository: null,
     currentExample: null,
-    exampleReferenceMode: "latest",
+    exampleReferenceMode: "tag",
   };
 }
 

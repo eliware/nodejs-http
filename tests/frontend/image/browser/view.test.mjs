@@ -59,3 +59,19 @@ test("renders one repository and returns when required elements are missing", ()
   installBrowserDom({ ids: ["image-browser-status"] });
   renderImageBrowser(ui.state);
 });
+
+test("shows an empty state when no stable images match", () => {
+  const ui = setup([]);
+  renderImageBrowser(ui.state);
+  expect(ui.get("image-browser-status").textContent).toContain("No stable CentOS Stream 10 images");
+  expect(ui.get("image-list").children).toHaveLength(0);
+});
+
+test("renders image records inside an open repository", () => {
+  const ui = setup([record("ghcr.io/eliware/centos10-node26")]);
+  ui.state.openRepository = "ghcr.io/eliware/centos10-node26";
+  renderImageBrowser(ui.state);
+  expect(ui.get("image-list").children).toHaveLength(1);
+  ui.get("image-list").children[0].dispatch("click");
+  expect(ui.get("image-example-panel").hidden).toBe(false);
+});

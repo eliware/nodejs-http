@@ -3,62 +3,69 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Browse the signed Eliware Node.js package repository." />
+    <link rel="icon" href="/assets/favicon.ico" />
+    <link rel="stylesheet" href="/web/app.css?v=__ASSET_VERSION__" />
     <title>{{TITLE}} · Eliware Node.js</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 2rem;
-        background: #101820;
-        color: #edf4f7;
-        font:
-          1rem/1.5 system-ui,
-          sans-serif;
-      }
-      main {
-        max-width: 1100px;
-        margin: auto;
-      }
-      a {
-        color: #7ee0c3;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1.5rem;
-      }
-      th,
-      td {
-        padding: 0.75rem;
-        border-bottom: 1px solid #35444b;
-        text-align: left;
-      }
-      th {
-        color: #b3c2c8;
-      }
-    </style>
   </head>
   <body>
-    <main>
-      <p>
-        <a href="/">Eliware Node.js 26</a> · <a href="/install">Install</a> ·
-        <a href="/metadata/catalog.json">Catalog</a>
-      </p>
-      <h1>{{TITLE}}</h1>
-      {{BREADCRUMBS}}
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Size</th>
-            <th>Modified</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{ROWS}}
-        </tbody>
-      </table>
-      <p>{{SUMMARY}}</p>
-      {{VALIDATION}}
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="navbar">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/"
+          ><img class="brand-logo" src="/assets/eliware-brand.svg" alt="Eliware" /><strong
+            >Eliware Node.js</strong
+          ></a
+        >
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/">Home</a><a href="/browse">Browse</a><a href="/install">Install</a
+          ><a href="/blog">Blog</a><a href="/about">About</a>
+        </nav>
+        <details class="mobile-nav">
+          <summary>Menu</summary>
+          <nav class="mobile-nav-links" aria-label="Mobile navigation">
+            <a href="/">Home</a><a href="/browse">Browse</a><a href="/install">Install</a
+            ><a href="/blog">Blog</a><a href="/about">About</a>
+          </nav>
+        </details>
+      </div>
+    </header>
+    <main id="main" class="container repository-browser">
+      <header class="directory-hero">
+        <div>
+          <p class="eyebrow">Published repository content</p>
+          <h1>{{TITLE}}</h1>
+          {{BREADCRUMBS}}
+        </div>
+        <img src="/assets/eliware-brand.svg" alt="" />
+      </header>
+      <section class="directory-card card p-4">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">Name</th>
+              <th scope="col">Size</th>
+              <th scope="col">Modified</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ROWS}}
+          </tbody>
+        </table>
+        <p class="directory-summary">{{SUMMARY}}</p>
+        {{VALIDATION}}
+      </section>
     </main>
+    <footer class="site-footer">
+      <div class="container py-4 d-flex flex-wrap justify-content-between gap-2">
+        <span>© __COPYRIGHT_YEAR__ Eliware · Node.js HTTP v__APP_VERSION__</span
+        ><span
+          ><a href="/install">Install</a> · <a href="/metadata/catalog.json">Catalog</a> ·
+          <a href="/feed.xml">RSS</a></span
+        >
+      </div>
+    </footer>
+    <script src="/web/app.js?v=__ASSET_VERSION__" defer></script>
   </body>
 </html>

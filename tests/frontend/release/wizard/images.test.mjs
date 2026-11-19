@@ -79,4 +79,27 @@ test("uses the stable image and safe fallbacks", () => {
   const fallback = resolveContainerImage({ images: [{}] }, "unknown", "stable", "stable", "sha");
   expect(fallback.reference).toBe("ghcr.io/eliware/centos10-node26");
   expect(fallback.repositoryUrl).toBeNull();
+  expect(fallback.digest).toBe("Not published yet");
+});
+
+test("normalizes a direct image catalog record without a reference", () => {
+  const direct = resolveContainerImage(
+    {
+      stable: { latest: { node_version: "26.13.1" } },
+      images: [
+        {
+          repository: "ghcr.io/eliware/centos10-node26",
+          node_version: "26.13.1",
+          tag: "26.13.1",
+          digest: "sha256:direct",
+        },
+      ],
+    },
+    "centos-stream",
+    "stable",
+    "stable",
+    "tag",
+  );
+  expect(direct.reference).toBe("ghcr.io/eliware/centos10-node26:26.13.1");
+  expect(direct.digest).toBe("sha256:direct");
 });

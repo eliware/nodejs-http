@@ -1,5 +1,16 @@
-FROM node:26-bookworm-slim
+FROM ghcr.io/eliware/centos10-node26:26.13.1 AS frontend-build
 
+USER root
+WORKDIR /opt/nodejs-http
+COPY package.json package-lock.json ./
+RUN PUPPETEER_SKIP_DOWNLOAD=true npm ci
+COPY src ./src
+COPY webpack.config.mjs ./webpack.config.mjs
+RUN npm run build
+
+FROM ghcr.io/eliware/centos10-node26:26.13.1
+
+USER root
 ENV NODE_ENV=production
 WORKDIR /opt/nodejs-http
 COPY package.json package-lock.json ./
@@ -8,6 +19,7 @@ COPY --chown=node:node bin/server.mjs ./bin/server.mjs
 COPY --chown=node:node src ./src
 COPY --chown=node:node templates ./site
 COPY --chown=node:node public/assets ./site/assets
+COPY --from=frontend-build --chown=node:node /opt/nodejs-http/dist ./site/web
 ENV HOST=0.0.0.0 \
     PORT=7100 \
     PUBLIC_DIR=/srv/repository \

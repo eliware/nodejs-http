@@ -44,7 +44,8 @@ function addEntryRow(table, entry) {
   iconSymbol.textContent = entry.type === "directory" ? "▰" : "▤";
   icon.appendChild(iconSymbol);
   const link = document.createElement("a");
-  link.href = entry.href;
+  link.href =
+    entry.type === "directory" ? `/browse?path=${encodeURIComponent(entry.href)}` : entry.href;
   link.textContent = `${entry.name}${entry.type === "directory" ? "/" : ""}`;
   name.appendChild(link);
   size.textContent = entry.size == null ? "Directory" : formatBytes(entry.size);
@@ -85,7 +86,7 @@ function renderEntries({ listing, sortKey, ascending, filterQuery, runtimeOnly }
   entries.replaceChildren();
   if (listing.path !== "/") {
     const row = document.createElement("tr");
-    row.innerHTML = `<td class="kind" aria-hidden="true"><span class="kind-symbol glyph">↥</span></td><td><a href="${encodeURI(parentPath(listing.path))}">Parent directory</a></td><td>—</td><td>—</td>`;
+    row.innerHTML = `<td class="kind" aria-hidden="true"><span class="kind-symbol glyph">↥</span></td><td><a href="/browse?path=${encodeURIComponent(parentPath(listing.path))}">Parent directory</a></td><td>—</td><td>—</td>`;
     entries.appendChild(row);
   }
   const filtered = listing.entries.filter((entry) => {

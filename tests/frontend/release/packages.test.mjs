@@ -6,32 +6,28 @@ function packageRecord(name, format, href) {
   return { type: "file", name, href, package: { format } };
 }
 
-test("collects package entries and classifies stable and rolling releases", () => {
+test("collects stable RPM entries and reads their Node.js versions", () => {
   expect(allPackages({})).toEqual([]);
   expect(allPackages({ directories: { "/empty/": { path: "/empty/" } } })).toEqual([]);
-  const stable = packageRecord("one.rpm", "rpm", "/el10/10.1/one.rpm");
-  const rolling = packageRecord("two.deb", "deb", "/previews/rolling-abc/two.deb");
+  const stable = packageRecord(
+    "eliware-node26-26.13.1-1.npm12.2.3.el10.x86_64.rpm",
+    "rpm",
+    "/el10/one.rpm",
+  );
+  const other = packageRecord("two.deb", "deb", "/debian/two.deb");
   expect(
     allPackages({
       directories: {
         "/el10/": {
           path: "/el10/",
-          entries: [stable, rolling, { type: "directory" }, { type: "file" }],
+          entries: [stable, other, { type: "directory" }, { type: "file" }],
         },
       },
     }),
-  ).toEqual([
-    { ...stable, directory: "/el10/" },
-    { ...rolling, directory: "/el10/" },
-  ]);
-  expect(releaseFor(stable)).toEqual({ channel: "stable", version: "10.1" });
+  ).toEqual([{ ...stable, package: { format: "rpm" }, directory: "/el10/" }]);
+  expect(releaseFor(stable)).toEqual({ channel: "stable", version: "26.13.1" });
   expect(releaseFor(packageRecord("old", "rpm", "/legacy/file.rpm"))).toEqual({
     channel: "stable",
     version: "stable",
-  });
-  expect(releaseFor(rolling)).toEqual({ channel: "rolling", version: "rolling-abc" });
-  expect(releaseFor(packageRecord("preview", "rpm", "/previews/"))).toEqual({
-    channel: "rolling",
-    version: "rolling",
   });
 });

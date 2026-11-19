@@ -5,7 +5,7 @@ function renderBreadcrumbs(path) {
   const breadcrumbs = getElement("directory-breadcrumbs");
   breadcrumbs.replaceChildren();
   const root = document.createElement("a");
-  root.href = "/";
+  root.href = "/browse?path=%2F";
   root.textContent = "nodejs.eliware.org";
   breadcrumbs.appendChild(root);
   const parts = path.split("/").filter(Boolean);
@@ -17,7 +17,7 @@ function renderBreadcrumbs(path) {
     breadcrumbs.appendChild(separator);
     href += `${encodeURIComponent(part)}/`;
     const crumb = document.createElement(index === parts.length - 1 ? "span" : "a");
-    if (crumb instanceof HTMLAnchorElement) crumb.href = href;
+    if (crumb instanceof HTMLAnchorElement) crumb.href = `/browse?path=${encodeURIComponent(href)}`;
     crumb.textContent = decodeURIComponent(part);
     if (index === parts.length - 1) crumb.setAttribute("aria-current", "page");
     breadcrumbs.appendChild(crumb);

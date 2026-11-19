@@ -11,8 +11,22 @@ test("returns no options when the catalog has no releases", () => {
   expect(releaseOptions()).toEqual([]);
 });
 
-test("populates and compares release selections", () => {
-  state.catalog = { stable: { version: "10.1" }, preview: { items: [{ candidate: "rolling-1" }] } };
+test("reads the latest stable release when history is absent", () => {
+  state.catalog = { stable: { latest: { node_version: "26.13.1" } } };
+  expect(releaseOptions()).toEqual([
+    {
+      id: "stable:26.13.1",
+      label: "Stable 26.13.1",
+      version: "26.13.1",
+      channel: "stable",
+    },
+  ]);
+  state.catalog = { stable: { items: [{}] } };
+  expect(releaseOptions()).toEqual([]);
+});
+
+test("populates and compares stable releases", () => {
+  state.catalog = { stable: { items: [{ node_version: "26.13.1" }, { node_version: "26.13.0" }] } };
   state.packages = [];
   const { get } = installBrowserDom({
     ids: ["compare-from", "compare-to", "release-comparison-result"],
@@ -20,18 +34,20 @@ test("populates and compares release selections", () => {
   populateComparison();
   expect(get("compare-from").options).toHaveLength(2);
   get("compare-from").value = "stable:10.1";
-  get("compare-to").value = "rolling:rolling-1";
+  get("compare-to").value = "stable:26.13.0";
   renderComparison();
-  expect(get("release-comparison-result").innerHTML).toContain("stable → rolling");
+  expect(get("release-comparison-result").innerHTML).toContain("stable → stable");
   get("compare-from").value = "bad";
   renderComparison();
-  expect(get("release-comparison-result").innerHTML).toContain("stable → rolling");
+  expect(get("release-comparison-result").innerHTML).toContain("stable → stable");
   get("compare-from").value = "stable:10.1";
   get("compare-to").value = "bad";
   renderComparison();
-  expect(get("release-comparison-result").innerHTML).toContain("stable → rolling");
+  expect(get("release-comparison-result").innerHTML).toContain("stable → stable");
   installBrowserDom({ ids: ["compare-from"] });
   populateComparison();
+  renderComparison();
+  installBrowserDom();
   renderComparison();
   state.catalog = { stable: { version: "10.1" } };
   const single = installBrowserDom({ ids: ["compare-from", "compare-to"] });

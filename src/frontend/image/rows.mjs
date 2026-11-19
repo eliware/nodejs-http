@@ -27,14 +27,14 @@ function renderImageRow(list, record, showExample, formatDateTime, displaySource
   const heading = document.createElement("div");
   heading.className = "image-entry-heading";
   const title = document.createElement("h3");
-  title.textContent = `${record.channel === "rolling" ? "Rolling" : "Stable"} · Node.js ${record.version}`;
+  title.textContent = `Stable · Node.js ${record.version}`;
   const badge = document.createElement("span");
   badge.className = "badge";
   badge.textContent = `${record.distroLabel} ${record.release} · ${record.arch}`;
   heading.append(title, badge);
   const details = document.createElement("p");
   details.className = "muted small";
-  details.textContent = `Built ${formatDateTime(record.built)} · Source ${displaySource(record)}`;
+  details.textContent = `Built ${formatDateTime(record.built || record.generated)} · Source ${displaySource(record)}`;
   const reference = document.createElement("code");
   reference.textContent = record.image.reference;
   const digest = document.createElement("code");

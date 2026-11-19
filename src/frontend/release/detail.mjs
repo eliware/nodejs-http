@@ -21,9 +21,7 @@ function renderDetail(entry) {
   getElement("package-detail-hash").textContent = entry.sha256 || "Checksum unavailable";
   getElement("package-detail-link").href = entry.href;
   getElement("package-detail-command").textContent =
-    entry.package.format === "rpm"
-      ? `curl -fsSLO ${url}\necho "${checksum}" | sha256sum --check -\nsudo dnf install -y ./${filename}`
-      : `curl -fsSLO ${url}\necho "${checksum}" | sha256sum --check -\nsudo apt install ./${filename}`;
+    `curl -fsSLO ${url}\necho "${checksum}" | sha256sum --check -\nsudo dnf install -y ./${filename}`;
   panel.hidden = false;
   state.selected = entry;
 }

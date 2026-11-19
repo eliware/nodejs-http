@@ -26,7 +26,7 @@ docker compose up --build -d
 
 Check the container with `docker compose ps` and `curl --fail http://127.0.0.1:7100/ready`. View logs with `docker compose logs --follow web`. Stop the container with `docker compose down`.
 
-The container uses `node:26-bookworm-slim`. It copies application code and static templates into the image. It reads repository content from the read-only directory. The image does not build RPMs or change repository files.
+The container uses the published `ghcr.io/eliware/centos10-node26:26.13.1` image. A build stage creates the browser assets. The runtime stage copies the application, templates, and assets into the image. The application reads repository content from the read-only directory. It does not build RPMs or change repository files.
 
 ## Local development
 

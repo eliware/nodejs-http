@@ -4,22 +4,22 @@ const { renderImageExample } = __moduleApi0();
 import { BrowserElement, installBrowserDom } from "../../../test-fixtures/browser-dom.mjs";
 
 const record = {
-  repository: "ghcr.io/eliware/rocky10-gluster",
+  repository: "ghcr.io/eliware/centos10-node26",
   image: {
-    repository: "ghcr.io/eliware/rocky10-gluster",
+    repository: "ghcr.io/eliware/centos10-node26",
     digest: "sha256:123",
-    reference: "ghcr.io/eliware/rocky10-gluster:10",
+    reference: "ghcr.io/eliware/centos10-node26:26.13.1",
   },
 };
 
 test("returns when the example or panel elements are unavailable", () => {
   installBrowserDom();
   renderImageExample(null, "latest");
-  renderImageExample({ record, kind: "dockerfile" }, "latest");
+  renderImageExample({ record, kind: "dockerfile" }, "tag");
 });
 
 test.each([
-  ["dockerfile", "FROM ghcr.io/eliware/rocky10-gluster:latest"],
+  ["dockerfile", "FROM ghcr.io/eliware/centos10-node26:26.13.1"],
   ["compose", "services:"],
   ["kubernetes", "apiVersion: apps/v1"],
 ])("renders the %s example", (kind, expected) => {
@@ -38,10 +38,10 @@ test.each([
   });
   renderImageExample({ record, kind }, "latest");
   expect(get("image-example-panel").hidden).toBe(false);
-  expect(get("image-example-title").textContent).toContain("rocky10-gluster");
+  expect(get("image-example-title").textContent).toContain("centos10-node26");
   if (kind === "dockerfile")
     expect(get("image-example-code").textContent).toContain(
-      "FROM ghcr.io/eliware/rocky10-gluster:latest",
+      "FROM ghcr.io/eliware/centos10-node26:26.13.1",
     );
   else expect(get("image-example-code").textContent).toContain(expected);
   expect(activeReference.classList.contains("active")).toBe(true);
@@ -55,5 +55,5 @@ test("uses digest and tag references", () => {
   renderImageExample({ record, kind: "dockerfile" }, "sha");
   expect(get("image-example-code").textContent).toContain("@sha256:123");
   renderImageExample({ record, kind: "dockerfile" }, "tag");
-  expect(get("image-example-code").textContent).toContain(":10");
+  expect(get("image-example-code").textContent).toContain(":26.13.1");
 });

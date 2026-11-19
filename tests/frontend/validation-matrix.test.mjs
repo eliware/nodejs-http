@@ -23,7 +23,7 @@ test("renders validation statuses and uses distribution aliases", async () => {
         generated: "2026-01-01T00:00:00Z",
         distributions: [
           {
-            id: "debian",
+            id: "centos-stream-10",
             core: { status: "passed" },
             integrity: "failed",
             provenance_verification: "passed",
@@ -32,7 +32,7 @@ test("renders validation statuses and uses distribution aliases", async () => {
       },
       container_validation: {
         distributions: [
-          { id: "ubuntu", core: { status: "passed" }, provenance: { status: "failed" } },
+          { id: "centos-stream-10", core: { status: "passed" }, provenance: { status: "failed" } },
         ],
       },
     },
@@ -45,8 +45,7 @@ test("renders validation statuses and uses distribution aliases", async () => {
     ],
   });
   await initValidationMatrix();
-  expect(get("validation-rows").innerHTML).toContain("Debian 12 (bookworm)");
-  expect(get("validation-rows").innerHTML).toContain("Ubuntu 24.04 (noble)");
+  expect(get("validation-rows").innerHTML).toContain("CentOS Stream 10");
   expect(get("validation-rows").innerHTML).toContain("validation-icon pass");
   expect(get("validation-rows").innerHTML).toContain("validation-icon fail");
   expect(get("validation-checks").textContent).toContain("Results from");

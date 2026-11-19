@@ -1,5 +1,6 @@
 function selectImageRecords(records, catalog, distro, channel, version) {
-  const stableVersion = catalog.stable?.version;
+  const stableVersion =
+    catalog.stable?.latest?.node_version || catalog.stable?.node_version || catalog.stable?.version;
   return records.filter(
     (record) =>
       record.distro === distro &&

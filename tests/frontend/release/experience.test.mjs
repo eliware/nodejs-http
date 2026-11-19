@@ -26,12 +26,10 @@ const stable = {
   size: 2048,
   modified: "2026-01-01T00:00:00Z",
 };
-const rolling = {
-  type: "file",
-  name: "gluster.deb",
-  href: "/debian/previews/2026-01-01-abcdef1234/gluster.deb",
-  package: { format: "deb" },
-  size: 1024,
+const stableNode = {
+  ...stable,
+  name: "eliware-node26-26.13.1-1.npm12.2.3.el10.x86_64.rpm",
+  href: "/el10/x86_64/stable/eliware-node26-26.13.1-1.npm12.2.3.el10.x86_64.rpm",
 };
 function setup(search = "") {
   const copy = new BrowserElement("button");
@@ -58,13 +56,15 @@ function setup(search = "") {
   });
   globalThis.location = { search };
   fetchCatalog.mockResolvedValue({
-    stable: { version: "10.1", built: "2026-01-01T00:00:00Z" },
-    preview: { items: [{ candidate: "rolling-abcdef1234", built: "2026-01-02T00:00:00Z" }] },
+    stable: {
+      version: "26.13.1",
+      built: "2026-01-01T00:00:00Z",
+      items: [{ node_version: "26.13.1" }, { node_version: "26.13.0" }],
+    },
   });
   fetchRepositoryIndex.mockResolvedValue({
     directories: {
-      "/el10/": { path: "/el10/", entries: [stable] },
-      "/debian/": { path: "/debian/", entries: [rolling] },
+      "/el10/": { path: "/el10/", entries: [stableNode] },
     },
   });
   fetchReleaseManifest.mockResolvedValue({ generated: "today" });
@@ -78,10 +78,10 @@ test("does nothing without the package search or detail panel", async () => {
 });
 
 test("renders searchable packages, details, release history, and comparisons", async () => {
-  const state = setup(`?package=${encodeURIComponent(stable.href)}`);
+  const state = setup(`?package=${encodeURIComponent(stableNode.href)}`);
   await initReleaseExperience();
-  expect(state.get("package-search-status").textContent).toBe("2 matching packages");
-  expect(state.get("package-detail-title").textContent).toBe("gluster.rpm");
+  expect(state.get("package-search-status").textContent).toBe("1 matching package");
+  expect(state.get("package-detail-title").textContent).toBe(stableNode.name);
   expect(state.get("package-detail-command").textContent).toContain("dnf install");
   expect(state.get("package-detail-panel").hidden).toBe(false);
   expect(state.get("release-timeline").children.length).toBeGreaterThan(0);
@@ -117,7 +117,7 @@ test("loads release data without a requested package", async () => {
   releaseState.channel = "all";
   state.get("package-detail-panel").hidden = true;
   await initReleaseExperience();
-  expect(state.get("package-search-status").textContent).toBe("2 matching packages");
+  expect(state.get("package-search-status").textContent).toBe("1 matching package");
   expect(state.get("package-detail-panel").hidden).toBe(true);
 });
 
@@ -135,7 +135,7 @@ test("continues when release manifest fails and skips a missing requested packag
   state.get("package-detail-panel").hidden = true;
   fetchReleaseManifest.mockRejectedValue(new Error("manifest offline"));
   await initReleaseExperience();
-  expect(state.get("package-search-status").textContent).toContain("matching packages");
+  expect(state.get("package-search-status").textContent).toContain("matching package");
   expect(state.get("package-detail-panel").hidden).toBe(true);
 });
 

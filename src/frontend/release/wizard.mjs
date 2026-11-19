@@ -3,7 +3,7 @@ const { fetchCatalog } = __moduleApi1();
 import __moduleApifix1 from "../dom.mjs";
 const { getElement } = __moduleApifix1();
 import __moduleApifix2 from "../format.mjs";
-const { formatDateTime, previewCommit, previewDate } = __moduleApifix2();
+const { formatDateTime } = __moduleApifix2();
 import { wizardState } from "./wizard/state.mjs";
 import { distroTargets } from "./wizard/targets.mjs";
 import __commands from "./wizard/commands.mjs";
@@ -27,45 +27,36 @@ function setTargetReleaseOptions() {
 
 function setVersionOptions() {
   const version = getElement("target-version");
-  const channel = getElement("target-channel");
   const stable = wizardState.catalog.stable?.latest || wizardState.catalog.stable;
   version.replaceChildren();
-  if (channel.value === "stable") {
-    const option = document.createElement("option");
-    option.value = "stable";
-    option.textContent = `Latest stable (${stable?.node_version || stable?.version || "unavailable"})`;
-    version.appendChild(option);
-  } else {
-    (wizardState.catalog.preview?.items || []).forEach((item, index) => {
-      const option = document.createElement("option");
-      option.value = item.candidate;
-      option.textContent = `${index ? "Rolling" : "Latest rolling"} · ${previewDate(item)} · ${previewCommit(item)}`;
-      version.appendChild(option);
-    });
-  }
-  if (!version.options.length) {
-    const option = document.createElement("option");
-    option.textContent = "No builds available";
-    version.appendChild(option);
-  }
+  const option = document.createElement("option");
+  option.value = "stable";
+  option.textContent =
+    stable?.node_version || stable?.version
+      ? `Latest stable (${stable.node_version || stable.version})`
+      : "No stable release available";
+  version.appendChild(option);
   updateCommand();
   updateContainerCommand();
 }
 
 function updateReleaseSummary(data) {
   const stable = data.stable?.latest || data.stable || {};
-  const preview = data.preview || {};
-  getElement("release").textContent = stable.node_version || stable.version || "unavailable";
-  getElement("built").textContent = stable.built ? formatDateTime(stable.built) : "Validated";
-  getElement("preview-count").textContent = preview.items?.length || 0;
-  if (preview.available)
-    getElement("preview-summary").textContent =
-      `${preview.items?.length || 0} rolling build${preview.items?.length === 1 ? "" : "s"} available; latest built ${formatDateTime(preview.latest?.built)}.`;
+  const releaseVersion = stable.node_version || stable.version || "unavailable";
+  const release = getElement("release");
+  if (release) release.textContent = releaseVersion;
+  const built = getElement("built");
+  if (built)
+    built.textContent =
+      stable.built || stable.generated
+        ? formatDateTime(stable.built || stable.generated)
+        : "Validated";
+  const status = getElement("release-status");
+  if (status) status.textContent = `Latest stable release: Node.js ${releaseVersion}.`;
 }
 
 async function initReleaseWizard() {
-  if (!getElement("release") || !getElement("target-channel") || !getElement("target-version"))
-    return;
+  if (!getElement("target-channel") || !getElement("target-version")) return;
   document
     .querySelectorAll("[data-package-manager]")
     .forEach((button) =>

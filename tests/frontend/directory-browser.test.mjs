@@ -15,7 +15,7 @@ function listing() {
     entries: [{ name: "pkg.rpm", type: "file", size: 32, href: "/el10/pkg.rpm" }],
   };
 }
-function setup(pathname = "/el10") {
+function setup(search = "?path=%2Fel10%2F") {
   const firstSort = new BrowserElement("button");
   firstSort.dataset.sortKey = "type";
   const arrow = new BrowserElement("span");
@@ -40,7 +40,7 @@ function setup(pathname = "/el10") {
     groups: { ".sort-button": [firstSort, secondSort] },
   });
   globalThis.HTMLAnchorElement = BrowserElement;
-  globalThis.location = { pathname };
+  globalThis.location = { pathname: "/browse", search };
   fetchDirectory.mockReset().mockResolvedValue(listing());
   return { ...state, firstSort, secondSort, arrow, header };
 }
@@ -55,14 +55,21 @@ test("loads without optional path and breadcrumb elements", async () => {
   const state = installBrowserDom({
     ids: ["directory-entries", "directory-title", "directory-status"],
   });
-  globalThis.location = { pathname: "/" };
+  globalThis.location = { pathname: "/browse", search: "" };
   fetchDirectory.mockResolvedValue(listing());
   await initDirectoryBrowser();
   expect(state.get("directory-title").textContent).toBe("Index of /el10/");
 });
 
+test("adds a leading slash to a relative repository path", async () => {
+  const state = setup("?path=el10%2F");
+  await initDirectoryBrowser();
+  expect(fetchDirectory).toHaveBeenCalledWith("/el10/");
+  expect(state.get("directory-title").textContent).toBe("Index of /el10/");
+});
+
 test("loads a directory and responds to sorting, filtering, and view changes", async () => {
-  const state = setup("/el10");
+  const state = setup();
   await initDirectoryBrowser();
   expect(fetchDirectory).toHaveBeenCalledWith("/el10/");
   expect(state.get("directory-title").textContent).toBe("Index of /el10/");
@@ -82,7 +89,7 @@ test("loads a directory and responds to sorting, filtering, and view changes", a
 });
 
 test("keeps a trailing slash and propagates metadata failures", async () => {
-  const state = setup("/el10/");
+  const state = setup("?path=%2Fel10%2F");
   fetchDirectory.mockRejectedValueOnce(new Error("offline"));
   await expect(initDirectoryBrowser()).rejects.toThrow("offline");
   expect(fetchDirectory).toHaveBeenCalledWith("/el10/");

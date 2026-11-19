@@ -26,6 +26,13 @@ function renderSearch() {
   const matches = state.packages.filter(packageMatches);
   list.replaceChildren();
   status.textContent = `${matches.length} matching package${matches.length === 1 ? "" : "s"}`;
+  if (!matches.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "No stable RPM packages match these filters.";
+    list.appendChild(empty);
+    return;
+  }
   matches.slice(0, 12).forEach((entry) => {
     const item = document.createElement("article");
     item.className = "package-result";

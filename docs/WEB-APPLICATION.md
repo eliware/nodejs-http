@@ -19,7 +19,7 @@ The server accepts GET and `HEAD` requests by default. It returns 405 for other 
 | `/feed.xml`                 | RSS 2.0 XML for published posts.                                     |
 | `/sitemap.xml`              | Sitemap for site pages, repository directories, and published posts. |
 
-The install page describes the Node.js 26 RPM for CentOS Stream 10 EPEL on x86_64. The RPM name is `eliware-nodejs26`. The command names are `node26`, `npm26`, and `npx26`.
+The install page describes the stable Node.js 26 RPM for CentOS Stream 10 EPEL on x86_64. The RPM name is `eliware-node26`. The command names are `node`, `npm`, and `npx`.
 
 ## Repository files
 
@@ -55,4 +55,4 @@ The list API returns a path, total entry count, offset, limit, `hasMore`, entrie
 
 The image copies `templates/` into `/opt/nodejs-http/site` and copies `public/assets/` into its `assets/` directory. It serves those files from `STATIC_DIR`. Repository files remain in the read-only repository path.
 
-Run `npm run build` to create the optional browser bundle in `dist/`. The production image does not include or require that bundle. See [usage](usage.md) for container commands.
+Run `npm run build` to create the browser bundle in `dist/`. The production image builds that bundle in a separate stage and serves it with the pages. See [usage](usage.md) for container commands.

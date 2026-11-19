@@ -3,24 +3,78 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>About Eliware Node.js packages</title>
+    <meta name="description" content="About the Eliware Node.js package repository." />
+    <link rel="icon" href="/assets/favicon.ico" />
+    <link rel="stylesheet" href="/web/app.css?v=__ASSET_VERSION__" />
+    <title>About · Eliware Node.js</title>
   </head>
   <body>
-    <main>
-      <p><a href="/">Eliware Node.js 26</a></p>
-      <h1>About this package repository</h1>
-      <p>
-        Eliware packages the official precompiled Node.js Linux x64 binaries as signed RPMs for
-        CentOS Stream 10 EPEL.
-      </p>
-      <p>
-        The local packaging pipeline builds the RPM and CentOS Stream 10 runtime image. This HTTP
-        service serves published packages and release metadata.
-      </p>
-      <p>
-        <a href="/metadata/catalog.json">Read the release catalog</a> ·
-        <a href="/el10/x86_64/stable/">Browse RPM files</a>
-      </p>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="navbar">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/"
+          ><img class="brand-logo" src="/assets/eliware-brand.svg" alt="Eliware" /><strong
+            >Eliware Node.js</strong
+          ></a
+        >
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/">Home</a><a href="/browse">Browse</a><a href="/install">Install</a
+          ><a href="/blog">Blog</a>
+        </nav>
+        <details class="mobile-nav">
+          <summary>Menu</summary>
+          <nav class="mobile-nav-links" aria-label="Mobile navigation">
+            <a href="/">Home</a><a href="/browse">Browse</a><a href="/install">Install</a
+            ><a href="/blog">Blog</a>
+          </nav>
+        </details>
+      </div>
+    </header>
+    <main id="main" class="container repository-browser info-page">
+      <header class="blog-hero">
+        <p class="eyebrow">About this service</p>
+        <h1>Node.js packages from Eliware</h1>
+        <p class="lead">
+          We package official precompiled Node.js Linux x64 releases for CentOS Stream 10 EPEL.
+        </p>
+      </header>
+      <section class="card p-4">
+        <h2>What this service does</h2>
+        <p>
+          This site serves signed RPMs, repository metadata, release records, validation results,
+          provenance, and published container images.
+        </p>
+        <p>
+          The HTTP application reads the published repository as read-only content. The separate
+          local conductor packages and signs the official Node.js archive.
+        </p>
+        <h2 class="mt-4">Supported target</h2>
+        <p>
+          Stable Node.js 26 packages target CentOS Stream 10 EPEL on x86_64 systems. Install and
+          update them with DNF or YUM.
+        </p>
+        <h2 class="mt-4">Release information</h2>
+        <p>
+          Review the <a href="/metadata/catalog.json">release catalog</a>,
+          <a href="/metadata/provenance/package.json">package provenance</a>, and
+          <a href="/metadata/validation/package.json">validation record</a>.
+        </p>
+        <p>
+          <a href="https://nodejs.org/">Node.js project</a> ·
+          <a href="https://github.com/eliware/nodejs-packaging">Packaging source</a> ·
+          <a href="https://github.com/eliware/nodejs-http">HTTP service source</a>
+        </p>
+      </section>
     </main>
+    <footer class="site-footer">
+      <div class="container py-4 d-flex flex-wrap justify-content-between gap-2">
+        <span>© __COPYRIGHT_YEAR__ Eliware · Node.js HTTP v__APP_VERSION__</span
+        ><span
+          ><a href="/blog">Blog</a> · <a href="/feed.xml">RSS</a> · <a href="/policy">Policy</a> ·
+          <a href="/tos">Terms</a></span
+        >
+      </div>
+    </footer>
+    <script src="/web/app.js?v=__ASSET_VERSION__" defer></script>
   </body>
 </html>

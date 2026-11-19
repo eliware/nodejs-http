@@ -4,178 +4,397 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Signed Node.js 26 RPMs for CentOS Stream 10 from Eliware." />
-    <meta name="theme-color" content="#101820" />
     <link rel="canonical" href="https://nodejs.eliware.org/" />
-    <link rel="icon" href="/favicon.ico" />
-    <title>Eliware Node.js 26</title>
-    <style>
-      :root {
-        color-scheme: dark;
-        font:
-          16px/1.6 system-ui,
-          sans-serif;
-        background: #101820;
-        color: #edf4f7;
-      }
-      body {
-        margin: 0;
-      }
-      main {
-        width: min(960px, calc(100% - 2rem));
-        margin: 0 auto;
-      }
-      header,
-      section,
-      footer {
-        padding: 2rem 0;
-      }
-      header {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        border-bottom: 1px solid #35444b;
-      }
-      header img {
-        width: 3rem;
-        height: 3rem;
-      }
-      h1 {
-        font-size: clamp(2rem, 6vw, 4rem);
-        line-height: 1.1;
-        margin: 0;
-      }
-      h2 {
-        font-size: 1.5rem;
-      }
-      p {
-        max-width: 70ch;
-      }
-      a {
-        color: #7ee0c3;
-      }
-      code,
-      pre {
-        background: #1c2a32;
-        border-radius: 0.5rem;
-      }
-      code {
-        padding: 0.15rem 0.35rem;
-      }
-      pre {
-        padding: 1rem;
-        overflow-x: auto;
-      }
-      .cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1rem;
-      }
-      .card {
-        border: 1px solid #35444b;
-        border-radius: 0.75rem;
-        padding: 1rem;
-      }
-      .muted {
-        color: #b3c2c8;
-      }
-      footer {
-        border-top: 1px solid #35444b;
-      }
-    </style>
+    <link rel="icon" href="/assets/favicon.ico" />
+    <link rel="stylesheet" href="/web/app.css?v=__ASSET_VERSION__" />
+    <title>Eliware Node.js</title>
   </head>
   <body>
-    <main>
-      <header>
-        <img src="/assets/eliware-brand.svg" alt="Eliware" />
-        <div>
-          <p class="muted">Eliware packages</p>
-          <h1>Node.js 26</h1>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="navbar">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+          <img class="brand-logo" src="/assets/eliware-brand.svg" alt="Eliware" />
+          <strong>Eliware Node.js</strong>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/browse">Browse</a><a href="/install">Install</a><a href="#containers">Images</a>
+          <a href="/blog">Blog</a><a href="/about">About</a>
+        </nav>
+        <details class="mobile-nav">
+          <summary>Menu</summary>
+          <nav class="mobile-nav-links" aria-label="Mobile navigation">
+            <a href="/browse">Browse</a><a href="/install">Install</a>
+            <a href="#containers">Images</a><a href="/blog">Blog</a><a href="/about">About</a>
+          </nav>
+        </details>
+      </div>
+    </header>
+
+    <main id="main" class="container">
+      <section class="hero">
+        <div class="row">
+          <div class="col-lg-7">
+            <p class="eyebrow">Signed packages · CentOS Stream 10</p>
+            <h1>Node.js 26, ready for DNF.</h1>
+            <p class="lead">
+              Install the official precompiled Node.js release as an RPM. Verify each package,
+              release, and image from published metadata.
+            </p>
+            <p id="release-status" class="badge" aria-live="polite">
+              Loading stable release details.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-info" href="/install"
+                ><span class="hero-icon">↓</span><span>Install Node.js</span></a
+              >
+              <a class="btn btn-outline-light" href="/browse"
+                ><span class="hero-icon icon-folder"></span><span>Browse packages</span></a
+              >
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <img class="hero-art" src="/assets/eliware-brand.svg" alt="Eliware mark" />
+          </div>
         </div>
-      </header>
-      <section aria-labelledby="intro">
-        <h2 id="intro">Install Node.js on CentOS Stream 10</h2>
-        <p>
-          Use the signed Eliware RPM repository to install Node.js 26 with DNF. Use the same package
-          to receive updates through DNF or YUM.
-        </p>
-        <pre><code>sudo dnf install eliware-nodejs26
-sudo yum -y update</code></pre>
-        <p id="release-status" class="muted">Loading release information.</p>
+        <div class="stats-grid">
+          <article class="card">
+            <strong id="release" class="stat-value">Loading</strong>
+            <div class="stat-label">Latest stable Node.js</div>
+          </article>
+          <article class="card">
+            <strong id="built" class="stat-value">Loading</strong>
+            <div class="stat-label">Release build time</div>
+          </article>
+          <article class="card">
+            <strong>CentOS Stream 10</strong>
+            <div class="stat-label">EPEL · x86_64 · RPM</div>
+          </article>
+        </div>
       </section>
-      <section class="cards" aria-label="Release resources">
-        <article class="card">
-          <h2>RPM repository</h2>
-          <p>Configure the stable repository and verify signed package metadata.</p>
-          <p><a href="/nodejs26.repo">Download the repository file</a></p>
-          <p><a href="/el10/x86_64/stable/">Browse stable RPM files</a></p>
-        </article>
-        <article class="card">
-          <h2>Container image</h2>
-          <p id="image-status">
-            The Node.js base image is planned. Published image tags and digests will appear here.
-          </p>
-          <pre id="image-command-wrap" hidden><code id="image-command"></code></pre>
-          <p id="image-link-wrap" hidden>
-            <a id="image-link" href="https://github.com/orgs/eliware/packages"
-              >View the published image</a
+
+      <section id="install" class="card p-4">
+        <div class="workspace-heading">
+          <div>
+            <p class="eyebrow">Install or update</p>
+            <h2 id="package-install-title">Install with DNF</h2>
+          </div>
+          <div id="package-manager-tools" class="d-flex gap-2" aria-label="Package manager">
+            <button
+              class="btn btn-outline-light"
+              type="button"
+              data-package-manager="dnf"
+              aria-pressed="true"
             >
-          </p>
+              DNF
+            </button>
+            <button
+              class="btn btn-outline-light"
+              type="button"
+              data-package-manager="yum"
+              aria-pressed="false"
+            >
+              YUM
+            </button>
+          </div>
+        </div>
+        <p id="rpm-status" class="muted">
+          Install the stable Node.js 26 package on CentOS Stream 10.
+        </p>
+        <select id="target-distro" class="visually-hidden" aria-label="Operating system">
+          <option value="centos-stream">CentOS Stream 10</option>
+        </select>
+        <div class="wizard-fields">
+          <label class="form-label" for="target-channel"
+            >Release lane<select id="target-channel">
+              <option value="stable">Stable</option>
+            </select></label
+          >
+          <label class="form-label" for="target-version"
+            >Node.js version<select id="target-version">
+              <option value="stable">Latest stable</option>
+            </select></label
+          >
+          <label class="form-label" for="target-release"
+            >Operating system release<select id="target-release">
+              <option value="10">10</option>
+            </select></label
+          >
+        </div>
+        <div class="code-wrap">
+          <pre><code id="rpm-command">Loading installation commands.</code></pre>
+          <button
+            class="copy-btn"
+            type="button"
+            data-copy="rpm-command"
+            aria-label="Copy installation commands"
+          >
+            <span class="copy-icon">⧉</span>
+          </button>
+        </div>
+        <p class="muted">
+          <a id="package-repo-file" href="/nodejs26.repo">Repository configuration</a
+          ><span id="package-repo-separator"> · </span
+          ><a id="rpm-browse" href="/el10/x86_64/stable/">Browse stable RPMs</a>
+        </p>
+      </section>
+
+      <section id="validation-matrix" class="section-block">
+        <div class="workspace-heading">
+          <div>
+            <p class="eyebrow">Release checks</p>
+            <h2>Validation status</h2>
+          </div>
+          <a href="/metadata/validation/package.json">Package evidence</a>
+        </div>
+        <p id="validation-checks" class="muted">Loading validation records.</p>
+        <div class="table-scroll card">
+          <table class="validation-table">
+            <thead>
+              <tr>
+                <th>Target</th>
+                <th>RPM</th>
+                <th>Image</th>
+                <th>Repository</th>
+                <th>Provenance</th>
+              </tr>
+            </thead>
+            <tbody id="validation-rows">
+              <tr>
+                <td colspan="5">Loading validation results.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="repository" class="card p-4 section-block">
+        <div id="release-workspace">
+          <div class="workspace-heading">
+            <div>
+              <p class="eyebrow">Package discovery</p>
+              <h2>Explore RPMs</h2>
+            </div>
+            <a href="/browse">Open repository browser</a>
+          </div>
+          <div class="package-search-tools">
+            <label class="form-label" for="package-search"
+              >Search packages<input
+                id="package-search"
+                type="search"
+                placeholder="Search by package name"
+            /></label>
+            <label class="form-label" for="package-format"
+              >Format<select id="package-format">
+                <option value="all">All formats</option>
+                <option value="rpm">RPM</option>
+              </select></label
+            >
+            <label class="form-label" for="package-channel"
+              >Release<select id="package-channel">
+                <option value="all">All stable releases</option>
+                <option value="stable">Stable</option>
+              </select></label
+            >
+          </div>
+          <p id="package-search-status" class="muted" aria-live="polite">Loading package index.</p>
+          <div id="package-search-results" class="package-search-results"></div>
+          <article id="package-detail-panel" class="package-detail-panel" hidden>
+            <div class="package-detail-heading">
+              <div>
+                <h3 id="package-detail-title"></h3>
+                <p id="package-detail-meta" class="muted"></p>
+              </div>
+              <a id="package-detail-link" class="btn btn-info" href="#">Download RPM</a>
+            </div>
+            <div class="package-checksum">
+              <span>SHA-256</span><code id="package-detail-hash"></code
+              ><button type="button" data-package-detail-copy="package-detail-hash">Copy</button>
+            </div>
+            <div class="code-wrap">
+              <pre><code id="package-detail-command"></code></pre>
+              <button
+                class="copy-btn"
+                type="button"
+                data-copy="package-detail-command"
+                aria-label="Copy verification and install commands"
+              >
+                <span class="copy-icon">⧉</span>
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="release-history" class="workspace-columns section-block">
+        <article class="card p-4">
+          <p class="eyebrow">Release history</p>
+          <h2>Stable releases</h2>
+          <ol id="release-timeline" class="release-timeline">
+            <li>Loading release history.</li>
+          </ol>
         </article>
-        <article class="card">
-          <h2>Release data</h2>
-          <p>Review the release catalog, checksums, validation, and provenance records.</p>
-          <p><a href="/metadata/catalog.json">Open the release catalog</a></p>
-          <p><a href="/metadata/repository-index.json">Open the file index</a></p>
+        <article class="card p-4">
+          <p class="eyebrow">Compare</p>
+          <h2>Release contents</h2>
+          <div class="comparison-selects">
+            <label>From<select id="compare-from"></select></label
+            ><label>To<select id="compare-to"></select></label>
+          </div>
+          <div id="release-comparison-result" class="comparison-result" aria-live="polite"></div>
         </article>
       </section>
-      <footer>
-        <p class="muted">
-          The Node.js release team maintains Node.js. Eliware packages the official precompiled
-          Linux x64 binaries.
+
+      <section id="containers" class="card p-4 section-block">
+        <div class="workspace-heading">
+          <div>
+            <p class="eyebrow">Published runtime</p>
+            <h2>CentOS Node.js image</h2>
+          </div>
+          <a
+            id="image-repository-link"
+            href="https://github.com/orgs/eliware/packages/container/package/centos10-node26"
+            >GHCR package</a
+          >
+        </div>
+        <p id="image-digest" class="muted">Loading image digest.</p>
+        <div class="image-reference-toggle" aria-label="Image reference format">
+          <button
+            type="button"
+            data-image-reference="tag"
+            data-image-example-reference="tag"
+            aria-pressed="true"
+          >
+            Version tag
+          </button>
+          <button
+            type="button"
+            data-image-reference="sha"
+            data-image-example-reference="sha"
+            aria-pressed="false"
+          >
+            Immutable digest
+          </button>
+        </div>
+        <div class="code-wrap">
+          <pre><code id="image-ref">Loading image reference.</code></pre>
+          <button
+            class="copy-btn"
+            type="button"
+            data-copy="image-ref"
+            aria-label="Copy image reference"
+          >
+            <span class="copy-icon">⧉</span>
+          </button>
+        </div>
+        <div id="image-browser" class="image-browser-integrated">
+          <div class="workspace-heading">
+            <div>
+              <h3>Image releases</h3>
+              <p id="image-browser-status" class="muted" aria-live="polite">
+                Loading published image records.
+              </p>
+            </div>
+            <nav
+              class="image-browser-breadcrumbs"
+              id="image-browser-breadcrumbs"
+              aria-label="Image repositories"
+            ></nav>
+          </div>
+          <div id="image-list" class="image-list"></div>
+          <article id="image-example-panel" class="image-example-panel" hidden>
+            <div class="workspace-heading">
+              <h3 id="image-example-title">Container usage</h3>
+              <div class="d-flex gap-2">
+                <button type="button" data-image-example-kind="dockerfile">Dockerfile</button
+                ><button type="button" data-image-example-kind="compose">Compose</button
+                ><button type="button" data-image-example-kind="kubernetes">Kubernetes</button>
+              </div>
+            </div>
+            <pre><code id="image-example-code"></code></pre>
+            <button
+              class="copy-btn"
+              type="button"
+              data-copy="image-example-code"
+              aria-label="Copy container example"
+            >
+              <span class="copy-icon">⧉</span>
+            </button>
+          </article>
+        </div>
+      </section>
+
+      <section id="verify-panel" class="section-block">
+        <div class="workspace-heading">
+          <div>
+            <p class="eyebrow">Verify before install</p>
+            <h2>Release and signing records</h2>
+          </div>
+          <a href="/metadata/catalog.json">Release catalog</a>
+        </div>
+        <div class="resource-columns">
+          <a class="card p-3" href="/keys/RPM-GPG-KEY-ELIWARE-NODEJS">RPM signing key</a>
+          <a class="card p-3" href="/el10/x86_64/stable/repodata/repomd.xml">Signed RPM metadata</a>
+          <a class="card p-3" href="/el10/x86_64/stable/SHA256SUMS">RPM checksums</a>
+          <a class="card p-3" href="/metadata/provenance/package.json">Package provenance</a>
+          <a class="card p-3" href="/metadata/provenance/images/nodejs26-26.13.1.json"
+            >Image provenance</a
+          >
+          <a class="card p-3" href="/metadata/releases/nodejs26.json">Release record</a>
+        </div>
+      </section>
+
+      <section id="faq" class="section-block">
+        <p class="eyebrow">Questions</p>
+        <h2>Frequently asked questions</h2>
+        <div class="faq-list">
+          <details>
+            <summary>Which systems does this repository support?</summary>
+            <p>It provides stable x86_64 RPMs for CentOS Stream 10 EPEL.</p>
+          </details>
+          <details>
+            <summary>Does the RPM compile Node.js?</summary>
+            <p>No. It packages the official precompiled Node.js Linux x64 archive.</p>
+          </details>
+          <details>
+            <summary>How do I update Node.js?</summary>
+            <p>
+              Run <code>sudo dnf update</code> or <code>sudo yum update</code>. DNF keeps global npm
+              tools outside RPM-managed files.
+            </p>
+          </details>
+          <details>
+            <summary>Does publishing an HTTP image deploy the service?</summary>
+            <p>No. Image publication and application deployment are separate operations.</p>
+          </details>
+        </div>
+      </section>
+
+      <section id="community" class="card p-4 section-block">
+        <p class="eyebrow">Community</p>
+        <h2>Node.js and Eliware</h2>
+        <p>
+          Read project updates, follow the official Node.js release notes, or join the Eliware
+          community.
         </p>
         <p>
-          <a href="https://nodejs.org/">Node.js project</a> ·
-          <a href="https://github.com/eliware/nodejs-packaging">Packaging source</a> ·
-          <a href="https://github.com/eliware/nodejs-http">HTTP service source</a>
+          <a href="/blog">Eliware blog</a> · <a href="/feed.xml">RSS feed</a> ·
+          <a href="https://nodejs.org/en/blog/release/">Node.js releases</a> ·
+          <a href="https://discord.gg/M6aTR9eTwN">Eliware Discord</a>
         </p>
-      </footer>
+      </section>
     </main>
-    <script>
-      fetch("/metadata/catalog.json")
-        .then((response) => {
-          if (!response.ok) throw new Error("Release catalog unavailable");
-          return response.json();
-        })
-        .then((catalog) => {
-          const status = document.getElementById("release-status");
-          const latest = catalog.stable?.latest;
-          if (!latest) {
-            status.textContent = "The first signed Node.js 26 release is not published yet.";
-            return;
-          }
-          status.textContent = `Latest stable release: Node.js ${latest.node_version}.`;
-          const image = (catalog.images || []).find(
-            (record) =>
-              record.version === latest.node_version &&
-              record.image?.repository === "ghcr.io/eliware/centos10-node26",
-          );
-          if (image) {
-            const reference = image.image.digest
-              ? `${image.image.repository}@${image.image.digest}`
-              : `${image.image.repository}:${image.image.tag || image.version}`;
-            document.getElementById("image-status").textContent =
-              `Node.js ${latest.node_version} base image.`;
-            document.getElementById("image-command").textContent = `docker pull ${reference}`;
-            document.getElementById("image-command-wrap").hidden = false;
-            document.getElementById("image-link-wrap").hidden = false;
-            document.getElementById("image-link").href =
-              "https://github.com/orgs/eliware/packages/container/package/centos10-node26";
-          }
-        })
-        .catch(() => {
-          document.getElementById("release-status").textContent =
-            "Release information is temporarily unavailable.";
-        });
-    </script>
+
+    <footer class="site-footer">
+      <div class="container py-4 d-flex flex-wrap justify-content-between gap-2">
+        <span>© __COPYRIGHT_YEAR__ Eliware · Node.js HTTP v__APP_VERSION__</span>
+        <span
+          ><a href="/about">About</a> · <a href="/tos">Terms</a> · <a href="/policy">Policy</a> ·
+          <a href="/metadata/catalog.json">Catalog</a> ·
+          <a href="https://github.com/eliware/nodejs-http">Source</a></span
+        >
+      </div>
+    </footer>
+    <script src="/web/app.js?v=__ASSET_VERSION__" defer></script>
   </body>
 </html>

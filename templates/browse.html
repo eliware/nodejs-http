@@ -3,16 +3,118 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Browse Node.js RPMs</title>
+    <meta name="description" content="Browse signed Node.js 26 RPMs and release metadata." />
+    <link rel="icon" href="/assets/favicon.ico" />
+    <link rel="stylesheet" href="/web/app.css?v=__ASSET_VERSION__" />
+    <title>Browse RPMs · Eliware Node.js</title>
   </head>
   <body>
-    <main>
-      <p><a href="/">Eliware Node.js 26</a></p>
-      <h1>CentOS Stream 10 RPM repository</h1>
-      <p>Browse signed Node.js 26 RPMs and repository metadata.</p>
-      <p><a href="/el10/x86_64/stable/">Open the stable repository</a></p>
-      <p><a href="/metadata/catalog.json">Open the release catalog</a></p>
-      <p><a href="/metadata/repository-index.json">Open the file index</a></p>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="navbar">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/"
+          ><img class="brand-logo" src="/assets/eliware-brand.svg" alt="Eliware" /><strong
+            >Eliware Node.js</strong
+          ></a
+        >
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/">Home</a><a href="/install">Install</a><a href="/#containers">Images</a
+          ><a href="/blog">Blog</a><a href="/about">About</a>
+        </nav>
+        <details class="mobile-nav">
+          <summary>Menu</summary>
+          <nav class="mobile-nav-links" aria-label="Mobile navigation">
+            <a href="/">Home</a><a href="/install">Install</a><a href="/#containers">Images</a
+            ><a href="/blog">Blog</a><a href="/about">About</a>
+          </nav>
+        </details>
+      </div>
+    </header>
+    <main id="main" class="container repository-browser">
+      <header class="directory-hero">
+        <div>
+          <p class="eyebrow">CentOS Stream 10 · EPEL · x86_64</p>
+          <h1>Repository browser</h1>
+          <p class="muted">Browse packages, signed metadata, checksums, and release evidence.</p>
+        </div>
+        <img src="/assets/eliware-brand.svg" alt="" />
+      </header>
+      <section class="card p-4">
+        <div class="workspace-heading">
+          <div>
+            <p class="eyebrow">Published files</p>
+            <h2 id="directory-title">Loading repository</h2>
+            <p id="directory-path" class="path">/</p>
+          </div>
+          <a class="btn btn-outline-light" href="/el10/x86_64/stable/">Open stable RPM directory</a>
+        </div>
+        <nav id="directory-breadcrumbs" class="breadcrumbs" aria-label="Repository location"></nav>
+        <div class="package-search-tools">
+          <label class="form-label" for="directory-filter"
+            >Filter entries<input id="directory-filter" type="search" placeholder="Filter by name"
+          /></label>
+          <label class="form-label" for="directory-view"
+            >Show<select id="directory-view">
+              <option value="all">All files</option>
+              <option value="runtime">Runtime packages</option>
+            </select></label
+          >
+        </div>
+        <p id="directory-status" class="muted" aria-live="polite">Loading entries.</p>
+        <div class="directory-summary"><p id="directory-summary" class="muted"></p></div>
+        <div class="directory-card card table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col"><span class="visually-hidden">Type</span></th>
+                <th scope="col">
+                  <button
+                    class="sort-button"
+                    type="button"
+                    data-sort-key="type"
+                    aria-label="Sort by type"
+                  >
+                    Name <span aria-hidden="true">↕</span>
+                  </button>
+                </th>
+                <th scope="col">
+                  <button class="sort-button" type="button" data-sort-key="size">
+                    Size <span aria-hidden="true">↕</span>
+                  </button>
+                </th>
+                <th scope="col">
+                  <button class="sort-button" type="button" data-sort-key="date">
+                    Modified <span aria-hidden="true">↕</span>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="directory-entries">
+              <tr>
+                <td colspan="4">Loading repository entries.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <section id="directory-validation" class="section-block" hidden>
+          <h2>Artifact validation</h2>
+          <div class="table-scroll">
+            <table class="validation-table">
+              <tbody id="directory-validation-rows"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
     </main>
+    <footer class="site-footer">
+      <div class="container py-4 d-flex flex-wrap justify-content-between gap-2">
+        <span>© __COPYRIGHT_YEAR__ Eliware · Node.js HTTP v__APP_VERSION__</span
+        ><span
+          ><a href="/about">About</a> · <a href="/metadata/catalog.json">Catalog</a> ·
+          <a href="/feed.xml">RSS</a></span
+        >
+      </div>
+    </footer>
+    <script src="/web/app.js?v=__ASSET_VERSION__" defer></script>
   </body>
 </html>

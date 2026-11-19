@@ -34,10 +34,10 @@ test("renders package details and installation commands", () => {
   expect(detail.get("package-detail-title").textContent).toBe("gluster.rpm");
   expect(detail.get("package-detail-command").textContent).toContain("dnf install");
   expect(detail.get("package-detail-link").href).toBe(rpm.href);
-  renderDetail({ ...rpm, package: { format: "deb" }, sha256: "", modified: "invalid" });
-  expect(detail.get("package-detail-command").textContent).toContain("apt install");
+  renderDetail({ ...rpm, sha256: "", modified: "invalid" });
+  expect(detail.get("package-detail-command").textContent).toContain("dnf install");
   expect(detail.get("package-detail-hash").textContent).toBe("Checksum unavailable");
-  expect(state.selected.package.format).toBe("deb");
+  expect(state.selected.package.format).toBe("rpm");
   renderDetail({ ...rpm, name: "zero.rpm", size: 0 });
   expect(detail.get("package-detail-meta").textContent).toContain("0 B");
 });

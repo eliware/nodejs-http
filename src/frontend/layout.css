@@ -340,6 +340,37 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.25rem;
 }
+.section-block {
+  margin-top: 2rem;
+}
+.blog-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.info-page {
+  padding-bottom: 3rem;
+}
+.image-browser-integrated > .workspace-heading {
+  align-items: center;
+}
+.image-example-panel > .workspace-heading button,
+.comparison-selects select {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  color: var(--text);
+  background: #0b1526;
+  font: inherit;
+}
+.image-example-panel > .workspace-heading button {
+  cursor: pointer;
+}
+.image-example-panel > .workspace-heading button.active {
+  border-color: var(--info);
+  color: #07121e;
+  background: var(--info);
+}
 .build-highlights {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
