@@ -13,7 +13,7 @@ function renderBreadcrumbs(requestPath) {
   const crumbs = ['<a href="/">nodejs.eliware.org</a>'];
   let href = "/";
   for (const [index, part] of parts.entries()) {
-    const decoded = decodeURIComponent(part);
+    const decoded = part;
     href += `${encodeURIComponent(decoded)}/`;
     const label = escapeHtml(decoded);
     const final = index === parts.length - 1;

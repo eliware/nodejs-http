@@ -27,7 +27,7 @@ async function serveBlogPage(response, request, requestPath, config) {
   } catch {
     return false;
   }
-  const category = categoryMatch ? decodeURIComponent(categoryMatch[1]) : "";
+  const category = categoryMatch ? categoryMatch[1] : "";
   body = renderBlogPage(body, blog, category, servingHostId());
   const buffer = Buffer.from(body);
   const headers = {

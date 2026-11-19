@@ -51,6 +51,12 @@ describe("blog HTTP surface", () => {
     expect(response.body.toString()).toContain("releases · Eliware");
   });
 
+  test("preserves percent escapes in category route names", async () => {
+    const response = await request((await fixture()).listener, "/blog/category/%252F");
+    expect(response.statusCode).toBe(200);
+    expect(response.body.toString()).toContain("https://nodejs.eliware.org/blog/category/%252F");
+  });
+
   test("renders remote hero URLs and articles without verification metadata", async () => {
     const site = await fixture();
     const response = new MockResponse();
