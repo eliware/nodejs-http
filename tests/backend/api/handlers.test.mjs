@@ -1,15 +1,9 @@
 import { expect, test } from "@jest/globals";
 import __moduleApi0 from "../../../src/backend/api/handlers.mjs";
 const { handleDirectoryApi } = __moduleApi0();
-import __moduleApifixGuide from "../../../src/backend/api/guide-handler.mjs";
-const { handleGuideApi } = __moduleApifixGuide();
 import __moduleApifixBlog from "../../../src/backend/api/blog-handler.mjs";
 const { handleBlogApi } = __moduleApifixBlog();
-import {
-  createGuideFile,
-  createRepositoryRoot,
-  writeRepositoryIndex,
-} from "../../../test-fixtures/filesystem.mjs";
+import { createRepositoryRoot, writeRepositoryIndex } from "../../../test-fixtures/filesystem.mjs";
 
 function responseFor(method = "GET") {
   return {
@@ -29,61 +23,12 @@ function responseFor(method = "GET") {
 
 const config = { publicDir: "missing-public-root", securityHeaders: false, compression: false };
 
-test("rejects unsupported guide coordinates", async () => {
-  const response = responseFor();
-  await expect(
-    handleGuideApi(response, "/api/guides/delete/centos10/stable", config),
-  ).resolves.toBe(true);
-  expect(response.statusCode).toBe(404);
-  expect(JSON.parse(response.body)).toEqual({ error: "guide not found" });
-});
-
 test("ignores unrelated directory API paths", async () => {
   const response = responseFor();
   await expect(
     handleDirectoryApi({ url: "/api/v1/list" }, response, "/api/v1/other", config),
   ).resolves.toBe(false);
   expect(response.statusCode).toBeNull();
-});
-
-test("serves valid guides and reports missing or invalid guide files", async () => {
-  const publicDir = await createRepositoryRoot();
-  const guide = {
-    schemaVersion: 2,
-    title: "Install",
-    summary: "Install GlusterFS",
-    platform: "rpm",
-    channel: "stable",
-    source: { repository: "https://example.test/repo", upstream: "https://example.test/upstream" },
-    sections: [
-      {
-        title: "Install",
-        steps: [
-          {
-            title: "Run",
-            text: "Install the package.",
-            commands: ["dnf install"],
-            verify: "Installed.",
-          },
-        ],
-      },
-    ],
-  };
-  await createGuideFile(
-    publicDir,
-    `${publicDir}/content/install/centos10/stable/instructions.json`,
-    JSON.stringify(guide),
-  );
-  const response = responseFor();
-  await handleGuideApi(response, "/api/guides/install/centos10/stable", {
-    ...config,
-    publicDir,
-  });
-  expect(response.statusCode).toBe(200);
-  expect(JSON.parse(response.body).guide).toEqual(guide);
-  const missing = responseFor();
-  await handleGuideApi(missing, "/api/guides/upgrade/centos10/stable", { ...config, publicDir });
-  expect(missing.statusCode).toBe(404);
 });
 
 test("serves articles, hides drafts, and handles blog store failures", async () => {

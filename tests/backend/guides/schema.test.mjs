@@ -19,7 +19,19 @@ const validGuide = () => ({
 
 test("accepts a valid guide document", () => {
   const guide = validGuide();
-  expect(validateGuide(guide)).toBe(guide);
+  expect(validateGuide(guide, "centos10", "stable")).toBe(guide);
+  const debianGuide = { ...guide, platform: "debian" };
+  expect(validateGuide(debianGuide, "debian12", "stable")).toBe(debianGuide);
+  const rollingGuide = { ...guide, channel: "rolling" };
+  expect(validateGuide(rollingGuide, "centos10", "rolling")).toBe(rollingGuide);
+});
+
+test.each([
+  [validGuide(), "other", "stable"],
+  [validGuide(), "debian12", "stable"],
+  [{ ...validGuide(), channel: "rolling" }, "centos10", "stable"],
+])("rejects a guide that does not match its requested coordinates", (guide, os, channel) => {
+  expect(() => validateGuide(guide, os, channel)).toThrow("invalid guide");
 });
 
 test.each([
@@ -54,5 +66,5 @@ test.each([
     ],
   },
 ])("rejects invalid guide documents", (guide) => {
-  expect(() => validateGuide(guide)).toThrow("invalid guide");
+  expect(() => validateGuide(guide, "centos10", "stable")).toThrow("invalid guide");
 });
