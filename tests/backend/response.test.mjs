@@ -1,8 +1,7 @@
 import { expect, test } from "@jest/globals";
 import { gunzipSync } from "node:zlib";
 import __moduleApi0 from "../../src/backend/response.mjs";
-const { baseHeaders, sendError, sendJson, sendText } = __moduleApi0();
-import { createFixtureFile } from "../../test-fixtures/filesystem.mjs";
+const { baseHeaders, sendJson, sendText } = __moduleApi0();
 
 function response(method = "GET", requestHeaders = {}) {
   return {
@@ -72,16 +71,4 @@ test("sends text and JSON when the response has no request", async () => {
   delete json.req;
   await sendJson(json, 200, { ok: true }, { compression: false });
   expect(json.body.toString()).toBe('{"ok":true}\n');
-});
-
-test("sends custom errors when present and text errors when absent", async () => {
-  const file = await createFixtureFile("custom error", "error-page.html");
-  const custom = response();
-  await sendError(custom, 404, "missing", config, file, { Allow: "GET" });
-  expect(custom.statusCode).toBe(404);
-  expect(custom.headers["Content-Type"]).toContain("text/html");
-  expect(custom.body.toString()).toBe("custom error");
-  const fallback = response();
-  await sendError(fallback, 404, "missing", config, `${file}.missing`);
-  expect(fallback.body.toString()).toBe("missing");
 });

@@ -1,12 +1,6 @@
 import path from "node:path";
-
-async function readJson(directoryPath, name, filesystem) {
-  try {
-    return JSON.parse(await filesystem.readFile(path.join(directoryPath, name), "utf8"));
-  } catch {
-    return null;
-  }
-}
+import __moduleApi1 from "./metadata.mjs";
+const { readJson } = __moduleApi1();
 
 async function readDirectoryListingData(directoryPath, config, filesystem) {
   const entries = (await filesystem.readdir(directoryPath, { withFileTypes: true }))

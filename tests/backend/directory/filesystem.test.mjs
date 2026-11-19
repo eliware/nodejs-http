@@ -22,6 +22,7 @@ test("reads directory entries and validation records under the repository root",
 
 test("returns null for files and paths outside the resolved root", async () => {
   const publicDir = await createRepositoryRoot();
+  expect(await readFilesystemDirectory({ publicDir }, "/../secret.txt")).toBeNull();
   expect(await readFilesystemDirectory({ publicDir }, "/glusterfs-el10.repo")).toBeNull();
 
   const filesystem = {

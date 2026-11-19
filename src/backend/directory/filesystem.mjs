@@ -2,14 +2,8 @@ import path from "node:path";
 import { promises as fs } from "node:fs";
 import __moduleApi1 from "../path-utils.mjs";
 const { resolvePublicPath } = __moduleApi1();
-
-async function readJson(directoryPath, name, filesystem) {
-  try {
-    return JSON.parse(await filesystem.readFile(path.join(directoryPath, name), "utf8"));
-  } catch {
-    return null;
-  }
-}
+import __moduleApifix1 from "./metadata.mjs";
+const { readJson } = __moduleApifix1();
 
 async function readFilesystemDirectory(config, requestPath, filesystem = fs) {
   const filePath =
