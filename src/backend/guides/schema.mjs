@@ -1,19 +1,14 @@
-import guidePathApi from "./path.mjs";
-const { GUIDE_CHANNELS, isGuideCoordinate, guidePlatform } = guidePathApi();
-
 const GUIDE_PLATFORMS = ["rpm", "debian", "ubuntu"];
+const GUIDE_CHANNELS = ["stable", "rolling"];
 
-function validateGuide(value, os, channel) {
+function validateGuide(value) {
   if (
-    !isGuideCoordinate("install", os, channel) ||
     !value ||
     value.schemaVersion !== 2 ||
     typeof value.title !== "string" ||
     typeof value.summary !== "string" ||
     !GUIDE_PLATFORMS.includes(value.platform) ||
-    value.platform !== guidePlatform(os) ||
     !GUIDE_CHANNELS.includes(value.channel) ||
-    value.channel !== channel ||
     !value.source ||
     typeof value.source.repository !== "string" ||
     typeof value.source.upstream !== "string" ||

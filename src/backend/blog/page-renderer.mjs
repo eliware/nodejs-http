@@ -1,5 +1,7 @@
 import __moduleApi1 from "./article/page.mjs";
-const { renderBlogArticlePage, escapeAttribute } = __moduleApi1();
+const { renderBlogArticlePage } = __moduleApi1();
+import articleEscapingApi from "./article/escaping.mjs";
+const { escapeAttribute } = articleEscapingApi();
 import __moduleApifix1 from "./jsonld.mjs";
 const { absoluteBlogImage, renderBlogJsonLd } = __moduleApifix1();
 import { APP_VERSION } from "../app-version.mjs";

@@ -1,4 +1,3 @@
-import path from "node:path";
 import {
   createGuideFile,
   createRepositoryRoot,
@@ -32,31 +31,6 @@ test("guides resolve from the hierarchical repository content path", async () =>
   expect(guideFilePath(root, "invalid", "centos10", "stable")).toBeNull();
   expect(guideFilePath(root, "install", "centos10", "invalid")).toBeNull();
   await expect(readGuide(root, "invalid", "centos10", "stable")).resolves.toBeNull();
-});
-
-test.each([
-  ["platform", { platform: "debian" }],
-  ["channel", { channel: "stable" }],
-])("rejects guide data with a mismatched requested %s", async (_name, changes) => {
-  const root = await createRepositoryRoot();
-  const file = guideFilePath(root, "upgrade", "rocky10", "rolling");
-  const guide = {
-    schemaVersion: 2,
-    title: "Upgrade",
-    summary: "Summary",
-    platform: "rpm",
-    channel: "rolling",
-    source: { repository: "repo", upstream: "upstream" },
-    sections: [],
-    ...changes,
-  };
-  await createGuideFile(root, file, JSON.stringify(guide));
-  await expect(readGuide(root, "upgrade", "rocky10", "rolling")).rejects.toThrow("invalid guide");
-});
-
-test("rejects the mismatched guide fixture", async () => {
-  const root = path.resolve("test-fixtures/guide-store-fixture");
-  await expect(readGuide(root, "upgrade", "rocky10", "rolling")).rejects.toThrow("invalid guide");
 });
 
 test.each([

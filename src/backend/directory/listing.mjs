@@ -3,8 +3,9 @@ import { APP_VERSION } from "../app-version.mjs";
 import __moduleApi1 from "../runtime-identity.mjs";
 const { servingHostId } = __moduleApi1();
 import __moduleApifix1 from "./presentation.mjs";
-const { copyrightYear, escapeHtml, formatBytes, ogImageForPath, renderBreadcrumbs } =
-  __moduleApifix1();
+const { copyrightYear, escapeHtml, formatBytes } = __moduleApifix1();
+import __moduleApifix3 from "./links.mjs";
+const { ogImageForPath, renderBreadcrumbs } = __moduleApifix3();
 import __moduleApifix2 from "./validation.mjs";
 const { renderValidation } = __moduleApifix2();
 
