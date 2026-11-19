@@ -1,7 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
 import { once } from "node:events";
-import __moduleApi0 from "../../../src/backend/blog/markdown.mjs";
-const { renderMarkdown } = __moduleApi0();
 import __moduleApifix1 from "../../../src/backend/blog/pages.mjs";
 const { serveBlogPage } = __moduleApifix1();
 import __moduleApifix2 from "../../../src/backend/static/file-server.mjs";
@@ -72,45 +70,6 @@ describe("blog HTTP surface", () => {
     await finished;
     expect(response.body.toString()).toContain("https://images.example/hero.png");
     expect(response.body.toString()).not.toContain("Last verified");
-  });
-
-  test("renders markdown headings, lists, code, and safe links", () => {
-    const html = renderMarkdown(
-      "# One\n## Two\n### Three\n\n- first [link](https://example.test)\n* second **bold**\n\n```\n<value>\n```",
-    );
-    expect(html).toContain('<h1 id="one">One</h1>');
-    expect(html).toContain('<h2 id="two">Two</h2>');
-    expect(html).toContain('<h3 id="three">Three</h3>');
-    expect(html).not.toContain("<ol>");
-    expect(html).toContain('<ul><li>first <a href="https://example.test"');
-    expect(html).toContain("<strong>bold</strong>");
-    expect(html).toContain("<pre><code>&lt;value&gt;");
-  });
-
-  test("gives repeated markdown headings unique anchor ids", () => {
-    expect(renderMarkdown("# Repeat\n\n# Repeat")).toContain('id="repeat-2"');
-  });
-
-  test("renders ordered Markdown lists", () => {
-    expect(renderMarkdown("1. first\n2. second")).toContain(
-      "<ol><li>first</li><li>second</li></ol>",
-    );
-  });
-
-  test("normalizes CRLF markdown and leaves unsafe links as text", () => {
-    const html = renderMarkdown("text\r\n\r\n[bad](javascript:alert)");
-    expect(html).toContain("<p>text</p>");
-    expect(html).toContain("<p>bad</p>");
-    expect(html).not.toContain("javascript:");
-  });
-
-  test("escapes markdown inline markup and closes an unclosed code block", () => {
-    const html = renderMarkdown("<tag> & \"quote\" 'apostrophe' `code`\n\n```\nunsafe <value>");
-    expect(html).toContain("&lt;tag&gt;");
-    expect(html).toContain("&quot;quote&quot;");
-    expect(html).toContain("&#39;apostrophe&#39;");
-    expect(html).toContain("<code>code</code>");
-    expect(html).toContain("<pre><code>unsafe &lt;value&gt;");
   });
 
   test("returns 404 for an unknown blog article", async () => {

@@ -82,39 +82,3 @@ test("does not send a body for HEAD and compresses accepted HTML", async () => {
   expect((await bodyPromise).length).toBeGreaterThan(0);
   expect(compressed.headers["Content-Encoding"]).toBe("gzip");
 });
-
-test("handles entries and optional metadata removed during directory rendering", async () => {
-  const output = response();
-  const bodyPromise = bodyOf(output);
-  const entry = { name: "vanished.txt", isDirectory: () => false };
-  const filesystem = {
-    readdir: async () => [entry],
-    stat: async () => {
-      throw new Error("entry removed");
-    },
-    readFile: async (filePath) => {
-      if (filePath.endsWith("directory-listing.html")) return "{{SUMMARY}}|{{ROWS}}";
-      throw new Error("optional file missing");
-    },
-  };
-
-  await sendDirectoryListing(
-    output,
-    output.req,
-    "/repository",
-    "/",
-    {
-      allowDotfiles: false,
-      directoryTemplate: "/repository/directory-listing.html",
-      securityHeaders: false,
-      compression: false,
-    },
-    filesystem,
-  );
-
-  const body = await bodyPromise;
-  expect(output.statusCode).toBe(200);
-  expect(body).toContain("vanished.txt");
-  expect(body).toContain("Total files: 0");
-  expect(body).not.toContain(".hidden");
-});

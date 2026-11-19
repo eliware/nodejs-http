@@ -1,20 +1,19 @@
-import __moduleApi1 from "./file-access.mjs";
+import __moduleApi1 from "../file-access.mjs";
 const { fileExists } = __moduleApi1();
-import __moduleApifix1 from "./response.mjs";
+import __moduleApifix1 from "../response.mjs";
 const { sendError, sendText } = __moduleApifix1();
-import __moduleApifix2 from "./special-routes.mjs";
+import __moduleApifix2 from "../special-routes.mjs";
 const { handleSpecialRequest } = __moduleApifix2();
-import __moduleApifix3 from "./path-utils.mjs";
+import __moduleApifix3 from "../path-utils.mjs";
 const { getRequestPath, resolvePublicPath } = __moduleApifix3();
-import __moduleApifix4 from "./directory/request.mjs";
+import __moduleApifix4 from "../directory/request.mjs";
 const { resolveDirectoryRequest } = __moduleApifix4();
-import { randomUUID } from "node:crypto";
-import __moduleApifix5 from "./metrics.mjs";
-const { recordRequest, startRequest } = __moduleApifix5();
-import __moduleApifix6 from "./send-file.mjs";
+import __moduleApifix6 from "../send-file.mjs";
 const { sendFile } = __moduleApifix6();
-import __moduleApifix7 from "./blog/store.mjs";
+import __moduleApifix7 from "../blog/store.mjs";
 const { createBlogStore } = __moduleApifix7();
+import __moduleApifix8 from "./observation.mjs";
+const { observeRequest } = __moduleApifix8();
 import { createLogger } from "@eliware/common";
 
 function createRequestListener(config, loggerOverride) {
@@ -30,48 +29,7 @@ function createRequestListener(config, loggerOverride) {
     Boolean,
   );
   return async function requestListener(request, response) {
-    const started = Date.now();
-    const suppliedRequestId = request.headers?.["x-request-id"];
-    const requestId =
-      typeof suppliedRequestId === "string" &&
-      suppliedRequestId.length <= 128 &&
-      /^[A-Za-z0-9._:-]+$/.test(suppliedRequestId)
-        ? suppliedRequestId
-        : randomUUID();
-    response.setHeader?.("X-Request-ID", requestId);
-    startRequest();
-    const finish = () => {
-      const durationMs = Date.now() - started;
-      const bytes =
-        Number(
-          typeof response.getHeader === "function" ? response.getHeader("Content-Length") : 0,
-        ) || 0;
-      recordRequest({
-        method: request.method,
-        path: request.url,
-        status: response.statusCode,
-        durationMs,
-        bytes,
-      });
-      if (config.accessLog && config.logLevel !== "silent") {
-        const entry = {
-          timestamp: new Date().toISOString(),
-          request_id: requestId,
-          method: request.method || "-",
-          path: request.url || "/",
-          status: response.statusCode,
-          duration_ms: durationMs,
-          bytes,
-        };
-        logger.info(
-          config.structuredLogs
-            ? "HTTP request"
-            : `${entry.method} ${entry.path} ${entry.status} ${entry.duration_ms}ms`,
-          config.structuredLogs ? entry : undefined,
-        );
-      }
-    };
-    response.once("finish", finish);
+    observeRequest(request, response, config, logger);
 
     if (!allowedMethods.includes(request.method || "")) {
       await sendError(response, 405, "Method Not Allowed", config, config.methodNotAllowedFile, {

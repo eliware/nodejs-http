@@ -6,7 +6,9 @@ import { state } from "./state.mjs";
 import __moduleApifix2 from "./search.mjs";
 const { allPackages, renderDetail, renderSearch } = __moduleApifix2();
 import __moduleApifix3 from "./timeline.mjs";
-const { populateComparison, renderTimeline } = __moduleApifix3();
+const { renderTimeline } = __moduleApifix3();
+import __moduleApifix4 from "./comparison.mjs";
+const { populateComparison } = __moduleApifix4();
 
 function initControls() {
   const search = getElement("package-search");
