@@ -1,4 +1,4 @@
-import guidePathApi from "./path.mjs";
+import guidePathApi from "../path.mjs";
 const { isGuideCoordinate, guidePlatform } = guidePathApi();
 
 function validateGuideCoordinates(value, os, channel) {

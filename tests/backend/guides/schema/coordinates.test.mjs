@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import __moduleApi0 from "../../../src/backend/guides/coordinate-validation.mjs";
+import __moduleApi0 from "../../../../src/backend/guides/schema/coordinates.mjs";
 const { validateGuideCoordinates } = __moduleApi0();
 
 const guide = (overrides = {}) => ({ platform: "rpm", channel: "stable", ...overrides });

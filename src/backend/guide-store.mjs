@@ -4,7 +4,7 @@ import guidePathApi from "./guides/path.mjs";
 const { GUIDE_ACTIONS, GUIDE_OSES, GUIDE_CHANNELS, guideFilePath } = guidePathApi();
 import __moduleApifix1 from "./guides/schema.mjs";
 const { validateGuide } = __moduleApifix1();
-import __moduleApifix2 from "./guides/coordinate-validation.mjs";
+import __moduleApifix2 from "./guides/schema/coordinates.mjs";
 const { validateGuideCoordinates } = __moduleApifix2();
 const cache = new Map();
 
