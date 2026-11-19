@@ -1,6 +1,6 @@
 import path from "node:path";
 
-const DEFAULT_PORT = 7001;
+const DEFAULT_PORT = 7100;
 const DEFAULT_HOST = "0.0.0.0";
 const DEFAULT_PUBLIC_DIR = path.resolve(process.cwd(), "public");
 

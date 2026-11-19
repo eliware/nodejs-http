@@ -2,7 +2,7 @@
 
 ## @eliware/nodejs-http [![License](https://img.shields.io/github/license/eliware/nodejs-http)](https://github.com/eliware/nodejs-http/blob/main/LICENSE) [![CI](https://github.com/eliware/nodejs-http/actions/workflows/ci.yaml/badge.svg)](https://github.com/eliware/nodejs-http/actions/workflows/ci.yaml)
 
-Read-only Node.js RPM repository and web frontend.
+Node.js HTTP repository and web frontend.
 
 ## Table of Contents
 

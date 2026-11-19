@@ -5,7 +5,7 @@ services:
       context: .
     container_name: nodejs-http-local
     ports:
-      - "127.0.0.1:7001:7001"
+      - "127.0.0.1:7100:7100"
     volumes:
       - type: bind
         source: ${REPOSITORY_ROOT:?Set REPOSITORY_ROOT to the published repository directory}
@@ -16,7 +16,7 @@ services:
         - CMD
         - node
         - -e
-        - "fetch('http://127.0.0.1:7001/ready').then(response => { if (!response.ok) process.exitCode = 1; }).catch(() => { process.exitCode = 1; })"
+        - "fetch('http://127.0.0.1:7100/ready').then(response => { if (!response.ok) process.exitCode = 1; }).catch(() => { process.exitCode = 1; })"
       interval: 30s
       timeout: 5s
       retries: 3

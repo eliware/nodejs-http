@@ -22,4 +22,4 @@ Check `BLOG_DIR` or the expected guide path under `PUBLIC_DIR`. Validate blog fi
 
 ## The container does not start
 
-Run `docker compose ps` and `docker compose logs web`. Confirm that `REPOSITORY_ROOT` names an existing directory and that port 7001 is available on localhost.
+Run `docker compose ps` and `docker compose logs web`. Confirm that `REPOSITORY_ROOT` names an existing directory and that port 7100 is available on localhost.

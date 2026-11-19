@@ -9,7 +9,7 @@ COPY --chown=node:node src ./src
 COPY --chown=node:node templates ./site
 COPY --chown=node:node public/assets ./site/assets
 ENV HOST=0.0.0.0 \
-    PORT=7001 \
+    PORT=7100 \
     PUBLIC_DIR=/srv/repository \
     BLOG_DIR=/srv/repository/content/blogs \
     STATIC_DIR=/opt/nodejs-http/site \
@@ -21,6 +21,6 @@ ENV HOST=0.0.0.0 \
     DIRECTORY_INDEX=true \
     COMPRESSION=true \
     RAM_CACHE=false
-EXPOSE 7001
+EXPOSE 7100
 USER node
 CMD ["node", "bin/server.mjs"]

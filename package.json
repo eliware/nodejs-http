@@ -2,7 +2,7 @@
   "name": "@eliware/nodejs-http",
   "version": "15.2.0",
   "type": "module",
-  "description": "Read-only Node.js RPM repository and web frontend.",
+  "description": "Node.js HTTP repository and web frontend.",
   "keywords": [
     "nodejs",
     "repository",
@@ -99,7 +99,7 @@
     "url": "https://github.com/eliware/nodejs-http/issues"
   },
   "eliware": {
-    "id": "E-7003",
+    "id": "E-7100",
     "apply": [
       "general",
       "application",

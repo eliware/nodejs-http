@@ -1,7 +1,7 @@
 version: "15.1"
 description: Requirements for the Node.js HTTP repository and web frontend.
 directives:
-  - id: E-7003.0
+  - id: E-7100.0
     dos:
       - Return published Node.js content through read-only HTTP routes.
       - Keep package construction, signing, migration, and publication in the packaging repository.
