@@ -1,5 +1,7 @@
 import markdownInlineApi from "./inline.mjs";
 const { renderInline, escapeHtml } = markdownInlineApi();
+import headingIdsApi from "./heading-ids.mjs";
+const { createHeadingIdGenerator } = headingIdsApi();
 
 function renderMarkdown(markdown) {
   const lines = String(markdown).replaceAll("\r\n", "\n").split("\n");
@@ -8,18 +10,7 @@ function renderMarkdown(markdown) {
   let list = [];
   let orderedList = [];
   let code = null;
-  const headingIds = new Map();
-  const slugify = (value) => {
-    const base =
-      String(value)
-        .toLowerCase()
-        .replace(/<[^>]+>/g, "")
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "") || "section";
-    const count = headingIds.get(base) || 0;
-    headingIds.set(base, count + 1);
-    return count ? `${base}-${count + 1}` : base;
-  };
+  const headingId = createHeadingIdGenerator();
 
   const flushParagraph = () => {
     if (paragraph.length) {
@@ -69,7 +60,9 @@ function renderMarkdown(markdown) {
       flushParagraph();
       flushList();
       const level = heading[1].length;
-      output.push(`<h${level} id="${slugify(heading[2])}">${renderInline(heading[2])}</h${level}>`);
+      output.push(
+        `<h${level} id="${headingId(heading[2])}">${renderInline(heading[2])}</h${level}>`,
+      );
       continue;
     }
     const item = /^[-*]\s+(.+)$/.exec(line);

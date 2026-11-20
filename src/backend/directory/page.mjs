@@ -1,12 +1,9 @@
-import { APP_VERSION } from "../app-version.mjs";
-import __moduleApi1 from "../runtime-identity.mjs";
-const { servingHostId } = __moduleApi1();
 import __moduleApifix1 from "./html-escaping.mjs";
 const { escapeHtml } = __moduleApifix1();
 import __moduleApifix6 from "./byte-format.mjs";
 const { formatBytes } = __moduleApifix6();
-import __moduleApifix7 from "./copyright-year.mjs";
-const { copyrightYear } = __moduleApifix7();
+import pageMetadataApi from "./page-metadata.mjs";
+const { pageMetadata } = pageMetadataApi();
 import __moduleApifix2 from "./links.mjs";
 const { ogImageForPath, renderBreadcrumbs } = __moduleApifix2();
 import __moduleApifix3 from "./validation.mjs";
@@ -27,7 +24,7 @@ function renderDirectoryHtml({
 }) {
   const title = `Index of ${requestPath}`;
   if (!template) return renderFallbackHtml(title, rows);
-  const appVersion = process.env.APP_VERSION || APP_VERSION;
+  const metadata = pageMetadata();
   return renderDirectoryTemplate(template, {
     title: escapeHtml(title),
     ogImage: escapeHtml(ogImageForPath(requestPath)),
@@ -37,10 +34,7 @@ function renderDirectoryHtml({
     path: escapeHtml(requestPath),
     validation: renderValidation(validation, containerValidation),
     summary: `Total files: ${fileCount} · Total size: ${formatBytes(totalBytes)}`,
-    copyrightYear: copyrightYear(),
-    appVersion,
-    hostId: servingHostId(),
-    assetVersion: appVersion,
+    ...metadata,
   });
 }
 
