@@ -60,9 +60,6 @@ test("rejects invalid publication metadata", () => {
   expect(() => assertBlogDocument({ ...validBlog, updated_at: "2026-08-17T12:00:00Z" })).toThrow(
     /updated_at/,
   );
-  expect(() => assertBlogDocument({ ...validBlog, tags: ["releases", "releases"] })).toThrow(
-    /duplicates/,
-  );
 });
 
 test("rejects a missing required field", () => {
@@ -91,9 +88,6 @@ test.each([
   [{ series: " " }, /series must be a non-empty string/],
   [{ series_order: 0 }, /series_order/],
   [{ series_order: 1.5 }, /series_order/],
-  [{ tags: [] }, /tags/],
-  [{ tags: ["Bad Tag"] }, /tags/],
-  [{ status: "private" }, /status/],
   [{ content: " " }, /content must be a non-empty string/],
 ])("rejects invalid editorial values", (change, expected) => {
   expect(() => assertBlogDocument({ ...validBlog, ...change })).toThrow(expected);

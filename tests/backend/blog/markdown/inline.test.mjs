@@ -15,3 +15,7 @@ test("allows safe links and leaves unsafe links as text", () => {
   );
   expect(renderInline("[Bad](javascript:alert)")).toBe("Bad");
 });
+
+test("supports inline code and bold text", () => {
+  expect(renderInline("`code` **bold**")).toBe("<code>code</code> <strong>bold</strong>");
+});
