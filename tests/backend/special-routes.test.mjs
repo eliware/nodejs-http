@@ -1,8 +1,10 @@
 import { expect, test } from "@jest/globals";
+import { once } from "node:events";
 import __moduleApi0 from "../../src/backend/special-routes.mjs";
 const { handleSpecialRequest } = __moduleApi0();
 import { createHttpResponse, readHttpBody } from "../../test-fixtures/http-response.mjs";
 import { createHealthMetadata, createStaticSite } from "../../test-fixtures/filesystem.mjs";
+import { fixture, MockResponse, request } from "../../test-fixtures/blog/http.mjs";
 
 async function call(requestPath, { method = "GET", config = {} } = {}) {
   const response = createHttpResponse(method, { "accept-encoding": "gzip" });
@@ -134,4 +136,64 @@ test("serves static files with HEAD and exposes missing static files to normal r
 test("uses the configured static index file for the site root", async () => {
   const result = await call("/", { config: { staticIndexFile: "about.html" } });
   expect(result.body).toBe("about");
+});
+
+test("serves only published blog posts with safe rendered HTML", async () => {
+  const response = await request((await fixture()).listener, "/api/v1/blogs");
+  expect(response.statusCode).toBe(200);
+  const body = JSON.parse(response.body);
+  expect(body.total).toBe(1);
+  expect(body.posts[0].slug).toBe("safe-post");
+  expect(body.posts[0].html).toContain('<h1 id="hello">Hello</h1>');
+  expect(body.posts[0].html).not.toContain("<script>");
+  expect(body.posts[0].html).not.toContain("javascript:");
+});
+
+test("serves RSS and server-rendered article metadata", async () => {
+  const listener = (await fixture()).listener;
+  const feed = await request(listener, "/feed.xml");
+  expect(feed.statusCode).toBe(200);
+  expect(feed.headers["Content-Type"]).toContain("application/rss+xml");
+  expect(feed.body.toString()).toContain("safe-post");
+  expect(feed.body.toString()).not.toContain("draft-post");
+
+  const article = await request(listener, "/blog/safe-post");
+  expect(article.statusCode).toBe(200);
+  expect(article.body.toString()).toContain("https://nodejs.eliware.org/blog/safe-post");
+  expect(article.body.toString()).toContain('"@type":"TechArticle"');
+  expect(article.body.toString()).toContain("<h1>Safe &lt;title&gt;</h1>");
+  expect(article.body.toString()).toContain('data-server-rendered="true"');
+  expect(article.body.toString().match(/<h1>/g)).toHaveLength(1);
+});
+
+test("serves the standard blog footer and category routes", async () => {
+  const listener = (await fixture()).listener;
+  const index = await request(listener, "/blog");
+  const body = index.body.toString();
+  expect(body).toContain('class="site-footer"');
+  expect(body).toContain("Eliware · Node.js packaging");
+  expect(body).toContain('href="/metadata/catalog.json"');
+  expect(body).toMatch(/Host <code>[^<]+<\/code>/);
+
+  const category = await request(listener, "/blog/category/releases");
+  expect(category.statusCode).toBe(200);
+  expect(category.body.toString()).toContain("releases · Eliware");
+  const encoded = await request(listener, "/blog/category/%252F");
+  expect(encoded.statusCode).toBe(200);
+  expect(encoded.body.toString()).toContain("https://nodejs.eliware.org/blog/category/%252F");
+});
+
+test("returns blog article not-found responses and handles HEAD requests", async () => {
+  const listener = (await fixture()).listener;
+  const missing = await request(listener, "/blog/missing");
+  expect(missing.statusCode).toBe(404);
+  expect(missing.body.toString()).toContain("Blog post not found");
+
+  const response = new MockResponse();
+  const finished = once(response, "finish");
+  listener({ method: "HEAD", url: "/blog", headers: {} }, response);
+  await finished;
+  expect(response.statusCode).toBe(200);
+  expect(response.headers["Content-Length"]).toBeGreaterThan(0);
+  expect(response.body.length).toBe(0);
 });

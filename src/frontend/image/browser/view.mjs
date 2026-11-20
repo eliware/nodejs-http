@@ -10,6 +10,8 @@ import __moduleApifix1 from "../../format.mjs";
 const { formatDateTime } = __moduleApifix1();
 import imageStateApi from "./state.mjs";
 const { selectedImageRecords, setOpenRepository, setCurrentExample } = imageStateApi();
+import imageBreadcrumbsApi from "./breadcrumbs.mjs";
+const { renderImageBreadcrumbs } = imageBreadcrumbsApi();
 
 function showExample(state, record, kind) {
   setCurrentExample(state, record, kind);
@@ -18,29 +20,6 @@ function showExample(state, record, kind) {
   if (!panel) return;
   panel.hidden = false;
   panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
-}
-
-function renderBreadcrumbs(state, render) {
-  const breadcrumbs = getElement("image-browser-breadcrumbs");
-  if (!breadcrumbs) return;
-  breadcrumbs.replaceChildren();
-  const root = document.createElement("button");
-  root.type = "button";
-  root.className = "breadcrumb-link";
-  root.textContent = "Images";
-  root.addEventListener("click", () => {
-    setOpenRepository(state, null);
-    render();
-  });
-  breadcrumbs.appendChild(root);
-  if (state.openRepository) {
-    const separator = document.createElement("span");
-    separator.textContent = " / ";
-    breadcrumbs.append(separator);
-    const current = document.createElement("span");
-    current.textContent = state.openRepository.split("/").at(-1);
-    breadcrumbs.append(current);
-  }
 }
 
 function selectedRecords(state) {
@@ -57,7 +36,7 @@ function renderImageBrowser(state) {
   const status = getElement("image-browser-status");
   if (!list || !status) return;
   const render = () => renderImageBrowser(state);
-  renderBreadcrumbs(state, render);
+  renderImageBreadcrumbs(state, render);
   list.replaceChildren();
   const visible = selectedRecords(state);
   if (!visible.length) {

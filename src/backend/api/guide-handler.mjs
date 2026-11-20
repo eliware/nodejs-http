@@ -1,7 +1,9 @@
 import __moduleApi1 from "../response.mjs";
 const { sendJson } = __moduleApi1();
 import __moduleApifix1 from "../guide-store.mjs";
-const { readGuide, GUIDE_ACTIONS, GUIDE_OSES, GUIDE_CHANNELS } = __moduleApifix1();
+const { readGuide } = __moduleApifix1();
+import guidePathApi from "../guides/path.mjs";
+const { GUIDE_ACTIONS, GUIDE_OSES, GUIDE_CHANNELS } = guidePathApi();
 
 async function handleGuideApi(response, requestPath, config) {
   const match = requestPath.match(/^\/api\/guides\/([^/]+)\/([^/]+)\/([^/]+)$/);

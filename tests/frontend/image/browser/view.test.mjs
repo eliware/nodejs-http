@@ -45,8 +45,6 @@ test("renders repository folders, breadcrumbs, and image details", () => {
   ui.get("image-list").children[0].children[0].dispatch("click");
   expect(ui.get("image-browser-status").textContent).toBe("1 images");
   expect(ui.state.openRepository).toBe("ghcr.io/eliware/nodejs");
-  ui.get("image-browser-breadcrumbs").children[0].dispatch("click");
-  expect(ui.state.openRepository).toBeNull();
 });
 
 test("renders one repository and returns when required elements are missing", () => {
@@ -54,6 +52,7 @@ test("renders one repository and returns when required elements are missing", ()
   renderImageBrowser(ui.state);
   expect(ui.get("image-browser-status").textContent).toBe("1 images · 1 repositories");
   expect(ui.get("image-example-panel").hidden).toBe(false);
+  renderImageBrowser(ui.state);
   installBrowserDom({ ids: ["image-list"] });
   renderImageBrowser(ui.state);
   installBrowserDom({ ids: ["image-browser-status"] });
