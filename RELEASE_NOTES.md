@@ -4,12 +4,23 @@
 
 ### Added
 
-- Add a published stable repository fixture and verify catalog output against package metadata.
+- Add published stable repository fixtures and compare catalog responses with package metadata.
+- Add focused modules for guide source validation, code fences, image rows, route families, and release wizard summaries.
 
 ### Changed
 
-- Clarify the stable release catalog and unavailable preview state in metadata integration guidance.
-- Refresh browser compatibility data dependencies.
+- Update the package version to 15.2.2 and refresh npm dependencies and browser compatibility data.
+- Use the published CentOS Stream 10 Node.js image tag in the application build and runtime stages.
+- Organize blog, directory, health, sitemap, request, configuration, and release rendering code by responsibility.
+- Update metadata guidance for stable catalog availability and the published image guide for release v15.2.2.
+
+### Fixed
+
+- Require guide source references to use valid HTTP or HTTPS URLs.
+- Return HTTP 503 when stable release metadata is unavailable or incomplete.
+- Hide symbolic links from directory listings by default and reject links that resolve outside the repository.
+- Preserve fenced code when a backtick line does not close the fence.
+- Lower the active request metric when a client disconnects before the response finishes.
 
 ## 15.2.1 — 2026-11-19
 
