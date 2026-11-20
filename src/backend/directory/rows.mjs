@@ -1,6 +1,8 @@
 import path from "node:path";
-import __moduleApifix1 from "./presentation.mjs";
-const { escapeHtml, formatBytes } = __moduleApifix1();
+import __moduleApifix1 from "./html-escaping.mjs";
+const { escapeHtml } = __moduleApifix1();
+import __moduleApifix2 from "./byte-format.mjs";
+const { formatBytes } = __moduleApifix2();
 
 function renderDirectoryRows(entries, requestPath) {
   const rows = [];

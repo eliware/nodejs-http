@@ -1,8 +1,12 @@
 import { APP_VERSION } from "../app-version.mjs";
 import __moduleApi1 from "../runtime-identity.mjs";
 const { servingHostId } = __moduleApi1();
-import __moduleApifix1 from "./presentation.mjs";
-const { copyrightYear, escapeHtml, formatBytes } = __moduleApifix1();
+import __moduleApifix1 from "./html-escaping.mjs";
+const { escapeHtml } = __moduleApifix1();
+import __moduleApifix6 from "./byte-format.mjs";
+const { formatBytes } = __moduleApifix6();
+import __moduleApifix7 from "./copyright-year.mjs";
+const { copyrightYear } = __moduleApifix7();
 import __moduleApifix2 from "./links.mjs";
 const { ogImageForPath, renderBreadcrumbs } = __moduleApifix2();
 import __moduleApifix3 from "./validation.mjs";

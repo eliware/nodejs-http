@@ -1,5 +1,7 @@
 import imageDistributionApi from "./distributions.mjs";
-const { distroFromRepository, distroLabel, distroRelease } = imageDistributionApi();
+const { distroFromRepository } = imageDistributionApi();
+import imageDistributionLabelsApi from "./distribution-labels.mjs";
+const { distroLabel, distroRelease } = imageDistributionLabelsApi();
 import imageRecordFilterApi from "./records/filter.mjs";
 const { filterImageRecords } = imageRecordFilterApi();
 

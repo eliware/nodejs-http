@@ -1,11 +1,5 @@
-const dateFormatter = new Intl.DateTimeFormat(undefined, {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  hour: "numeric",
-  minute: "2-digit",
-  timeZoneName: "short",
-});
+import dateFormatApi from "./date-format.mjs";
+const { formatBlogDate } = dateFormatApi();
 
 function escapeHtml(value) {
   return String(value)
@@ -16,10 +10,6 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-function formatBlogDate(value) {
-  return dateFormatter.format(new Date(value));
-}
-
 function renderBlogCard(post) {
   const tags = post.tags.map((tag) => `<span class="blog-tag">${escapeHtml(tag)}</span>`).join("");
   const minutes = Math.max(1, Math.ceil(post.content.split(/\s+/).length / 220));
@@ -27,5 +17,5 @@ function renderBlogCard(post) {
 }
 
 export default function __moduleApi0() {
-  return { escapeHtml, formatBlogDate, renderBlogCard };
+  return { escapeHtml, renderBlogCard };
 }

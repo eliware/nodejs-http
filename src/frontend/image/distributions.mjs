@@ -1,19 +1,3 @@
-const distroLabels = {
-  "centos-stream": "CentOS Stream",
-  rocky: "Rocky Linux",
-  alma: "AlmaLinux",
-  oracle: "Oracle Linux",
-  debian: "Debian",
-  ubuntu: "Ubuntu",
-};
-const distroReleases = {
-  "centos-stream": "10",
-  rocky: "10",
-  alma: "10",
-  oracle: "10",
-  debian: "12",
-  ubuntu: "24.04",
-};
 const repositoryDistributions = {
   "centos10-node26": "centos-stream",
   "rocky10-gluster": "rocky",
@@ -28,14 +12,6 @@ function distroFromRepository(repository) {
   return repositoryDistributions[name] || "centos-stream";
 }
 
-function distroLabel(distro) {
-  return distroLabels[distro] || distro;
-}
-
-function distroRelease(distro) {
-  return distroReleases[distro] || "unknown";
-}
-
 export default function __moduleApi0() {
-  return { distroFromRepository, distroLabel, distroRelease };
+  return { distroFromRepository };
 }

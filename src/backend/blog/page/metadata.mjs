@@ -1,9 +1,9 @@
-import articleEscapingApi from "../article/escaping.mjs";
+import articleEscapingApi from "../article/attribute-escaping.mjs";
 const { escapeAttribute } = articleEscapingApi();
 import __moduleApifix1 from "../jsonld.mjs";
 const { absoluteBlogImage, renderBlogJsonLd } = __moduleApifix1();
 import { APP_VERSION } from "../../app-version.mjs";
-import __moduleApifix3 from "../../directory/presentation.mjs";
+import __moduleApifix3 from "../../directory/copyright-year.mjs";
 const { copyrightYear } = __moduleApifix3();
 
 const SITE_URL = "https://nodejs.eliware.org";

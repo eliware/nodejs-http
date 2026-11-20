@@ -1,4 +1,4 @@
-import presentationApi from "./presentation.mjs";
+import presentationApi from "./html-escaping.mjs";
 const { escapeHtml } = presentationApi();
 
 function ogImageForPath(requestPath) {

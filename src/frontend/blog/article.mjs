@@ -1,5 +1,7 @@
 import __moduleApifix1 from "./cards.mjs";
-const { escapeHtml, formatBlogDate } = __moduleApifix1();
+const { escapeHtml } = __moduleApifix1();
+import __moduleApifix3 from "./date-format.mjs";
+const { formatBlogDate } = __moduleApifix3();
 import __moduleApifix2 from "../../shared/blog/article-markup.mjs";
 const { withoutLeadingTitle } = __moduleApifix2();
 

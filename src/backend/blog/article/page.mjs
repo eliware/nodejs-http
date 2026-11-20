@@ -1,7 +1,9 @@
 import articleRendererApi from "./renderer.mjs";
 const { renderBlogContent } = articleRendererApi();
-import articleEscapingApi from "./escaping.mjs";
-const { escapeAttribute, escapeHtml } = articleEscapingApi();
+import articleAttributeEscapingApi from "./attribute-escaping.mjs";
+const { escapeAttribute } = articleAttributeEscapingApi();
+import articleTextEscapingApi from "./text-escaping.mjs";
+const { escapeHtml } = articleTextEscapingApi();
 import __moduleApifixReadingTime from "./reading-time.mjs";
 const { readingTimeMinutes } = __moduleApifixReadingTime();
 
