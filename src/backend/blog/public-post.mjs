@@ -1,8 +1,8 @@
 import __moduleApi1 from "./markdown.mjs";
-const { renderBlogArticle } = __moduleApi1();
+const { renderMarkdown } = __moduleApi1();
 
 function publicBlogPost(blog) {
-  return { ...blog, html: renderBlogArticle(blog) };
+  return { ...blog, html: renderMarkdown(blog.content) };
 }
 
 export default function __moduleApi0() {

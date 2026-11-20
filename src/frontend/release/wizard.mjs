@@ -4,9 +4,10 @@ import __moduleApifix1 from "../dom.mjs";
 const { getElement } = __moduleApifix1();
 import { distroTargets } from "./wizard/targets.mjs";
 import { wizardState } from "./wizard/state.mjs";
-import __commands from "./wizard/commands.mjs";
-const { setImageReferenceMode, setPackageManager, updateCommand, updateContainerCommand } =
-  __commands();
+import packageCommandsApi from "./wizard/package-commands.mjs";
+const { setPackageManager: selectPackageManager, updateCommand } = packageCommandsApi();
+import imageCommandsApi from "./wizard/image-commands.mjs";
+const { setImageReferenceMode, updateContainerCommand } = imageCommandsApi();
 import releaseSummaryApi from "./wizard/release-summary.mjs";
 const { populateVersionOptions, updateReleaseSummary } = releaseSummaryApi();
 
@@ -23,6 +24,11 @@ function setTargetReleaseOptions() {
   option.value = target.release;
   option.textContent = target.release;
   release.appendChild(option);
+}
+
+function setPackageManager(value) {
+  selectPackageManager(value);
+  updateContainerCommand();
 }
 
 async function initReleaseWizard() {

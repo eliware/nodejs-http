@@ -4,12 +4,8 @@ import blogListApi from "./blog/list.mjs";
 const { renderBlogList } = blogListApi();
 import __moduleApifixArticle from "./blog/article.mjs";
 const { renderBlogArticle } = __moduleApifixArticle();
-
-async function getJson(path) {
-  const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) throw new Error(`blog request failed: ${response.status}`);
-  return response.json();
-}
+import blogRequestApi from "./blog/request.mjs";
+const { requestBlogJson } = blogRequestApi();
 
 async function initBlog() {
   const status = getElement("blog-status");
@@ -26,7 +22,7 @@ async function initBlog() {
       await renderBlogArticle(slug, { status, list, article, hero });
       return;
     }
-    const result = await getJson("/api/v1/blogs");
+    const result = await requestBlogJson("/api/v1/blogs");
     const initialCategory = categoryPath
       ? decodeURIComponent(categoryPath[1])
       : new URLSearchParams(location.search).get("category") || "";
