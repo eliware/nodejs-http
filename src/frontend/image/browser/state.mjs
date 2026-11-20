@@ -1,4 +1,4 @@
-import imageSelectionApi from "../selection.mjs";
+import imageSelectionApi from "../records/selection.mjs";
 const { selectImageRecords } = imageSelectionApi();
 
 function createImageBrowserState(catalog, records) {

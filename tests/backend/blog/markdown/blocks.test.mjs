@@ -15,3 +15,13 @@ test("closes an empty and unclosed code block safely", () => {
   expect(renderMarkdown("```\nopen")).toBe("<pre><code>open</code></pre>");
   expect(renderMarkdown("# !!!")).toContain('id="section"');
 });
+
+test("renders ordered lists", () => {
+  expect(renderMarkdown("1. first\n2. second")).toContain("<ol><li>first</li><li>second</li></ol>");
+});
+
+test("normalizes CRLF between block paragraphs", () => {
+  const html = renderMarkdown("text\r\n\r\nmore");
+  expect(html).toContain("<p>text</p>");
+  expect(html).toContain("<p>more</p>");
+});

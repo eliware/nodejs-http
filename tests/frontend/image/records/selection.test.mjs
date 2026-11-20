@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import __moduleApi0 from "../../../src/frontend/image/selection.mjs";
+import __moduleApi0 from "../../../../src/frontend/image/records/selection.mjs";
 const { selectImageRecords } = __moduleApi0();
 
 const records = [
