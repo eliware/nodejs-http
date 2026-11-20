@@ -1,8 +1,9 @@
 import { expect, test } from "@jest/globals";
 import __moduleApi0 from "../../../../src/backend/blog/markdown/inline.mjs";
-const { renderInline } = __moduleApi0();
+const { renderInline, escapeHtml } = __moduleApi0();
 
 test("escapes text and renders inline code and bold text", () => {
+  expect(escapeHtml("&\"<>'")).toBe("&amp;&quot;&lt;&gt;&#39;");
   expect(renderInline("<tag> & \"quote\" 'apostrophe' `code` **bold**")).toBe(
     "&lt;tag&gt; &amp; &quot;quote&quot; &#39;apostrophe&#39; <code>code</code> <strong>bold</strong>",
   );

@@ -1,9 +1,7 @@
 import articleRendererApi from "./renderer.mjs";
 const { renderBlogContent } = articleRendererApi();
-import articleAttributeEscapingApi from "./attribute-escaping.mjs";
-const { escapeAttribute } = articleAttributeEscapingApi();
-import articleTextEscapingApi from "./text-escaping.mjs";
-const { escapeHtml } = articleTextEscapingApi();
+import markdownInlineApi from "../markdown/inline.mjs";
+const { escapeHtml } = markdownInlineApi();
 import __moduleApifixReadingTime from "./reading-time.mjs";
 const { readingTimeMinutes } = __moduleApifixReadingTime();
 
@@ -14,9 +12,9 @@ function renderBlogArticlePage(blog) {
     ? `<p class="blog-meta">Last verified ${escapeHtml(blog.last_verified_at.slice(0, 10))} · Tested on ${escapeHtml(blog.tested_on.join(", "))}</p>`
     : "";
   const hero = blog.hero_image
-    ? `<img class="blog-hero-image" src="${escapeAttribute(blog.hero_image)}" alt="${escapeAttribute(blog.title)}" width="1200" height="630" loading="eager" />`
+    ? `<img class="blog-hero-image" src="${escapeHtml(blog.hero_image)}" alt="${escapeHtml(blog.title)}" width="1200" height="630" loading="eager" />`
     : "";
-  return `<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> → <a href="/blog">Blog</a> → ${escapeHtml(blog.category)}</nav>${hero}<p class="blog-date"><time datetime="${escapeAttribute(blog.published_at)}">${escapeHtml(blog.published_at)}</time></p><h1>${escapeHtml(blog.title)}</h1><p class="lead">${escapeHtml(blog.summary)}</p><p class="blog-byline">By ${escapeHtml(blog.author)} · ${readingTimeMinutes(blog.content)} min read</p>${verified}<div class="blog-content">${html}</div><p><a href="/blog">← All posts</a></p>`;
+  return `<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a> → <a href="/blog">Blog</a> → ${escapeHtml(blog.category)}</nav>${hero}<p class="blog-date"><time datetime="${escapeHtml(blog.published_at)}">${escapeHtml(blog.published_at)}</time></p><h1>${escapeHtml(blog.title)}</h1><p class="lead">${escapeHtml(blog.summary)}</p><p class="blog-byline">By ${escapeHtml(blog.author)} · ${readingTimeMinutes(blog.content)} min read</p>${verified}<div class="blog-content">${html}</div><p><a href="/blog">← All posts</a></p>`;
 }
 
 export default function __moduleApi0() {

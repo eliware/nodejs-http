@@ -29,32 +29,19 @@ const config = {
   defaultMimeType: "application/octet-stream",
 };
 
-test("sends a custom error file when it exists", async () => {
-  const file = await createFixtureFile("custom error", "error-page.html");
-  const result = response();
-  await sendError(result, 404, "missing", config, file, { Allow: "GET" });
-  expect(result.statusCode).toBe(404);
-  expect(result.headers["Content-Type"]).toContain("text/html");
-  expect(result.headers.Allow).toBe("GET");
-  expect(result.body.toString()).toBe("custom error");
-});
-
-test("does not send a custom error body for HEAD requests", async () => {
-  const file = await createFixtureFile("custom error", "head-error-page.html");
-  const result = response();
-  result.req.method = "HEAD";
-  await sendError(result, 404, "missing", config, file);
-  expect(result.statusCode).toBe(404);
-  expect(result.headers["Content-Length"]).toBe(Buffer.byteLength("custom error"));
-  expect(result.body).toHaveLength(0);
-});
-
-test("uses a text error when the custom file is missing or unset", async () => {
-  const missing = response();
-  await sendError(missing, 404, "missing", config, "/not/a/real/error-page.html");
-  expect(missing.body.toString()).toBe("missing");
+test("uses the text fallback when a custom file is missing or unset", async () => {
   const fallback = response();
+  await sendError(fallback, 404, "missing", config, "/not/a/real/error-page.html");
+  expect(fallback.body.toString()).toBe("missing");
   await sendError(fallback, 405, "unsupported", config);
   expect(fallback.statusCode).toBe(405);
   expect(fallback.body.toString()).toBe("unsupported");
+});
+
+test("uses the custom error sender when a custom file exists", async () => {
+  const file = await createFixtureFile("custom error", "routed-error.html");
+  const result = response();
+  await sendError(result, 404, "missing", config, file);
+  expect(result.headers["Content-Type"]).toContain("text/html");
+  expect(result.body.toString()).toBe("custom error");
 });

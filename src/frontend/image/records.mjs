@@ -1,7 +1,5 @@
-import imageDistributionApi from "./distributions.mjs";
-const { distroFromRepository } = imageDistributionApi();
-import imageDistributionLabelsApi from "./distribution-labels.mjs";
-const { distroLabel, distroRelease } = imageDistributionLabelsApi();
+import imageRecordDistributionApi from "./records/distribution.mjs";
+const { mapImageDistribution } = imageRecordDistributionApi();
 import imageRecordFilterApi from "./records/filter.mjs";
 const { filterImageRecords } = imageRecordFilterApi();
 
@@ -9,7 +7,6 @@ function imageRecords(data) {
   return filterImageRecords(data).map((record) => {
     const image = record.image || record;
     const repository = image.repository;
-    const distro = distroFromRepository(repository);
     const version = record.version || record.node_version || "unknown";
     const tag = image.tag || version;
     return {
@@ -18,10 +15,8 @@ function imageRecords(data) {
         ...image,
         reference: image.reference || `${repository}:${tag}`,
       },
-      distro,
-      distroLabel: distroLabel(distro),
       repository,
-      release: distroRelease(distro),
+      ...mapImageDistribution(repository),
       arch: "x86_64",
       channel: "stable",
       version,
