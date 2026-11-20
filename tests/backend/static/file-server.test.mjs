@@ -27,8 +27,8 @@ class MockResponse extends Writable {
 }
 
 const makePublicDir = createStaticDirectory;
-const createQuietListener = (publicDir) =>
-  createStaticRequestListener({ ...loadConfig({ ACCESS_LOG: "false" }), publicDir });
+const createQuietListener = (publicDir, overrides = {}) =>
+  createStaticRequestListener({ ...loadConfig({ ACCESS_LOG: "false" }), publicDir, ...overrides });
 
 async function runRequest(listener, request) {
   const response = new MockResponse();
@@ -202,7 +202,7 @@ describe("createStaticRequestListener", () => {
 
   test("renders symlinked directories as directories", async () => {
     const publicDir = await makePublicDir();
-    const listener = createQuietListener(publicDir);
+    const listener = createQuietListener(publicDir, { allowSymlinks: true });
     const response = await runRequest(listener, {
       method: "GET",
       url: "/folder/",

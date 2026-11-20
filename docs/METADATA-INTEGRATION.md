@@ -15,7 +15,7 @@ The application checks `metadata_version` before it returns supported catalog, i
 - `metadata/active-generation.json`
 - `.generations/<generation>/generation.json`, where `<generation>` matches the active generation value
 
-Every file must contain the supported `metadata_version`. The readiness response reports `ready` and the generation identifier when all checks pass. It returns HTTP 503 with `not-ready` when any file is missing, invalid, or inconsistent.
+Every file must contain the supported `metadata_version`. The catalog must also mark stable metadata as available and include the latest stable release. The readiness response reports `ready` and the generation identifier when all checks pass. It returns HTTP 503 with `not-ready` when any file is missing, invalid, or inconsistent.
 
 ## Repository index
 

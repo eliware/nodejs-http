@@ -1,6 +1,16 @@
 const GUIDE_PLATFORMS = ["rpm", "debian", "ubuntu"];
 const GUIDE_CHANNELS = ["stable", "rolling"];
 
+function isHttpUrl(value) {
+  if (typeof value !== "string" || !value.trim()) return false;
+  try {
+    const url = new URL(value);
+    return (url.protocol === "http:" || url.protocol === "https:") && Boolean(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
 function validateGuide(value) {
   if (
     !value ||
@@ -10,8 +20,8 @@ function validateGuide(value) {
     !GUIDE_PLATFORMS.includes(value.platform) ||
     !GUIDE_CHANNELS.includes(value.channel) ||
     !value.source ||
-    typeof value.source.repository !== "string" ||
-    typeof value.source.upstream !== "string" ||
+    !isHttpUrl(value.source.repository) ||
+    !isHttpUrl(value.source.upstream) ||
     !Array.isArray(value.sections) ||
     value.sections.some(
       (section) =>

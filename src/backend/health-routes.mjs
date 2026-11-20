@@ -26,7 +26,10 @@ async function checkReadiness(response, config) {
       JSON.parse(await fs.readFile(path.join(config.publicDir, "metadata/catalog.json"), "utf8")),
       "catalog.json",
     );
-    catalog = Boolean(value.stable && typeof value.stable === "object");
+    catalog =
+      value.stable?.available === true &&
+      typeof value.stable.latest?.node_version === "string" &&
+      Boolean(value.stable.latest.node_version.trim());
   } catch {}
   let index = false;
   try {

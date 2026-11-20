@@ -8,7 +8,10 @@ const guide = {
   summary: "Summary",
   platform: "rpm",
   channel: "stable",
-  source: { repository: "repo", upstream: "nodejs" },
+  source: {
+    repository: "https://example.test/repository",
+    upstream: "https://example.test/upstream",
+  },
   sections: [],
 };
 

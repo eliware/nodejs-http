@@ -59,7 +59,7 @@ Run `npm run build` to create the browser bundle in `dist/`. The production imag
 
 ## Published image
 
-The public image is `ghcr.io/eliware/nodejs-http`. The workflow publishes a version tag when a Git tag matches `package.json.version`. The current release tag is `v15.2.1`.
+The public image is `ghcr.io/eliware/nodejs-http`. The workflow publishes a version tag when a Git tag matches `package.json.version`. The current release tag is `v15.2.2`.
 
 The repository maintainers own the application code and Dockerfile. The `nodejs-packaging` repository owns the CentOS Stream 10 Node.js base image. The workflow leaves `platforms` unset, so the `ubuntu-latest` runner builds `linux/amd64`.
 

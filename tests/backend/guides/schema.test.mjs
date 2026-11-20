@@ -8,7 +8,10 @@ const validGuide = () => ({
   summary: "Install summary",
   platform: "rpm",
   channel: "stable",
-  source: { repository: "repo", upstream: "nodejs" },
+  source: {
+    repository: "https://example.test/repository",
+    upstream: "https://example.test/upstream",
+  },
   sections: [
     {
       title: "Install",
@@ -34,8 +37,17 @@ test.each([
   { ...validGuide(), platform: "unknown" },
   { ...validGuide(), channel: "unknown" },
   { ...validGuide(), source: null },
-  { ...validGuide(), source: { upstream: "nodejs" } },
-  { ...validGuide(), source: { repository: "repo" } },
+  { ...validGuide(), source: { upstream: "https://example.test/upstream" } },
+  { ...validGuide(), source: { repository: "https://example.test/repository" } },
+  { ...validGuide(), source: { repository: " ", upstream: "https://example.test/upstream" } },
+  { ...validGuide(), source: { repository: "repo", upstream: "https://example.test/upstream" } },
+  {
+    ...validGuide(),
+    source: {
+      repository: "https://example.test/repository",
+      upstream: "ftp://example.test/upstream",
+    },
+  },
   { ...validGuide(), sections: null },
   { ...validGuide(), sections: [null] },
   { ...validGuide(), sections: [{ title: 1, steps: [] }] },

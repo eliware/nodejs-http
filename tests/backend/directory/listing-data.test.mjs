@@ -3,7 +3,12 @@ import __moduleApi0 from "../../../src/backend/directory/listing-data.mjs";
 const { readDirectoryListingData } = __moduleApi0();
 
 function entry(name, directory = false) {
-  return { name, isDirectory: () => directory };
+  return {
+    name,
+    isDirectory: () => directory,
+    isFile: () => !directory,
+    isSymbolicLink: () => false,
+  };
 }
 
 test("reads, filters, and sorts repository entries with metadata", async () => {
@@ -11,7 +16,11 @@ test("reads, filters, and sorts repository entries with metadata", async () => {
     readdir: jest
       .fn()
       .mockResolvedValue([entry("z.txt"), entry("folder", true), entry("a.txt"), entry(".hidden")]),
-    stat: jest.fn(async (filePath) => ({ size: filePath.endsWith("a.txt") ? 2 : 4 })),
+    stat: jest.fn(async (filePath) => ({
+      size: filePath.endsWith("a.txt") ? 2 : 4,
+      isDirectory: () => filePath.endsWith("folder"),
+      isFile: () => !filePath.endsWith("folder"),
+    })),
     readFile: jest.fn(async (filePath) => {
       if (filePath.endsWith("container-validation.json")) return '{"passed":false}';
       if (filePath.endsWith("validation.json")) return '{"passed":true}';
@@ -50,4 +59,64 @@ test("keeps entries when stats and optional files are missing", async () => {
   expect(data.validation).toBeNull();
   expect(data.containerValidation).toBeNull();
   expect(data.template).toBeNull();
+});
+
+test("hides disabled symlinks and keeps only allowed links inside the repository", async () => {
+  const entries = [
+    {
+      name: "inside-link",
+      isDirectory: () => false,
+      isFile: () => false,
+      isSymbolicLink: () => true,
+    },
+    {
+      name: "outside-link",
+      isDirectory: () => false,
+      isFile: () => false,
+      isSymbolicLink: () => true,
+    },
+    {
+      name: "special-link",
+      isDirectory: () => false,
+      isFile: () => false,
+      isSymbolicLink: () => true,
+    },
+    entry("package.rpm"),
+    { name: "socket", isDirectory: () => false, isFile: () => false, isSymbolicLink: () => false },
+  ];
+  const filesystem = {
+    readdir: jest.fn(async () => entries),
+    realpath: jest.fn(async (value) => {
+      if (value === "/repo") return value;
+      return value.endsWith("outside-link") ? "/outside/package.rpm" : value;
+    }),
+    stat: jest.fn(async (value) => ({
+      size: 42,
+      isDirectory: () => value.endsWith("inside-link"),
+      isFile: () => value.endsWith("package.rpm"),
+    })),
+    readFile: jest.fn(async () => "<main>{{ROWS}}</main>"),
+  };
+  const config = {
+    allowDotfiles: false,
+    allowSymlinks: false,
+    directoryTemplate: "/site/listing.html",
+  };
+  const disabled = await readDirectoryListingData("/repo", config, filesystem);
+  expect(disabled.entries.map(({ name }) => name)).toEqual(["package.rpm"]);
+
+  const allowed = await readDirectoryListingData(
+    "/repo",
+    { ...config, allowSymlinks: true, publicDir: "/repo" },
+    filesystem,
+  );
+  expect(allowed.entries.map(({ name }) => name)).toEqual(["inside-link", "package.rpm"]);
+  expect(allowed.entries[0].isDirectory).toBe(true);
+
+  const unresolvedRoot = await readDirectoryListingData(
+    "/repo",
+    { ...config, allowSymlinks: true },
+    filesystem,
+  );
+  expect(unresolvedRoot.entries.map(({ name }) => name)).toEqual(["package.rpm"]);
 });

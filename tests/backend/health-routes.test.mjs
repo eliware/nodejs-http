@@ -122,6 +122,27 @@ describe("health and catalog routes", () => {
     expect(JSON.parse(response.body).status).toBe("not-ready");
   });
 
+  test("reports not-ready when stable metadata is unavailable or incomplete", async () => {
+    const { publicDir } = await metadataFixture();
+    await writeHealthMetadata(publicDir, "metadata/catalog.json", {
+      metadata_version: SUPPORTED_METADATA_VERSION,
+      stable: { available: false, latest: { node_version: "26.13.1" } },
+    });
+    const unavailable = await responseFor((value) =>
+      handleHealthRoute({ method: "GET" }, value, "/ready", configFor(publicDir)),
+    );
+    expect(unavailable.statusCode).toBe(503);
+
+    await writeHealthMetadata(publicDir, "metadata/catalog.json", {
+      metadata_version: SUPPORTED_METADATA_VERSION,
+      stable: { available: true },
+    });
+    const incomplete = await responseFor((value) =>
+      handleHealthRoute({ method: "GET" }, value, "/ready", configFor(publicDir)),
+    );
+    expect(incomplete.statusCode).toBe(503);
+  });
+
   test.each([
     ["catalog", "metadata/catalog.json", { metadata_version: SUPPORTED_METADATA_VERSION }],
     [
