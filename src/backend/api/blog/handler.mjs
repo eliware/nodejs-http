@@ -1,15 +1,11 @@
 import __moduleApi1 from "../../response.mjs";
 const { sendJson } = __moduleApi1();
-import __moduleApifix1 from "../../blog/markdown.mjs";
-const { renderBlogArticle } = __moduleApifix1();
+import publicBlogApi from "../../blog/public-post.mjs";
+const { publicBlogPost } = publicBlogApi();
 import __moduleApifix2 from "../../metadata/version.mjs";
 const { SUPPORTED_METADATA_VERSION } = __moduleApifix2();
 import blogPathApi from "./path.mjs";
 const { matchBlogApiPath, isValidBlogSlug } = blogPathApi();
-
-function publicBlog(blog) {
-  return { ...blog, html: renderBlogArticle(blog) };
-}
 
 async function handleBlogApi(response, requestPath, config) {
   const route = matchBlogApiPath(requestPath);
@@ -27,7 +23,7 @@ async function handleBlogApi(response, requestPath, config) {
         sendJson(response, 404, { error: "blog post not found" }, config, "no-store");
         return true;
       }
-      sendJson(response, 200, publicBlog(blog), config, "public, max-age=60, must-revalidate");
+      sendJson(response, 200, publicBlogPost(blog), config, "public, max-age=60, must-revalidate");
       return true;
     }
     const posts = await config.blogStore.published();
@@ -37,7 +33,7 @@ async function handleBlogApi(response, requestPath, config) {
       {
         metadata_version: SUPPORTED_METADATA_VERSION,
         schema: 1,
-        posts: posts.map(publicBlog),
+        posts: posts.map(publicBlogPost),
         total: posts.length,
       },
       config,

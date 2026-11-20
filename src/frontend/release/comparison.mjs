@@ -3,6 +3,8 @@ const { getElement } = __moduleApi1();
 import __moduleApifix1 from "./packages.mjs";
 const { releaseFor } = __moduleApifix1();
 import { state } from "./state.mjs";
+import comparisonViewApi from "./comparison-view.mjs";
+const { renderComparisonView } = comparisonViewApi();
 
 function releaseOptions() {
   const options = [];
@@ -37,7 +39,12 @@ function renderComparison() {
   const from = options.find((item) => item.id === left);
   const to = options.find((item) => item.id === right);
   if (!from || !to) return;
-  result.innerHTML = `<div><span>Packages</span><strong>${packageCount(from.version, from.channel)} → ${packageCount(to.version, to.channel)}</strong></div><div><span>Channel</span><strong>${from.channel} → ${to.channel}</strong></div><div><span>Release</span><strong>${from.label} → ${to.label}</strong></div>`;
+  result.innerHTML = renderComparisonView(
+    from,
+    to,
+    packageCount(from.version, from.channel),
+    packageCount(to.version, to.channel),
+  );
 }
 
 function populateComparison() {

@@ -1,7 +1,9 @@
 import markdownInlineApi from "./inline.mjs";
-const { renderInline, escapeHtml } = markdownInlineApi();
+const { renderInline } = markdownInlineApi();
 import headingIdsApi from "./heading-ids.mjs";
 const { createHeadingIdGenerator } = headingIdsApi();
+import codeBlocksApi from "./code-blocks.mjs";
+const { transitionCodeFence, renderCodeBlock } = codeBlocksApi();
 
 function renderMarkdown(markdown) {
   const lines = String(markdown).replaceAll("\r\n", "\n").split("\n");
@@ -34,15 +36,13 @@ function renderMarkdown(markdown) {
   };
 
   for (const line of lines) {
-    if (line.startsWith("```")) {
+    const codeFence = transitionCodeFence(line, code);
+    if (codeFence.handled) {
       flushParagraph();
       flushList();
       flushOrderedList();
-      if (code === null) code = [];
-      else {
-        output.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
-        code = null;
-      }
+      code = codeFence.code;
+      if (codeFence.html) output.push(codeFence.html);
       continue;
     }
     if (code !== null) {
@@ -86,7 +86,7 @@ function renderMarkdown(markdown) {
   flushParagraph();
   flushList();
   flushOrderedList();
-  if (code !== null) output.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
+  if (code !== null) output.push(renderCodeBlock(code));
   return output.join("\n");
 }
 

@@ -1,15 +1,8 @@
 import sitemapRoutesApi from "./sitemap/routes.mjs";
 const { getStaticSitemapRoutes } = sitemapRoutesApi();
+import sitemapXmlApi from "./sitemap/xml.mjs";
+const { escapeXml } = sitemapXmlApi();
 const SITE_URL = "https://nodejs.eliware.org";
-
-function escapeXml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&apos;");
-}
 
 function renderSitemap(posts, repositoryPaths) {
   const urls = [
