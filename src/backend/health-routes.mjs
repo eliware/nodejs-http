@@ -2,8 +2,8 @@ import path from "node:path";
 import { promises as fs } from "node:fs";
 import __moduleApi1 from "./response.mjs";
 const { sendJson } = __moduleApi1();
-import __moduleApifix1 from "./metrics.mjs";
-const { renderMetrics } = __moduleApifix1();
+import healthMetricsApi from "./health/metrics.mjs";
+const { handleMetricsRoute } = healthMetricsApi();
 import __moduleApifix2 from "./metadata/version.mjs";
 const { assertMetadataVersion } = __moduleApifix2();
 
@@ -13,12 +13,7 @@ async function handleHealthRoute(request, response, requestPath, config) {
     return true;
   }
   if (requestPath === "/metrics") {
-    response.writeHead(200, {
-      "Content-Type": "text/plain; version=0.0.4; charset=utf-8",
-      "Cache-Control": "no-store",
-    });
-    response.end(request.method === "HEAD" ? undefined : renderMetrics());
-    return true;
+    return handleMetricsRoute(request, response);
   }
   if (requestPath !== "/ready" && requestPath !== "/readyz") return false;
   return checkReadiness(response, config);

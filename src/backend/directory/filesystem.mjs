@@ -4,13 +4,8 @@ import __moduleApi1 from "../path-utils.mjs";
 const { resolvePublicPath } = __moduleApi1();
 import __moduleApifix1 from "./metadata.mjs";
 const { readJson } = __moduleApifix1();
-
-function encodePath(pathname) {
-  return pathname
-    .split("/")
-    .map((segment) => encodeURIComponent(segment))
-    .join("/");
-}
+import directoryEntriesApi from "./entries.mjs";
+const { readDirectoryEntries } = directoryEntriesApi();
 
 async function readFilesystemDirectory(config, requestPath, filesystem = fs) {
   const filePath =
@@ -25,41 +20,13 @@ async function readFilesystemDirectory(config, requestPath, filesystem = fs) {
     return null;
   const stats = await filesystem.stat(resolvedPath);
   if (!stats.isDirectory()) return null;
-  const directoryHref = requestPath.endsWith("/") ? requestPath : `${requestPath}/`;
-  const encodedDirectoryHref = encodePath(directoryHref);
-  const entries = (
-    await Promise.all(
-      (await filesystem.readdir(resolvedPath, { withFileTypes: true }))
-        .filter((entry) => config.allowDotfiles || !entry.name.startsWith("."))
-        .map(async (entry) => {
-          let isDirectory = entry.isDirectory();
-          if (!isDirectory && !entry.isFile() && !entry.isSymbolicLink?.()) return null;
-          if (entry.isSymbolicLink?.()) {
-            if (!config.allowSymlinks) return null;
-            try {
-              const targetPath = await filesystem.realpath(path.join(resolvedPath, entry.name));
-              const relativeTarget = path.relative(normalizedRoot, targetPath);
-              if (
-                relativeTarget === ".." ||
-                relativeTarget.startsWith(`..${path.sep}`) ||
-                path.isAbsolute(relativeTarget)
-              )
-                return null;
-              const targetStats = await filesystem.stat(targetPath);
-              isDirectory = targetStats.isDirectory();
-              if (!isDirectory && !targetStats.isFile()) return null;
-            } catch {
-              return null;
-            }
-          }
-          return {
-            name: entry.name,
-            type: isDirectory ? "directory" : "file",
-            href: `${encodedDirectoryHref}${encodeURIComponent(entry.name)}${isDirectory ? "/" : ""}`,
-          };
-        }),
-    )
-  ).filter(Boolean);
+  const entries = await readDirectoryEntries(
+    filesystem,
+    resolvedPath,
+    normalizedRoot,
+    requestPath,
+    config,
+  );
   return {
     entries,
     validation: await readJson(resolvedPath, "validation.json", filesystem),

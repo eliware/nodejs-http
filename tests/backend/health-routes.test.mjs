@@ -47,6 +47,14 @@ async function metadataFixture({ active = true } = {}) {
 const configFor = (publicDir) => ({ publicDir, securityHeaders: true });
 
 describe("health and catalog routes", () => {
+  test("dispatches metrics requests to the metrics handler", async () => {
+    const response = await responseFor((value) =>
+      handleHealthRoute({ method: "GET" }, value, "/metrics", configFor("/tmp")),
+    );
+    expect(response.statusCode).toBe(200);
+    expect(response.body.toString()).toContain("nodejs_repository_http_requests_total");
+  });
+
   test("returns an uncached health response", async () => {
     const response = await responseFor((value) =>
       handleHealthRoute({ method: "GET" }, value, "/health", configFor("/tmp")),
@@ -62,24 +70,6 @@ describe("health and catalog routes", () => {
     );
     expect(response.statusCode).toBe(200);
     expect(JSON.parse(response.body)).toEqual({ status: "ok" });
-  });
-
-  test("renders metrics for GET requests", async () => {
-    const response = await responseFor((value) =>
-      handleHealthRoute({ method: "GET" }, value, "/metrics", configFor("/tmp")),
-    );
-    expect(response.statusCode).toBe(200);
-    expect(response.headers["Content-Type"]).toContain("text/plain");
-    expect(response.body.toString()).toContain("nodejs_repository_http_requests_total");
-  });
-
-  test("does not write a metrics body for HEAD requests", async () => {
-    const response = await responseFor(
-      (value) => handleHealthRoute({ method: "HEAD" }, value, "/metrics", configFor("/tmp")),
-      "HEAD",
-    );
-    expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(0);
   });
 
   test("ignores unrelated health paths", async () => {

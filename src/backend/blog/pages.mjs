@@ -2,14 +2,12 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import __moduleApi1 from "../response.mjs";
 const { sendError } = __moduleApi1();
-import __moduleApiFileHeaders from "../response/file-headers.mjs";
-const { fileHeaders } = __moduleApiFileHeaders();
-import __moduleApifix1 from "../response/compression.mjs";
-const { compressBody } = __moduleApifix1();
-import __moduleApifix2 from "../runtime-identity.mjs";
-const { servingHostId } = __moduleApifix2();
-import __moduleApifix3 from "./page/renderer.mjs";
-const { renderBlogPage } = __moduleApifix3();
+import __moduleApifix1 from "../runtime-identity.mjs";
+const { servingHostId } = __moduleApifix1();
+import __moduleApifix2 from "./page/renderer.mjs";
+const { renderBlogPage } = __moduleApifix2();
+import blogPageResponseApi from "./page/response.mjs";
+const { sendBlogPageResponse } = blogPageResponseApi();
 
 async function serveBlogPage(response, request, requestPath, config) {
   const categoryMatch = requestPath.match(/^\/blog\/category\/([^/]+)\/?$/);
@@ -29,29 +27,7 @@ async function serveBlogPage(response, request, requestPath, config) {
   }
   const category = categoryMatch ? categoryMatch[1] : "";
   body = renderBlogPage(body, blog, category, servingHostId());
-  const buffer = Buffer.from(body);
-  const headers = {
-    ...fileHeaders(
-      file,
-      { size: buffer.length, mtime: new Date(), mtimeMs: Date.now() },
-      config,
-      request,
-    ),
-    "Cache-Control": "public, max-age=60, must-revalidate",
-  };
-  if (request.method === "HEAD") {
-    response.writeHead(200, { ...headers, "Content-Length": buffer.length });
-    response.end();
-    return true;
-  }
-  const encoded = await compressBody(buffer, request, "text/html; charset=utf-8", config);
-  response.writeHead(200, {
-    ...headers,
-    "Content-Length": encoded.body.length,
-    ...encoded.headers,
-  });
-  response.end(encoded.body);
-  return true;
+  return sendBlogPageResponse(response, request, file, body, config);
 }
 
 export default function __moduleApi0() {

@@ -1,5 +1,7 @@
 import blogFieldsApi from "./fields.mjs";
 const { BLOG_SCHEMA, BLOG_STATUSES, BLOG_REQUIRED_FIELDS, BLOG_FIELDS } = blogFieldsApi();
+import blogTimestampApi from "./timestamps.mjs";
+const { assertBlogTimestamps, assertTimestamp } = blogTimestampApi();
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const TAG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -17,13 +19,6 @@ const CATEGORIES = new Set([
 function assertString(value, label) {
   if (typeof value !== "string" || !value.trim())
     throw new Error(`${label} must be a non-empty string`);
-}
-
-function assertTimestamp(value, label) {
-  assertString(value, label);
-  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value))
-    throw new Error(`${label} must be an ISO-8601 UTC timestamp`);
-  if (Number.isNaN(Date.parse(value))) throw new Error(`${label} is invalid`);
 }
 
 function assertBlogCoreFields(value, label) {
@@ -51,13 +46,7 @@ function assertBlogCoreFields(value, label) {
     throw new Error(`${label} status must be draft or published`);
   assertString(value.title, `${label} title`);
   assertString(value.summary, `${label} summary`);
-  assertTimestamp(value.published_at, `${label} published_at`);
-  assertTimestamp(value.updated_at, `${label} updated_at`);
-  assertTimestamp(value.created_at, `${label} created_at`);
-  if (Date.parse(value.created_at) > Date.parse(value.published_at))
-    throw new Error(`${label} created_at cannot follow published_at`);
-  if (Date.parse(value.updated_at) < Date.parse(value.published_at))
-    throw new Error(`${label} updated_at cannot precede published_at`);
+  assertBlogTimestamps(value, label);
   assertString(value.author, `${label} author`);
   if (value.content_format !== "markdown")
     throw new Error(`${label} content_format must be markdown`);
