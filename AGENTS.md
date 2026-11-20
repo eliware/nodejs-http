@@ -18,10 +18,7 @@ Use Node.js 26 or later and native ESM. Give each source and test module one pur
 
 ## Validation
 
-Run focused tests first during development. Run one test file with `npm test -- tests/path/to/example.test.mjs`.
-Run multiple test files with `npm test -- tests/path/to/first.test.mjs tests/path/to/second.test.mjs`.
-Prevent repeated full-suite runs during development. Run `npm test` before a commit, milestone, or release.
-Run `npm run lint`, `npm run audit`, `npm run format`, and `npm run format:check` when those checks apply.
+Run `npm test` before a commit, milestone, or release. Run `npm run lint`, `npm run audit`, `npm run format`, and `npm run format:check` when those checks apply.
 
 ## Security
 
