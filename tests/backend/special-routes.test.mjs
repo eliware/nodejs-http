@@ -38,6 +38,7 @@ test("routes health, catalog, and metadata API requests", async () => {
 });
 
 test("serves RSS and sitemap documents and their HEAD forms", async () => {
+  expect((await call("/not-sitemap")).result).toBe(false);
   const rss = await call("/feed.xml");
   expect(rss.response.statusCode).toBe(200);
   expect(rss.response.headers["Content-Type"]).toContain("rss+xml");

@@ -4,6 +4,8 @@ import __moduleApifix1 from "../../dom.mjs";
 const { getElement } = __moduleApifix1();
 import { wizardState } from "./state.mjs";
 import { distroTargets } from "./targets.mjs";
+import installCommandsApi from "./install-commands.mjs";
+const { buildInstallCommands } = installCommandsApi();
 function setPackageManager(value) {
   wizardState.packageManager = value;
   document.querySelectorAll("[data-package-manager]").forEach((button) => {
@@ -31,15 +33,14 @@ function updateCommand() {
   }
   if (repoSeparator) repoSeparator.hidden = false;
   if (browse) browse.href = `${origin}/el10/x86_64/stable/`;
-  const lines = upgrading
-    ? [`sudo ${wizardState.packageManager} update -y eliware-node26`]
-    : [
-        `sudo curl -fsSLo /etc/yum.repos.d/nodejs26.repo ${origin}${distroTargets["centos-stream"].repoFile}`,
-        `sudo ${wizardState.packageManager} install -y eliware-node26`,
-        "node --version && npm --version",
-      ];
+  const commandText = buildInstallCommands({
+    packageManager: wizardState.packageManager,
+    upgrading,
+    origin,
+    repositoryFile: distroTargets["centos-stream"].repoFile,
+  });
   const command = getElement("rpm-command");
-  if (command) command.textContent = lines.join("\n");
+  if (command) command.textContent = commandText;
   const status = getElement("rpm-status");
   if (status)
     status.textContent = `${upgrading ? "Update" : "Install"} Node.js ${release?.node_version || release?.version || "26"} on CentOS Stream 10.`;

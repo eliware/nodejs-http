@@ -1,14 +1,10 @@
 import blogCardsApi from "./cards.mjs";
-const { escapeHtml, renderBlogCard } = blogCardsApi();
+const { renderBlogCard } = blogCardsApi();
+import blogCategoriesApi from "./categories.mjs";
+const { renderBlogCategories } = blogCategoriesApi();
 
 function renderBlogList({ posts, status, list, search, category, initialCategory }) {
-  const categories = [...new Set(posts.map((post) => post.category))].sort();
-  if (category) {
-    category.innerHTML += categories
-      .map((item) => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`)
-      .join("");
-    category.value = initialCategory;
-  }
+  renderBlogCategories(posts, category, initialCategory);
   const render = () => {
     const query = (search?.value || "").toLowerCase().trim();
     const selected = category?.value || "";

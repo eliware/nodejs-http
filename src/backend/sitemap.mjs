@@ -1,3 +1,5 @@
+import sitemapRoutesApi from "./sitemap/routes.mjs";
+const { getStaticSitemapRoutes } = sitemapRoutesApi();
 const SITE_URL = "https://nodejs.eliware.org";
 
 function escapeXml(value) {
@@ -11,23 +13,8 @@ function escapeXml(value) {
 
 function renderSitemap(posts, repositoryPaths) {
   const urls = [
-    "/",
+    ...getStaticSitemapRoutes(),
     ...repositoryPaths,
-    "/about",
-    "/install",
-    "/upgrade",
-    "/blog",
-    "/blog/category/installation",
-    "/blog/category/upgrades",
-    "/blog/category/operations",
-    "/blog/category/architecture",
-    "/blog/category/troubleshooting",
-    "/blog/category/releases",
-    "/blog/category/security",
-    "/blog/category/kubernetes",
-    "/feed.xml",
-    "/tos",
-    "/policy",
     ...posts.map((post) => ({
       url: `/blog/${encodeURIComponent(post.slug)}`,
       lastmod: post.updated_at,
