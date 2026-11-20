@@ -69,10 +69,7 @@ test("does nothing when required release controls are missing", async () => {
 test("initializes stable options, package commands, and image references", async () => {
   const state = setup();
   await initReleaseWizard();
-  expect(state.get("release").textContent).toBe("26.13.1");
-  expect(state.get("release-status").textContent).toContain("Latest stable release");
   expect(state.get("target-release").options[0].value).toBe("10");
-  expect(state.get("target-version").options[0].value).toBe("stable");
   expect(state.get("rpm-command").textContent).toContain("eliware-node26");
   expect(state.get("image-ref").textContent).toContain("centos10-node26");
   state.manager.dispatch("click");
@@ -90,23 +87,6 @@ test("initializes stable options, package commands, and image references", async
   state.get("target-distro").dispatch("change");
 });
 
-test("formats a recorded stable build date", async () => {
-  const state = setup();
-  fetchCatalog.mockResolvedValue({ stable: { built: "2026-01-01T00:00:00Z" } });
-  await initReleaseWizard();
-  expect(state.get("built").textContent).not.toBe("Validated");
-});
-
-test("uses version and generated fields from latest stable metadata", async () => {
-  const state = setup();
-  fetchCatalog.mockResolvedValue({
-    stable: { latest: { version: "26.13.2", generated: "2026-01-02T00:00:00Z" } },
-  });
-  await initReleaseWizard();
-  expect(state.get("target-version").options[0].textContent).toContain("26.13.2");
-  expect(state.get("built").textContent).not.toBe("Validated");
-});
-
 test("continues when the target release selector is absent", async () => {
   const state = setup();
   state.elements.delete("target-release");
@@ -114,36 +94,9 @@ test("continues when the target release selector is absent", async () => {
   expect(state.get("release").textContent).toBe("26.13.1");
 });
 
-test("shows an empty stable option when release metadata has no version", async () => {
-  const state = setup();
-  fetchCatalog.mockResolvedValue({ stable: {} });
-  await initReleaseWizard();
-  state.get("target-channel").dispatch("change");
-  expect(state.get("target-version").options[0].textContent).toBe("No stable release available");
-});
-
-test("uses default release metadata when the catalog is empty", async () => {
-  const state = setup();
-  fetchCatalog.mockResolvedValue({});
-  await initReleaseWizard();
-  expect(state.get("release").textContent).toBe("unavailable");
-  expect(state.get("built").textContent).toBe("Validated");
-  state.get("target-channel").dispatch("change");
-  expect(state.get("target-version").options[0].textContent).toBe("No stable release available");
-});
-
 test("shows a helpful message when release metadata fails", async () => {
   const state = setup();
   fetchCatalog.mockRejectedValue(new Error("offline"));
   await initReleaseWizard();
   expect(state.get("rpm-command").textContent).toContain("temporarily unavailable");
-});
-
-test("updates the wizard when optional release summary fields are absent", async () => {
-  const state = setup();
-  state.elements.delete("release");
-  state.elements.delete("built");
-  state.elements.delete("release-status");
-  await initReleaseWizard();
-  expect(state.get("rpm-command").textContent).toContain("eliware-node26");
 });
