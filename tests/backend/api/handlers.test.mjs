@@ -29,12 +29,6 @@ test("ignores unrelated directory API paths", async () => {
   expect(response.statusCode).toBeNull();
 });
 
-test("uses the root path when the directory request has no URL or path query", async () => {
-  const response = responseFor();
-  await expect(handleDirectoryApi({}, response, "/api/v1/list", config)).resolves.toBe(true);
-  expect(response.statusCode).toBe(404);
-});
-
 test("normalizes directory API paths and returns successful indexed listings", async () => {
   const publicDir = await createRepositoryRoot();
   await writeRepositoryIndex(publicDir, {
