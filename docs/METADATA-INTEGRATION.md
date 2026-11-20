@@ -4,7 +4,7 @@ The nodejs-packaging project owns package builds, RPM signing, metadata creation
 
 Set `PUBLIC_DIR` to the published repository path. In the production container, attach it at `/srv/repository` as read-only. The tree includes signed RPMs, repository metadata, release metadata, guide documents, and optional blog content.
 
-The application checks `metadata_version` before it returns supported catalog, index, active generation, generation, blog, and validation documents. It rejects invalid metadata. Keep repository metadata aligned with the [release contract](https://github.com/eliware/nodejs-packaging/blob/main/specs/release-contract.md).
+The application checks `metadata_version` before it returns supported catalog, index, active generation, generation, blog, and validation documents. It rejects invalid metadata. Stable releases use the `stable` catalog entry. The `preview` field marks preview releases unavailable. The packaging schemas define published release fields. Keep repository metadata aligned with the [release contract](https://github.com/eliware/nodejs-packaging/blob/main/docs/RELEASE-CONTRACT.md).
 
 ## Readiness files
 

@@ -6,6 +6,7 @@ const { SUPPORTED_METADATA_VERSION } = __moduleApifix1();
 import { createHealthMetadata } from "../../../test-fixtures/filesystem.mjs";
 import { Writable } from "node:stream";
 import { once } from "node:events";
+import path from "node:path";
 
 class MockResponse extends Writable {
   constructor() {
@@ -42,4 +43,14 @@ test("serves a versioned catalog and reports missing metadata", async () => {
 
 test("ignores unrelated catalog paths", async () => {
   expect(await handleCatalogRoute(new MockResponse(), "/api/v1/other", {})).toBe(false);
+});
+
+test("serves the packaging project stable release fixture", async () => {
+  const fixture = path.resolve("test-fixtures/published-repository");
+  const response = await responseFor(fixture);
+  const catalog = JSON.parse(response.body.toString());
+  expect(response.statusCode).toBe(200);
+  expect(catalog.stable.latest.node_version).toMatch(/^26\./);
+  expect(catalog.stable.latest.package.sha256).toMatch(/^[a-f0-9]{64}$/);
+  expect(catalog.preview).toEqual({ available: false });
 });
