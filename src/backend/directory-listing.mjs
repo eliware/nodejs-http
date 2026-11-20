@@ -9,6 +9,8 @@ import __moduleApifixPage from "./directory/page.mjs";
 const { renderDirectoryHtml } = __moduleApifixPage();
 import listingDataApi from "./directory/listing-data.mjs";
 const { readDirectoryListingData } = listingDataApi();
+import pageMetadataApi from "./directory/page-metadata.mjs";
+const { pageMetadata } = pageMetadataApi();
 
 async function sendDirectoryListing(
   response,
@@ -33,6 +35,7 @@ async function sendDirectoryListing(
     totalBytes,
     validation,
     containerValidation,
+    metadata: pageMetadata(),
   });
   const contentType = "text/html; charset=utf-8";
   const encoded = await compressBody(Buffer.from(body), request, contentType, config);

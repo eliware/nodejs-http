@@ -2,8 +2,6 @@ import __moduleApifix1 from "./html-escaping.mjs";
 const { escapeHtml } = __moduleApifix1();
 import __moduleApifix6 from "./byte-format.mjs";
 const { formatBytes } = __moduleApifix6();
-import pageMetadataApi from "./page-metadata.mjs";
-const { pageMetadata } = pageMetadataApi();
 import __moduleApifix2 from "./links.mjs";
 const { ogImageForPath, renderBreadcrumbs } = __moduleApifix2();
 import __moduleApifix3 from "./validation.mjs";
@@ -21,10 +19,10 @@ function renderDirectoryHtml({
   totalBytes,
   validation,
   containerValidation,
+  metadata,
 }) {
   const title = `Index of ${requestPath}`;
   if (!template) return renderFallbackHtml(title, rows);
-  const metadata = pageMetadata();
   return renderDirectoryTemplate(template, {
     title: escapeHtml(title),
     ogImage: escapeHtml(ogImageForPath(requestPath)),

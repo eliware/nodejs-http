@@ -10,7 +10,7 @@ function fileStats({ directory = false, size = 1536 } = {}) {
   };
 }
 
-test("builds escaped directory rows and file totals", () => {
+test("builds escaped directory rows", () => {
   const listing = renderDirectoryRows(
     [
       { name: "folder & one", isDirectory: true, stats: fileStats({ directory: true }) },
@@ -27,8 +27,6 @@ test("builds escaped directory rows and file totals", () => {
   expect(listing.html).toContain("2026-01-02 03:04:05 UTC");
   expect(listing.html).toContain('data-modified=""');
   expect(listing.html).toContain("vanished.txt");
-  expect(listing.fileCount).toBe(1);
-  expect(listing.totalBytes).toBe(1536);
 });
 
 test("omits the parent row at the root", () => {

@@ -1,7 +1,7 @@
 import __moduleApi1 from "./dom.mjs";
 const { getElement } = __moduleApi1();
-import __moduleApifix1 from "./blog/cards.mjs";
-const { escapeHtml, renderBlogCard } = __moduleApifix1();
+import blogListApi from "./blog/list.mjs";
+const { renderBlogList } = blogListApi();
 import __moduleApifixArticle from "./blog/article.mjs";
 const { renderBlogArticle } = __moduleApifixArticle();
 
@@ -30,27 +30,7 @@ async function initBlog() {
     const initialCategory = categoryPath
       ? decodeURIComponent(categoryPath[1])
       : new URLSearchParams(location.search).get("category") || "";
-    const categories = [...new Set(result.posts.map((post) => post.category))].sort();
-    if (category)
-      category.innerHTML += categories
-        .map((item) => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`)
-        .join("");
-    if (category) category.value = initialCategory;
-    const render = () => {
-      const query = (search?.value || "").toLowerCase().trim();
-      const selected = category?.value || "";
-      const posts = result.posts.filter(
-        (post) =>
-          (!selected || post.category === selected) &&
-          (!query ||
-            `${post.title} ${post.summary} ${post.tags.join(" ")}`.toLowerCase().includes(query)),
-      );
-      list.innerHTML = posts.map(renderBlogCard).join("");
-      status.textContent = `${posts.length} matching post${posts.length === 1 ? "" : "s"}`;
-    };
-    search?.addEventListener("input", render);
-    category?.addEventListener("change", render);
-    render();
+    renderBlogList({ posts: result.posts, status, list, search, category, initialCategory });
   } catch {
     status.textContent = "Blog posts are temporarily unavailable.";
   }

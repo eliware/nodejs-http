@@ -1,20 +1,19 @@
-import path from "node:path";
 import __moduleApi1 from "./config/boolean.mjs";
 const { parseBoolean } = __moduleApi1();
 import __moduleApifix1 from "./config/positive-int.mjs";
 const { parsePositiveInt } = __moduleApifix1();
+import configPathsApi from "./config/paths.mjs";
+const { DEFAULT_PUBLIC_DIR, deriveConfigPaths } = configPathsApi();
 
 const DEFAULT_PORT = 7100;
 const DEFAULT_HOST = "0.0.0.0";
-const DEFAULT_PUBLIC_DIR = path.resolve(process.cwd(), "public");
-
 function envValue(env, key, fallback = "") {
   const value = env[key];
   return typeof value === "string" ? value : fallback;
 }
 
 function loadConfig(env = process.env) {
-  const publicDir = path.resolve(envValue(env, "PUBLIC_DIR", DEFAULT_PUBLIC_DIR));
+  const paths = deriveConfigPaths(env);
   const host = envValue(env, "HOST", DEFAULT_HOST);
   const portText = envValue(env, "PORT");
   const directoryRedirect = envValue(env, "DIRECTORY_REDIRECT");
@@ -22,9 +21,7 @@ function loadConfig(env = process.env) {
   return {
     host,
     port: parsePositiveInt(portText, DEFAULT_PORT),
-    publicDir,
-    blogDir: path.resolve(envValue(env, "BLOG_DIR", path.join(publicDir, "content", "blogs"))),
-    staticDir: path.resolve(envValue(env, "STATIC_DIR", path.join(process.cwd(), "site"))),
+    ...paths,
     staticIndexFile: envValue(env, "STATIC_INDEX_FILE", "index.html"),
     indexFile: envValue(env, "INDEX_FILE", "index.html"),
     directoryIndex: parseBoolean(envValue(env, "DIRECTORY_INDEX"), true),

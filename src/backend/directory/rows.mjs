@@ -3,11 +3,11 @@ import __moduleApifix1 from "./html-escaping.mjs";
 const { escapeHtml } = __moduleApifix1();
 import __moduleApifix2 from "./byte-format.mjs";
 const { formatBytes } = __moduleApifix2();
+import directoryTotalsApi from "./totals.mjs";
+const { summarizeDirectoryTotals } = directoryTotalsApi();
 
 function renderDirectoryRows(entries, requestPath) {
   const rows = [];
-  let fileCount = 0;
-  let totalBytes = 0;
   if (requestPath !== "/") {
     const parent = path.posix.dirname(requestPath.replace(/\/$/, ""));
     rows.push(
@@ -23,10 +23,6 @@ function renderDirectoryRows(entries, requestPath) {
     if (stats) {
       modifiedIso = stats.mtime.toISOString();
       modified = modifiedIso.replace("T", " ").replace(/\.\d{3}Z$/, " UTC");
-      if (!isDirectory) {
-        fileCount += 1;
-        totalBytes += stats.size;
-      }
     }
     const entryPath = `${requestPath}${encodeURIComponent(entry.name)}${isDirectory ? "/" : ""}`;
     const modifiedAttribute = !isDirectory ? ` data-modified="${modifiedIso}"` : "";
@@ -34,7 +30,7 @@ function renderDirectoryRows(entries, requestPath) {
       `<tr data-name="${escapeHtml(entry.name.toLowerCase())}"><td class="kind" aria-hidden="true"><span class="kind-symbol">${isDirectory ? "▰" : "▤"}</span></td><td class="name"><a href="${escapeHtml(entryPath)}">${escapeHtml(entry.name)}${isDirectory ? "/" : ""}</a></td><td>${size}</td><td class="modified-cell"${modifiedAttribute}>${modified}</td></tr>`,
     );
   }
-  return { html: rows.join(""), fileCount, totalBytes };
+  return { html: rows.join(""), ...summarizeDirectoryTotals(entries) };
 }
 
 export default function __moduleApi0() {

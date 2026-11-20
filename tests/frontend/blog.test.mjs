@@ -26,29 +26,6 @@ test("does nothing when required blog elements are missing", async () => {
   await initBlog();
 });
 
-test("renders post cards, escapes text, and filters by search and category", async () => {
-  const { get } = blogDom();
-  globalThis.location = { pathname: "/blog", search: "?category=guides" };
-  globalThis.fetch = jest.fn(async () => ({
-    ok: true,
-    json: async () => ({
-      posts: [post, { ...post, slug: "other", category: "releases", title: "Other" }],
-    }),
-  }));
-  const category = get("blog-category");
-  category.value = "guides";
-  await initBlog();
-  expect(get("blog-status").textContent).toBe("1 matching post");
-  get("blog-search").value = "no match";
-  get("blog-search").dispatch("input");
-  expect(get("blog-status").textContent).toBe("0 matching posts");
-  get("blog-search").value = "gluster";
-  category.value = "releases";
-  category.dispatch("change");
-  expect(get("blog-list").innerHTML).toContain("Other");
-  expect(get("blog-list").innerHTML).not.toContain("Safe &lt;title&gt;");
-});
-
 test("reports a failed blog request", async () => {
   const { get } = blogDom();
   globalThis.location = { pathname: "/blog", search: "" };

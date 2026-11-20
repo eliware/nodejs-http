@@ -12,6 +12,12 @@ test("fills the configured listing template", () => {
     totalBytes: 1024,
     validation: null,
     containerValidation: null,
+    metadata: {
+      appVersion: "15.2.2",
+      assetVersion: "15.2.2",
+      copyrightYear: "2026",
+      hostId: "test-host",
+    },
   });
   expect(html).toContain("Index of /metadata/runs/run 1/");
   expect(html).toContain("/metadata/runs/run%201/release-card.png");
@@ -29,6 +35,7 @@ test("uses the fallback renderer when the template is unavailable", () => {
     template: null,
     requestPath: "/repo/",
     rows: "<tr>fallback row</tr>",
+    metadata: {},
   });
   expect(html).toContain("Index of /repo/");
   expect(html).toContain("<tr>fallback row</tr>");
