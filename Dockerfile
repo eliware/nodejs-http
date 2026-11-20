@@ -1,4 +1,4 @@
-FROM ghcr.io/eliware/centos10-node26:26.13.1 AS frontend-build
+FROM ghcr.io/eliware/centos10-node26:latest AS frontend-build
 
 USER root
 WORKDIR /opt/nodejs-http
@@ -8,7 +8,7 @@ COPY src ./src
 COPY webpack.config.mjs ./webpack.config.mjs
 RUN npm run build
 
-FROM ghcr.io/eliware/centos10-node26:26.13.1
+FROM ghcr.io/eliware/centos10-node26:latest
 
 USER root
 ENV NODE_ENV=production
