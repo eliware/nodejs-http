@@ -6,10 +6,8 @@ import __moduleApifix2 from "./links.mjs";
 const { ogImageForPath, renderBreadcrumbs } = __moduleApifix2();
 import __moduleApifix3 from "./validation.mjs";
 const { renderValidation } = __moduleApifix3();
-import __moduleApifix4 from "./fallback.mjs";
-const { renderFallbackHtml } = __moduleApifix4();
-import __moduleApifix5 from "./template.mjs";
-const { renderDirectoryTemplate } = __moduleApifix5();
+import directoryPageRendererApi from "./page/renderer.mjs";
+const { renderDirectoryPage } = directoryPageRendererApi();
 
 function renderDirectoryHtml({
   template,
@@ -22,8 +20,7 @@ function renderDirectoryHtml({
   metadata,
 }) {
   const title = `Index of ${requestPath}`;
-  if (!template) return renderFallbackHtml(title, rows);
-  return renderDirectoryTemplate(template, {
+  return renderDirectoryPage(template, title, rows, {
     title: escapeHtml(title),
     ogImage: escapeHtml(ogImageForPath(requestPath)),
     ogDescription: escapeHtml(`Browse signed Eliware Node.js artifacts in ${title}.`),

@@ -29,14 +29,3 @@ test("fills the configured listing template", () => {
   expect(html).toContain("15.2.2");
   expect(html).not.toContain("__ASSET_VERSION__");
 });
-
-test("uses the fallback renderer when the template is unavailable", () => {
-  const html = renderDirectoryHtml({
-    template: null,
-    requestPath: "/repo/",
-    rows: "<tr>fallback row</tr>",
-    metadata: {},
-  });
-  expect(html).toContain("Index of /repo/");
-  expect(html).toContain("<tr>fallback row</tr>");
-});

@@ -1,7 +1,7 @@
-import { APP_VERSION } from "../app-version.mjs";
-import runtimeIdentityApi from "../runtime-identity.mjs";
+import { APP_VERSION } from "../../app-version.mjs";
+import runtimeIdentityApi from "../../runtime-identity.mjs";
 const { servingHostId } = runtimeIdentityApi();
-import copyrightYearApi from "./copyright-year.mjs";
+import copyrightYearApi from "../copyright-year.mjs";
 const { copyrightYear } = copyrightYearApi();
 
 function pageMetadata() {

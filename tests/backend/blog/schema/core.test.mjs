@@ -37,4 +37,10 @@ test("rejects invalid core document fields", () => {
   expect(() => assertBlogCoreFields({ ...document, category: "unknown" }, "post")).toThrow(
     /category/,
   );
+  expect(() => assertBlogCoreFields({ ...document, tags: [] }, "post")).toThrow(/tags/);
+  expect(() => assertBlogCoreFields({ ...document, tags: ["bad tag"] }, "post")).toThrow(/tags/);
+  expect(() => assertBlogCoreFields({ ...document, tags: ["post", "post"] }, "post")).toThrow(
+    /duplicates/,
+  );
+  expect(() => assertBlogCoreFields({ ...document, status: "private" }, "post")).toThrow(/status/);
 });

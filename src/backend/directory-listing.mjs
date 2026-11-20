@@ -7,7 +7,7 @@ import __moduleApifixPage from "./directory/page.mjs";
 const { renderDirectoryHtml } = __moduleApifixPage();
 import listingDataApi from "./directory/listing-data.mjs";
 const { readDirectoryListingData } = listingDataApi();
-import pageMetadataApi from "./directory/page-metadata.mjs";
+import pageMetadataApi from "./directory/page/metadata.mjs";
 const { pageMetadata } = pageMetadataApi();
 import directoryTotalsApi from "./directory/totals.mjs";
 const { summarizeDirectoryTotals } = directoryTotalsApi();

@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import __moduleApi0 from "../../../src/backend/directory/page-metadata.mjs";
+import __moduleApi0 from "../../../../src/backend/directory/page/metadata.mjs";
 const { pageMetadata } = __moduleApi0();
 
 test("returns current page version, host, and copyright metadata", () => {

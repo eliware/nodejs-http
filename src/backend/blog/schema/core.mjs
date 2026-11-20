@@ -1,7 +1,8 @@
 import blogFieldsApi from "./fields.mjs";
-const { BLOG_SCHEMA, BLOG_REQUIRED_FIELDS, BLOG_FIELDS } = blogFieldsApi();
+const { BLOG_SCHEMA, BLOG_STATUSES, BLOG_REQUIRED_FIELDS, BLOG_FIELDS } = blogFieldsApi();
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const TAG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const CATEGORIES = new Set([
   "installation",
   "upgrades",
@@ -38,6 +39,16 @@ function assertBlogCoreFields(value, label) {
     if (!BLOG_FIELDS.has(field)) throw new Error(`${label} has unsupported field: ${field}`);
   if (!SLUG_PATTERN.test(value.slug))
     throw new Error(`${label} slug must contain lowercase letters, numbers, and hyphens`);
+  if (
+    !Array.isArray(value.tags) ||
+    value.tags.length === 0 ||
+    value.tags.some((tag) => typeof tag !== "string" || !TAG_PATTERN.test(tag))
+  )
+    throw new Error(`${label} tags must be a non-empty string array`);
+  if (new Set(value.tags).size !== value.tags.length)
+    throw new Error(`${label} tags must not contain duplicates`);
+  if (!BLOG_STATUSES.includes(value.status))
+    throw new Error(`${label} status must be draft or published`);
   assertString(value.title, `${label} title`);
   assertString(value.summary, `${label} summary`);
   assertTimestamp(value.published_at, `${label} published_at`);

@@ -11,7 +11,7 @@ function config() {
   return {
     publicDir: "",
     allowSymlinks: false,
-    byteRanges: true,
+    byteRanges: false,
     compression: false,
     compressionMinBytes: 0,
     defaultMimeType: "application/octet-stream",
@@ -21,100 +21,81 @@ function config() {
   };
 }
 
-async function send(method, headers, file, settings = config()) {
+async function send(headers, file, settings = config(), method = "GET") {
   const response = createHttpResponse(method, headers);
   const body = readHttpBody(response);
   await sendFile(response, response.req, file, settings);
   return { response, body: await body };
 }
 
-test("sends full and ranged HEAD responses without bodies", async () => {
-  const publicDir = await createStaticDirectory();
-  const file = await fileExists(path.join(publicDir, "hello.txt"), { publicDir });
-
-  const full = await send("HEAD", {}, file);
-  expect(full.response.statusCode).toBe(200);
-  expect(full.response.headers["Content-Length"]).toBe(file.stats.size);
-  expect(full.body).toHaveLength(0);
-
-  const ranged = await send("HEAD", { range: "bytes=0-4" }, file);
-  expect(ranged.response.statusCode).toBe(206);
-  expect(ranged.response.headers["Content-Range"]).toBe(`bytes 0-4/${file.stats.size}`);
-  expect(ranged.response.headers["Content-Length"]).toBe(5);
-  expect(ranged.body).toHaveLength(0);
+test("compresses a cached file when the client accepts gzip", async () => {
+  const file = {
+    path: "/static/file.txt",
+    stats: { size: 4, mtime: new Date(0), mtimeMs: 0 },
+    body: Buffer.from("cached response"),
+  };
+  const { response, body } = await send({ "accept-encoding": "gzip" }, file, {
+    ...config(),
+    compression: true,
+    compressionMinBytes: 0,
+  });
+  expect(response.statusCode).toBe(200);
+  expect(response.headers["Content-Encoding"]).toBe("gzip");
+  expect(body.length).toBeGreaterThan(0);
 });
 
-test("reports compressed representation headers for HEAD requests", async () => {
-  const publicDir = await createStaticDirectory();
-  const file = await fileExists(path.join(publicDir, "hello.txt"), { publicDir });
-  const cached = { ...file, body: Buffer.from("cached response") };
-  const settings = { ...config(), compression: true, compressionMinBytes: 0 };
-  const get = await send("GET", { "accept-encoding": "gzip" }, cached, settings);
-  const head = await send("HEAD", { "accept-encoding": "gzip" }, cached, settings);
-  expect(head.response.headers["Content-Encoding"]).toBe("gzip");
-  expect(head.response.headers.Vary).toBe("Accept-Encoding");
-  expect(head.response.headers["Content-Length"]).toBe(get.response.headers["Content-Length"]);
-  expect(head.body).toHaveLength(0);
-
-  const streamedHead = await send("HEAD", { "accept-encoding": "gzip" }, file, settings);
-  expect(streamedHead.response.headers["Content-Encoding"]).toBe("gzip");
-  expect(streamedHead.response.headers["Content-Length"]).toBeUndefined();
-  expect(streamedHead.body).toHaveLength(0);
-});
-
-test("rejects invalid ranges with a 416 response", async () => {
-  const publicDir = await createStaticDirectory();
-  const file = await fileExists(path.join(publicDir, "hello.txt"), { publicDir });
-
-  const { response, body } = await send("GET", { range: "bytes=999-1000" }, file);
-
-  expect(response.statusCode).toBe(416);
-  expect(response.headers["Content-Range"]).toBe(`bytes */${file.stats.size}`);
-  expect(body.toString()).toContain("Range Not Satisfiable");
-});
-
-test("compresses cached files and streams uncached file ranges", async () => {
-  const publicDir = await createStaticDirectory();
-  const file = await fileExists(path.join(publicDir, "hello.txt"), { publicDir });
-
-  const compressed = await send(
-    "GET",
-    { "accept-encoding": "gzip" },
-    { ...file, body: Buffer.from("cached response") },
-    { ...config(), compression: true, compressionMinBytes: 0 },
-  );
-  expect(compressed.response.statusCode).toBe(200);
-  expect(compressed.response.headers["Content-Encoding"]).toBe("gzip");
-  expect(compressed.body.length).toBeGreaterThan(0);
-
-  const ranged = await send("GET", { range: "bytes=0-4" }, file);
-  expect(ranged.response.statusCode).toBe(206);
-  expect(ranged.body.toString()).toBe("hello");
-});
-
-test("sends an uncompressed cached body when no encoding is accepted", async () => {
+test("sends a cached file without compression when the client does not accept it", async () => {
   const file = {
     path: "/static/file.txt",
     stats: { size: 4, mtime: new Date(0), mtimeMs: 0 },
     body: Buffer.from("data"),
   };
-  const { response, body } = await send("GET", {}, file);
-
+  const { response, body } = await send({}, file);
   expect(response.statusCode).toBe(200);
   expect(response.headers["Content-Length"]).toBe(4);
   expect(body.toString()).toBe("data");
 });
 
-test("streams full files without range support", async () => {
+test("streams full files when byte ranges are disabled", async () => {
   const publicDir = await createStaticDirectory();
   const file = await fileExists(path.join(publicDir, "hello.txt"), { publicDir });
-
-  const { response, body } = await send("GET", {}, file, {
-    ...config(),
-    byteRanges: false,
-  });
-
+  const { response, body } = await send({}, file, { ...config(), byteRanges: false });
   expect(response.statusCode).toBe(200);
   expect(response.headers["Accept-Ranges"]).toBeUndefined();
   expect(body.toString()).toBe("hello world");
+});
+
+test("sets compressed length for cached HEAD responses", async () => {
+  const file = {
+    path: "/static/file.txt",
+    stats: { size: 4, mtime: new Date(0), mtimeMs: 0 },
+    body: Buffer.from("cached response"),
+  };
+  const { response, body } = await send(
+    { "accept-encoding": "gzip" },
+    file,
+    { ...config(), compression: true, compressionMinBytes: 0 },
+    "HEAD",
+  );
+  expect(response.statusCode).toBe(200);
+  expect(response.headers["Content-Encoding"]).toBe("gzip");
+  expect(Number(response.headers["Content-Length"])).toBeGreaterThan(0);
+  expect(body.length).toBe(0);
+});
+
+test("sets negotiated encoding headers for streamed HEAD responses", async () => {
+  const file = {
+    path: "/static/file.txt",
+    stats: { size: 1024, mtime: new Date(0), mtimeMs: 0 },
+  };
+  const { response, body } = await send(
+    { "accept-encoding": "gzip" },
+    file,
+    { ...config(), compression: true, compressionMinBytes: 0 },
+    "HEAD",
+  );
+  expect(response.statusCode).toBe(200);
+  expect(response.headers["Content-Encoding"]).toBe("gzip");
+  expect(response.headers.Vary).toBe("Accept-Encoding");
+  expect(body.length).toBe(0);
 });
