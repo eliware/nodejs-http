@@ -1,22 +1,22 @@
-import __moduleApi1 from "../response.mjs";
+import __moduleApi1 from "../../response.mjs";
 const { sendJson } = __moduleApi1();
-import __moduleApifix1 from "../blog/markdown.mjs";
+import __moduleApifix1 from "../../blog/markdown.mjs";
 const { renderBlogArticle } = __moduleApifix1();
-import __moduleApifix2 from "../metadata/version.mjs";
+import __moduleApifix2 from "../../metadata/version.mjs";
 const { SUPPORTED_METADATA_VERSION } = __moduleApifix2();
+import blogPathApi from "./path.mjs";
+const { matchBlogApiPath, isValidBlogSlug } = blogPathApi();
 
 function publicBlog(blog) {
   return { ...blog, html: renderBlogArticle(blog) };
 }
 
 async function handleBlogApi(response, requestPath, config) {
-  const collectionPath = "/api/v1/blogs";
-  const prefix = `${collectionPath}/`;
-  const isCollection = requestPath === collectionPath;
-  const isArticle = requestPath.startsWith(prefix);
-  if (!isCollection && !isArticle) return false;
-  const slug = isArticle ? requestPath.slice(prefix.length) : "";
-  if (isArticle && (!slug || slug.includes("/"))) {
+  const route = matchBlogApiPath(requestPath);
+  if (!route) return false;
+  const isArticle = route.type === "article";
+  const slug = isArticle ? route.slug : "";
+  if (isArticle && !isValidBlogSlug(slug)) {
     sendJson(response, 404, { error: "blog post not found" }, config, "no-store");
     return true;
   }

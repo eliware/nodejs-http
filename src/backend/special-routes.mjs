@@ -1,6 +1,6 @@
 import __moduleApi1 from "./api/handlers.mjs";
 const { handleDirectoryApi } = __moduleApi1();
-import __moduleApiBlog from "./api/blog-handler.mjs";
+import __moduleApiBlog from "./api/blog/handler.mjs";
 const { handleBlogApi } = __moduleApiBlog();
 import __moduleApiGuide from "./api/guide-handler.mjs";
 const { handleGuideApi } = __moduleApiGuide();

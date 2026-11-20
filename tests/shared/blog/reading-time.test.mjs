@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import __moduleApi0 from "../../../../src/backend/blog/article/reading-time.mjs";
+import __moduleApi0 from "../../../src/shared/blog/reading-time.mjs";
 const { readingTimeMinutes } = __moduleApi0();
 
 test("returns at least one minute for short content", () => {

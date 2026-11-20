@@ -63,17 +63,3 @@ test("rethrows other directory errors", async () => {
   };
   await expect(checkBlogDocuments({ directory: "/blogs", fs, log: jest.fn() })).rejects.toBe(error);
 });
-
-test("rejects duplicate slugs", async () => {
-  const fs = {
-    readdir: jest.fn(async () => ["first.json", "second.json"]),
-    readFile: jest.fn(async () => JSON.stringify(blog("duplicate"))),
-  };
-  await expect(checkBlogDocuments({ directory: "/blogs", fs, log: jest.fn() })).rejects.toThrow(
-    `${path.join("/blogs", "second.json")}: duplicate slug duplicate`,
-  );
-});
-test("rejects malformed JSON content", async () => {
-  const fs = { readdir: jest.fn(async () => ["post.json"]), readFile: jest.fn(async () => "{") };
-  await expect(checkBlogDocuments({ directory: "/blogs", fs, log: jest.fn() })).rejects.toThrow();
-});

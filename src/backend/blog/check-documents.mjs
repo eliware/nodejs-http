@@ -1,7 +1,5 @@
-import path from "node:path";
-import schemaModule from "./schema.mjs";
-
-const { assertBlogDocument } = schemaModule();
+import documentCheckerApi from "./document-checker.mjs";
+const { validateBlogDocuments } = documentCheckerApi();
 
 async function checkBlogDocuments({ directory, fs, log }) {
   let names;
@@ -13,15 +11,9 @@ async function checkBlogDocuments({ directory, fs, log }) {
     return 0;
   }
 
-  const slugs = new Set();
-  for (const name of names) {
-    const file = path.join(directory, name);
-    const blog = assertBlogDocument(JSON.parse(await fs.readFile(file, "utf8")), file);
-    if (slugs.has(blog.slug)) throw new Error(`${file}: duplicate slug ${blog.slug}`);
-    slugs.add(blog.slug);
-  }
-  log(`validated ${names.length} blog documents`);
-  return names.length;
+  const count = await validateBlogDocuments({ directory, names, fs });
+  log(`validated ${count} blog documents`);
+  return count;
 }
 
 export default function checkDocumentsModule() {

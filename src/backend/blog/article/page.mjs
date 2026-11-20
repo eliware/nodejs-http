@@ -6,7 +6,7 @@ import articleHeroApi from "./hero.mjs";
 const { renderBlogHero } = articleHeroApi();
 import articleVerificationApi from "./verification.mjs";
 const { renderVerificationMetadata } = articleVerificationApi();
-import __moduleApifixReadingTime from "./reading-time.mjs";
+import __moduleApifixReadingTime from "../../../shared/blog/reading-time.mjs";
 const { readingTimeMinutes } = __moduleApifixReadingTime();
 
 function renderBlogArticlePage(blog) {

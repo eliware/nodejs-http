@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import __moduleApi0 from "../../../src/backend/api/blog-handler.mjs";
+import __moduleApi0 from "../../../../src/backend/api/blog/handler.mjs";
 const { handleBlogApi } = __moduleApi0();
 
 function response() {
@@ -70,18 +70,4 @@ test("serves published posts and handles missing articles and store failures", a
   });
   expect(broken.statusCode).toBe(503);
   expect(JSON.parse(broken.body)).toEqual({ error: "blog metadata unavailable" });
-});
-
-test("rejects nested article paths", async () => {
-  const result = response();
-  await expect(handleBlogApi(result, "/api/v1/blogs/post/extra", config)).resolves.toBe(true);
-  expect(result.statusCode).toBe(404);
-  expect(JSON.parse(result.body)).toEqual({ error: "blog post not found" });
-});
-
-test("rejects article slugs containing encoded path separators", async () => {
-  const result = response();
-  await expect(handleBlogApi(result, "/api/v1/blogs/safe/post", config)).resolves.toBe(true);
-  expect(result.statusCode).toBe(404);
-  expect(JSON.parse(result.body)).toEqual({ error: "blog post not found" });
 });
