@@ -16,6 +16,7 @@
   },
   "scripts": {
     "start": "node bin/server.mjs",
+    "deploy:compose": "docker compose up -d --build",
     "test": "eliware-test",
     "lint": "eliware-test --lint",
     "audit": "eliware-test --audit",
