@@ -2,6 +2,8 @@ import { EventEmitter } from "node:events";
 import { expect, jest, test } from "@jest/globals";
 import __moduleApi0 from "../../../src/backend/request/observation.mjs";
 const { observeRequest } = __moduleApi0();
+import metricsApi from "../../../src/backend/metrics.mjs";
+const { renderMetrics } = metricsApi();
 
 function response() {
   const value = new EventEmitter();
@@ -29,7 +31,10 @@ test("validates request IDs and writes structured access records on finish", () 
 
   requests.forEach((request, index) => observeRequest(request, responses[index], config, logger));
   jest.advanceTimersByTime(25);
-  responses.forEach((item) => item.emit("finish"));
+  responses.forEach((item) => {
+    item.emit("finish");
+    item.emit("close");
+  });
 
   expect(responses[0].headers["X-Request-ID"]).toMatch(/^[0-9a-f-]{36}$/);
   expect(responses[1].headers["X-Request-ID"]).toMatch(/^[0-9a-f-]{36}$/);
@@ -77,4 +82,20 @@ test("observes responses without optional header methods", () => {
     "HTTP request",
     expect.objectContaining({ method: "-", path: "/", bytes: 0 }),
   );
+});
+
+test("clears active request metrics when the connection closes before finish", () => {
+  const logger = { info: jest.fn() };
+  const disconnected = response();
+  observeRequest(
+    { method: "GET", url: "/disconnected", headers: {} },
+    disconnected,
+    config,
+    logger,
+  );
+  expect(renderMetrics()).toContain("nodejs_repository_http_active_requests 1");
+  disconnected.emit("close");
+  expect(renderMetrics()).toContain("nodejs_repository_http_active_requests 0");
+  disconnected.emit("finish");
+  expect(logger.info).not.toHaveBeenCalled();
 });

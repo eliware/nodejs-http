@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import metricsApi from "../metrics.mjs";
-const { recordRequest, startRequest } = metricsApi();
+const { cancelRequest, recordRequest, startRequest } = metricsApi();
 
 function requestIdentifier(request) {
   const supplied = request.headers?.["x-request-id"];
@@ -16,7 +16,10 @@ function observeRequest(request, response, config, logger) {
   const requestId = requestIdentifier(request);
   response.setHeader?.("X-Request-ID", requestId);
   startRequest();
+  let settled = false;
   response.once("finish", () => {
+    if (settled) return;
+    settled = true;
     const durationMs = Date.now() - started;
     const bytes =
       Number(typeof response.getHeader === "function" ? response.getHeader("Content-Length") : 0) ||
@@ -44,6 +47,11 @@ function observeRequest(request, response, config, logger) {
         : `${entry.method} ${entry.path} ${entry.status} ${entry.duration_ms}ms`,
       config.structuredLogs ? entry : undefined,
     );
+  });
+  response.once("close", () => {
+    if (settled) return;
+    settled = true;
+    cancelRequest();
   });
 }
 

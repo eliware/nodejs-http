@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 import __moduleApi0 from "../../src/backend/metrics.mjs";
-const { recordRequest, renderMetrics, startRequest } = __moduleApi0();
+const { cancelRequest, recordRequest, renderMetrics, startRequest } = __moduleApi0();
 
 test("records request totals and renders escaped labels", () => {
   startRequest();
@@ -12,4 +12,11 @@ test("records request totals and renders escaped labels", () => {
   expect(metrics).toContain('GET",path="/quoted\\\"path');
   expect(metrics).toContain('method="-",path="/"');
   expect(metrics).toContain("nodejs_repository_http_response_bytes_total");
+});
+
+test("cancels an unfinished request without changing completed request totals", () => {
+  startRequest();
+  cancelRequest();
+  const metrics = renderMetrics();
+  expect(metrics).toContain("nodejs_repository_http_active_requests 0");
 });

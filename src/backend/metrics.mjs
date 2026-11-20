@@ -14,6 +14,10 @@ function startRequest() {
   state.active += 1;
 }
 
+function cancelRequest() {
+  state.active = Math.max(0, state.active - 1);
+}
+
 function recordRequest({ method, path, status, durationMs, bytes }) {
   state.requests += 1;
   state.active = Math.max(0, state.active - 1);
@@ -30,5 +34,5 @@ function renderMetrics() {
 }
 
 export default function __moduleApi0() {
-  return { startRequest, recordRequest, renderMetrics };
+  return { startRequest, cancelRequest, recordRequest, renderMetrics };
 }

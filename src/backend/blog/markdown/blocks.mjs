@@ -46,7 +46,7 @@ function renderMarkdown(markdown) {
       continue;
     }
     if (code !== null) {
-      code.push(line);
+      code.lines.push(line);
       continue;
     }
     if (!line.trim()) {
@@ -86,7 +86,7 @@ function renderMarkdown(markdown) {
   flushParagraph();
   flushList();
   flushOrderedList();
-  if (code !== null) output.push(renderCodeBlock(code));
+  if (code !== null) output.push(renderCodeBlock(code.lines));
   return output.join("\n");
 }
 
