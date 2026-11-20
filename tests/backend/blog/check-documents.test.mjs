@@ -1,4 +1,5 @@
 import { expect, jest, test } from "@jest/globals";
+import path from "node:path";
 import checkDocumentsModule from "../../../src/backend/blog/check-documents.mjs";
 import versionModule from "../../../src/backend/metadata/version.mjs";
 
@@ -36,8 +37,8 @@ test("validates sorted JSON documents and ignores other files", async () => {
   const log = jest.fn();
   await expect(checkBlogDocuments({ directory: "/blogs", fs, log })).resolves.toBe(2);
   expect(fs.readFile.mock.calls.map(([file]) => file)).toEqual([
-    "/blogs/a-post.json",
-    "/blogs/z-post.json",
+    path.join("/blogs", "a-post.json"),
+    path.join("/blogs", "z-post.json"),
   ]);
   expect(log).toHaveBeenCalledWith("validated 2 blog documents");
 });
@@ -69,7 +70,7 @@ test("rejects duplicate slugs", async () => {
     readFile: jest.fn(async () => JSON.stringify(blog("duplicate"))),
   };
   await expect(checkBlogDocuments({ directory: "/blogs", fs, log: jest.fn() })).rejects.toThrow(
-    "/blogs/second.json: duplicate slug duplicate",
+    `${path.join("/blogs", "second.json")}: duplicate slug duplicate`,
   );
 });
 test("rejects malformed JSON content", async () => {

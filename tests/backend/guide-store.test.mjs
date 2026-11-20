@@ -166,6 +166,21 @@ test("rejects a guide path that changes outside the root after opening", async (
   expect(closed).toBe(true);
 });
 
+test("rejects a guide path that resolves outside the root before opening", async () => {
+  let opened = false;
+  const filesystem = {
+    realpath: async (value) =>
+      value === "/early-outside-root" ? value : "/outside/instructions.json",
+    open: async () => {
+      opened = true;
+    },
+  };
+  await expect(
+    readGuide("/early-outside-root", "install", "centos10", "stable", filesystem),
+  ).rejects.toThrow("guide path is outside the repository");
+  expect(opened).toBe(false);
+});
+
 test("rejects a guide file replaced between opening and validation", async () => {
   const openedFile = { dev: 1, ino: 1 };
   const filesystem = {

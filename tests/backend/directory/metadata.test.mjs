@@ -1,4 +1,5 @@
 import { expect, jest, test } from "@jest/globals";
+import path from "node:path";
 import metadataApi from "../../../src/backend/directory/metadata.mjs";
 
 const { readJson } = metadataApi();
@@ -10,7 +11,7 @@ test("reads JSON metadata from the requested directory", async () => {
   await expect(readJson("/repo", "validation.json", filesystem)).resolves.toEqual({
     status: "passed",
   });
-  expect(filesystem.readFile).toHaveBeenCalledWith("/repo/validation.json", "utf8");
+  expect(filesystem.readFile).toHaveBeenCalledWith(path.join("/repo", "validation.json"), "utf8");
 });
 
 test("returns null when metadata cannot be read or parsed", async () => {

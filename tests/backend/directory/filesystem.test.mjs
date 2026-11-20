@@ -1,4 +1,5 @@
 import { expect, test } from "@jest/globals";
+import path from "node:path";
 import {
   addOutsideSecret,
   addBrokenFileLink,
@@ -79,7 +80,7 @@ test("omits allowed symlinks that target special files", async () => {
   const filesystem = {
     realpath: async (value) => value,
     stat: async (value) => ({
-      isDirectory: () => value === publicDir,
+      isDirectory: () => value === path.resolve(publicDir),
       isFile: () => false,
     }),
     readdir: async () => [
@@ -106,4 +107,44 @@ test("omits allowed symlinks that target special files", async () => {
     filesystem,
   );
   expect(listing.entries).toEqual([]);
+});
+
+test("omits disallowed, outside, and unresolved symlinks", async () => {
+  const publicDir = "/repo";
+  const links = ["disallowed-link", "outside-link", "unresolved-link", "file-link"];
+  const filesystem = {
+    realpath: async (value) => {
+      if (value.endsWith("outside-link")) return path.resolve(publicDir, "..", "outside");
+      if (value.endsWith("unresolved-link")) throw new Error("broken link");
+      return path.resolve(value);
+    },
+    stat: async (value) => ({
+      isDirectory: () => value === path.resolve(publicDir),
+      isFile: () => value.endsWith("file-link"),
+    }),
+    readdir: async () =>
+      links.map((name) => ({
+        name,
+        isDirectory: () => false,
+        isFile: () => false,
+        isSymbolicLink: () => true,
+      })),
+    readFile: async () => {
+      throw new Error("missing metadata");
+    },
+  };
+
+  const disallowed = await readFilesystemDirectory(
+    { publicDir, allowSymlinks: false, allowDotfiles: false },
+    "/",
+    filesystem,
+  );
+  expect(disallowed.entries).toEqual([]);
+
+  const allowed = await readFilesystemDirectory(
+    { publicDir, allowSymlinks: true, allowDotfiles: false },
+    "/",
+    filesystem,
+  );
+  expect(allowed.entries).toEqual([{ name: "file-link", type: "file", href: "/file-link" }]);
 });
