@@ -31,7 +31,7 @@ test("fills blog templates for article, category, and index pages", () => {
   expect(articlePage).toContain("true||blog-article-page");
   expect(articlePage).toContain("host-1");
   expect(articlePage).toContain("2026");
-  expect(articlePage).toContain("15.2.1");
+  expect(articlePage).toContain("15.2.2");
   expect(articlePage).not.toContain("__ASSET_VERSION__");
   expect(articlePage).not.toContain("__COPYRIGHT_YEAR__");
   expect(articlePage).not.toContain("__APP_VERSION__");

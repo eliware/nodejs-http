@@ -1,5 +1,16 @@
 # Release Notes
 
+## 15.2.2 — 2026-11-20
+
+### Added
+
+- Add a published stable repository fixture and verify catalog output against package metadata.
+
+### Changed
+
+- Clarify the stable release catalog and unavailable preview state in metadata integration guidance.
+- Refresh browser compatibility data dependencies.
+
 ## 15.2.1 — 2026-11-19
 
 ### Added
