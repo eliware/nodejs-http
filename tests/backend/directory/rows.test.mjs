@@ -20,15 +20,15 @@ test("builds escaped directory rows", () => {
     "/el10/",
   );
 
-  expect(listing.html).toContain("Parent directory");
-  expect(listing.html).toContain("folder &amp; one/");
-  expect(listing.html).toContain("file &lt;one&gt;.rpm");
-  expect(listing.html).toContain("1.5 KiB");
-  expect(listing.html).toContain("2026-01-02 03:04:05 UTC");
-  expect(listing.html).toContain('data-modified=""');
-  expect(listing.html).toContain("vanished.txt");
+  expect(listing).toContain("Parent directory");
+  expect(listing).toContain("folder &amp; one/");
+  expect(listing).toContain("file &lt;one&gt;.rpm");
+  expect(listing).toContain("1.5 KiB");
+  expect(listing).toContain("2026-01-02 03:04:05 UTC");
+  expect(listing).toContain('data-modified=""');
+  expect(listing).toContain("vanished.txt");
 });
 
 test("omits the parent row at the root", () => {
-  expect(renderDirectoryRows([], "/").html).toBe("");
+  expect(renderDirectoryRows([], "/")).toBe("");
 });

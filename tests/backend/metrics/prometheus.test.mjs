@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import __moduleApi0 from "../../../src/backend/metrics/renderer.mjs";
+import __moduleApi0 from "../../../src/backend/metrics/prometheus.mjs";
 const { renderMetrics } = __moduleApi0();
 
 test("formats counters and escaped status and request labels", () => {

@@ -42,6 +42,7 @@ test("renders the configured directory template with file and directory rows", a
   expect(body).toContain("folder/");
   expect(body).not.toContain("secret");
   expect(body).toContain("Total files: 4");
+  expect(body).toContain("Total size:");
   expect(output.headers["Content-Type"]).toContain("text/html");
 });
 

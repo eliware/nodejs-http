@@ -1,4 +1,4 @@
-import imageDistributionApi from "../distributions.mjs";
+import imageDistributionApi from "./repository-distribution.mjs";
 const { distroFromRepository } = imageDistributionApi();
 import imageDistributionLabelsApi from "../distribution-labels.mjs";
 const { distroLabel, distroRelease } = imageDistributionLabelsApi();

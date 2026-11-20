@@ -33,5 +33,5 @@ function renderValidation(validation, containerValidation) {
 }
 
 export default function __moduleApi0() {
-  return { distributionLabels, validationIcon, metadataStatus, renderValidation };
+  return { renderValidation };
 }

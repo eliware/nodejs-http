@@ -9,6 +9,8 @@ import listingDataApi from "./directory/listing-data.mjs";
 const { readDirectoryListingData } = listingDataApi();
 import pageMetadataApi from "./directory/page-metadata.mjs";
 const { pageMetadata } = pageMetadataApi();
+import directoryTotalsApi from "./directory/totals.mjs";
+const { summarizeDirectoryTotals } = directoryTotalsApi();
 
 async function sendDirectoryListing(
   response,
@@ -24,7 +26,8 @@ async function sendDirectoryListing(
     containerValidation,
     template,
   } = await readDirectoryListingData(directoryPath, config, filesystem);
-  const { html: rows, fileCount, totalBytes } = renderDirectoryRows(details, requestPath);
+  const rows = renderDirectoryRows(details, requestPath);
+  const { fileCount, totalBytes } = summarizeDirectoryTotals(details);
   const body = renderDirectoryHtml({
     template,
     requestPath,

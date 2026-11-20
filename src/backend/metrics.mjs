@@ -1,4 +1,4 @@
-import metricsRendererApi from "./metrics/renderer.mjs";
+import metricsRendererApi from "./metrics/prometheus.mjs";
 const { renderMetrics: renderMetricsText } = metricsRendererApi();
 
 const state = {

@@ -10,6 +10,14 @@ test("maps a published repository to its distribution metadata", () => {
   });
 });
 
+test("maps an official Debian repository to its distribution metadata", () => {
+  expect(mapImageDistribution("ghcr.io/eliware/debian12-gluster")).toEqual({
+    distro: "debian",
+    distroLabel: "Debian",
+    release: "12",
+  });
+});
+
 test("uses default metadata for an unknown repository", () => {
   expect(mapImageDistribution("ghcr.io/other/unknown")).toEqual({
     distro: "centos-stream",

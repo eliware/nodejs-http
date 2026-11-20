@@ -3,8 +3,6 @@ import __moduleApifix1 from "./html-escaping.mjs";
 const { escapeHtml } = __moduleApifix1();
 import __moduleApifix2 from "./byte-format.mjs";
 const { formatBytes } = __moduleApifix2();
-import directoryTotalsApi from "./totals.mjs";
-const { summarizeDirectoryTotals } = directoryTotalsApi();
 
 function renderDirectoryRows(entries, requestPath) {
   const rows = [];
@@ -30,7 +28,7 @@ function renderDirectoryRows(entries, requestPath) {
       `<tr data-name="${escapeHtml(entry.name.toLowerCase())}"><td class="kind" aria-hidden="true"><span class="kind-symbol">${isDirectory ? "▰" : "▤"}</span></td><td class="name"><a href="${escapeHtml(entryPath)}">${escapeHtml(entry.name)}${isDirectory ? "/" : ""}</a></td><td>${size}</td><td class="modified-cell"${modifiedAttribute}>${modified}</td></tr>`,
     );
   }
-  return { html: rows.join(""), ...summarizeDirectoryTotals(entries) };
+  return rows.join("");
 }
 
 export default function __moduleApi0() {
